@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager;
 
+import com.openclassrooms.realestatemanager.utils.Utils;
+
 import org.junit.Test;
 
 import java.time.LocalDate;
@@ -8,8 +10,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
-import static com.openclassrooms.realestatemanager.Utils.convertDollarToEuro;
-import static com.openclassrooms.realestatemanager.Utils.convertEuroToDollar;
+import static com.openclassrooms.realestatemanager.utils.Utils.convertDollarToEuro;
+import static com.openclassrooms.realestatemanager.utils.Utils.convertEuroToDollar;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

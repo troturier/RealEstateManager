@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.openclassrooms.realestatemanager.MainActivity"
+    tools:context="com.openclassrooms.realestatemanager.controllers.MainActivity"
     android:gravity="center">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,14 +15,14 @@
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:paddingTop="8dp"
-        tools:context=".MainActivity">
+        tools:context=".controllers.MainActivity">
 
-        <ListView
-            android:id="@+id/listView"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/main_recycler_view"
+            android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center" />
-    </FrameLayout>
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 
 
 </android.support.constraint.ConstraintLayout>
