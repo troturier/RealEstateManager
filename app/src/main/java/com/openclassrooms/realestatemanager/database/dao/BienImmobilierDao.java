@@ -11,7 +11,7 @@ import com.openclassrooms.realestatemanager.models.BienImmobilier;
 import java.util.List;
 
 @Dao
-public interface RealEstateDao {
+public interface BienImmobilierDao {
 
     @Query("SELECT * FROM BienImmobilier WHERE _id = :_id")
     LiveData<List<BienImmobilier>> getBienImmobiliers(int _id);
