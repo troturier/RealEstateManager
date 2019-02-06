@@ -14,6 +14,12 @@ public class PointInteret {
     private int idBien;
     private String libelle;
 
+    public PointInteret(int _id, int idBien, String libelle) {
+        this._id = _id;
+        this.idBien = idBien;
+        this.libelle = libelle;
+    }
+
     // GETTERS - SETTERS //
 
     public int get_id() {

@@ -15,6 +15,13 @@ public class Photo {
     private String cheminAcces;
     private int idBien;
 
+    public Photo(int _id, String description, String cheminAcces, int idBien) {
+        this._id = _id;
+        this.description = description;
+        this.cheminAcces = cheminAcces;
+        this.idBien = idBien;
+    }
+
     // GETTERS - SETTERS //
 
     public void setIdBien(int idBien) {

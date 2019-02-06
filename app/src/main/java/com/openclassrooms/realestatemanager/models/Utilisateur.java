@@ -1,12 +1,20 @@
 package com.openclassrooms.realestatemanager.models;
 
+import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+@Entity
 public class Utilisateur {
     @PrimaryKey(autoGenerate = true)
     private int _id;
     private String nom;
     private String prenom;
+
+    public Utilisateur(int _id, String nom, String prenom) {
+        this._id = _id;
+        this.nom = nom;
+        this.prenom = prenom;
+    }
 
     // GETTERS - SETTERS //
 

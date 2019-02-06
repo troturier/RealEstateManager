@@ -33,9 +33,30 @@ public class BienImmobilier {
     private String dateVente;
     private int prix;
     private boolean statut;
-    private int idPhotoCouverture;
+    private Integer idPhotoCouverture;
     private int idAgent;
     private int idType;
+
+    public BienImmobilier(int _id, int surface, int chambres, int sdb, int pieces, String rue, String complementRue, String ville, String pays, String cp, String description, String dateEntree, String dateVente, int prix, boolean statut, int idPhotoCouverture, int idAgent, int idType) {
+        this._id = _id;
+        this.surface = surface;
+        this.chambres = chambres;
+        this.sdb = sdb;
+        this.pieces = pieces;
+        this.rue = rue;
+        this.complementRue = complementRue;
+        this.ville = ville;
+        this.pays = pays;
+        this.cp = cp;
+        this.description = description;
+        this.dateEntree = null;
+        this.dateVente = dateVente;
+        this.prix = prix;
+        this.statut = true;
+        this.idPhotoCouverture = idPhotoCouverture;
+        this.idAgent = idAgent;
+        this.idType = idType;
+    }
 
     // GETTERS - SETTERS //
 
