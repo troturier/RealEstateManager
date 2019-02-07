@@ -6,7 +6,9 @@ import androidx.room.*;
 @Entity(foreignKeys = @ForeignKey(
         entity = BienImmobilier.class,
         parentColumns = "id",
-        childColumns = "idBien"),
+        childColumns = "idBien",
+        deferred = true),
+
         indices = {@Index(value = "idBien", name = "idBien_Photo")})
 public class Photo {
     @PrimaryKey(autoGenerate = true)
@@ -14,12 +16,22 @@ public class Photo {
     private String description;
     private String cheminAcces;
     private int idBien;
+    private boolean couverture;
 
-    public Photo(int id, String description, String cheminAcces, int idBien) {
+    public boolean isCouverture() {
+        return couverture;
+    }
+
+    public void setCouverture(boolean couverture) {
+        this.couverture = couverture;
+    }
+
+    public Photo(int id, String description, String cheminAcces, int idBien, boolean couverture) {
         this.id = id;
         this.description = description;
         this.cheminAcces = cheminAcces;
         this.idBien = idBien;
+        this.couverture = couverture;
     }
 
     // GETTERS - SETTERS //

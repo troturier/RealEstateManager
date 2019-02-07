@@ -1,12 +1,14 @@
 package com.openclassrooms.realestatemanager.models;
 
 
-import androidx.room.*;
+import com.openclassrooms.realestatemanager.utils.Utils;
 
-@Entity(foreignKeys = {@ForeignKey(
-        entity = Photo.class,
-        parentColumns = "id",
-        childColumns = "idPhotoCouverture"),
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+
+@Entity(foreignKeys = {
         @ForeignKey(
                 entity = Utilisateur.class,
                 parentColumns = "id",
@@ -15,8 +17,7 @@ import androidx.room.*;
                 entity = Type.class,
                 parentColumns = "id",
                 childColumns = "idType")},
-        indices = {@Index(value = "idPhotoCouverture", name = "idPhotoCouverture"),
-                @Index(value = "idAgent", name = "idAgent"),
+        indices = {@Index(value = "idAgent", name = "idAgent"),
                 @Index(value = "idType", name = "idType")})
 public class BienImmobilier {
     @PrimaryKey(autoGenerate = true)
@@ -35,11 +36,10 @@ public class BienImmobilier {
     private String dateVente;
     private int prix;
     private boolean statut;
-    private int idPhotoCouverture;
     private int idAgent;
     private int idType;
 
-    public BienImmobilier(int id, int surface, int chambres, int sdb, int pieces, String rue, String complementRue, String ville, String pays, String cp, String description, String dateEntree, String dateVente, int prix, boolean statut, int idPhotoCouverture, int idAgent, int idType) {
+    public BienImmobilier(int id, int surface, int chambres, int sdb, int pieces, String rue, String complementRue, String ville, String pays, String cp, String description, String dateVente, int prix, boolean statut, int idAgent, int idType) {
         this.id = id;
         this.surface = surface;
         this.chambres = chambres;
@@ -51,11 +51,10 @@ public class BienImmobilier {
         this.pays = pays;
         this.cp = cp;
         this.description = description;
-        this.dateEntree = null;
+        this.dateEntree = Utils.getTodayDate();
         this.dateVente = dateVente;
         this.prix = prix;
-        this.statut = true;
-        this.idPhotoCouverture = idPhotoCouverture;
+        this.statut = statut;
         this.idAgent = idAgent;
         this.idType = idType;
     }
@@ -180,14 +179,6 @@ public class BienImmobilier {
 
     public void setStatut(boolean statut) {
         this.statut = statut;
-    }
-
-    public int getIdPhotoCouverture() {
-        return idPhotoCouverture;
-    }
-
-    public void setIdPhotoCouverture(int idPhotoCouverture) {
-        this.idPhotoCouverture = idPhotoCouverture;
     }
 
     public int getIdType() {

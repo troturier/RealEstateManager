@@ -1,6 +1,7 @@
-package com.openclassrooms.realestatemanager;
+package com.openclassrooms.realestatemanager.testDao;
 
 
+import com.openclassrooms.realestatemanager.LiveDataTestUtil;
 import com.openclassrooms.realestatemanager.database.RealEstateManagerDatabase;
 import com.openclassrooms.realestatemanager.models.Type;
 
