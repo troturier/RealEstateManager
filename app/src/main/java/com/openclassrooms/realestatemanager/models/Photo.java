@@ -16,22 +16,12 @@ public class Photo {
     private String description;
     private String cheminAcces;
     private int idBien;
-    private boolean couverture;
 
-    public boolean isCouverture() {
-        return couverture;
-    }
-
-    public void setCouverture(boolean couverture) {
-        this.couverture = couverture;
-    }
-
-    public Photo(int id, String description, String cheminAcces, int idBien, boolean couverture) {
+    public Photo(int id, String description, String cheminAcces, int idBien) {
         this.id = id;
         this.description = description;
         this.cheminAcces = cheminAcces;
         this.idBien = idBien;
-        this.couverture = couverture;
     }
 
     // GETTERS - SETTERS //

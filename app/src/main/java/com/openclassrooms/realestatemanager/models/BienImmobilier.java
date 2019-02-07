@@ -10,6 +10,10 @@ import androidx.room.PrimaryKey;
 
 @Entity(foreignKeys = {
         @ForeignKey(
+                entity = Photo.class,
+                parentColumns = "id",
+                childColumns = "idPhotoCouverture"),
+        @ForeignKey(
                 entity = Utilisateur.class,
                 parentColumns = "id",
                 childColumns = "idAgent"),
@@ -35,11 +39,12 @@ public class BienImmobilier {
     private String dateEntree;
     private String dateVente;
     private int prix;
+    private Integer idPhotoCouverture;
     private boolean statut;
     private int idAgent;
     private int idType;
 
-    public BienImmobilier(int id, int surface, int chambres, int sdb, int pieces, String rue, String complementRue, String ville, String pays, String cp, String description, String dateVente, int prix, boolean statut, int idAgent, int idType) {
+    public BienImmobilier(int id, int surface, int chambres, int sdb, int pieces, String rue, String complementRue, String ville, String pays, String cp, String description, String dateVente, int prix, Integer idPhotoCouverture, boolean statut, int idAgent, int idType) {
         this.id = id;
         this.surface = surface;
         this.chambres = chambres;
@@ -51,6 +56,7 @@ public class BienImmobilier {
         this.pays = pays;
         this.cp = cp;
         this.description = description;
+        this.idPhotoCouverture = idPhotoCouverture;
         this.dateEntree = Utils.getTodayDate();
         this.dateVente = dateVente;
         this.prix = prix;
@@ -195,5 +201,13 @@ public class BienImmobilier {
 
     public void setIdAgent(int idAgent) {
         this.idAgent = idAgent;
+    }
+
+    public Integer getIdPhotoCouverture() {
+        return idPhotoCouverture;
+    }
+
+    public void setIdPhotoCouverture(Integer idPhotoCouverture) {
+        this.idPhotoCouverture = idPhotoCouverture;
     }
 }

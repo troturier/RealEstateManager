@@ -4,7 +4,6 @@ package com.openclassrooms.realestatemanager.testDao;
 import com.openclassrooms.realestatemanager.LiveDataTestUtil;
 import com.openclassrooms.realestatemanager.database.RealEstateManagerDatabase;
 import com.openclassrooms.realestatemanager.models.BienImmobilier;
-import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.PointInteret;
 import com.openclassrooms.realestatemanager.models.Type;
 import com.openclassrooms.realestatemanager.models.Utilisateur;
@@ -34,7 +33,6 @@ public class PointInteretDaoTest {
     private static int ID = 1;
     private static Utilisateur USER_DEMO = new Utilisateur(ID, "Roturier", "Thibault");
     private static Type TYPE_DEMO = new Type(ID, "Appartement");
-    private static Photo PHOTO_DEMO = new Photo(ID, "test", "", ID, true);
     private static BienImmobilier BIEN_DEMO = new BienImmobilier(
             ID,
             20,
@@ -49,6 +47,7 @@ public class PointInteretDaoTest {
             null,
             null,
             100000,
+            null,
             true,
             1,
             1);
@@ -76,7 +75,6 @@ public class PointInteretDaoTest {
         this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
         this.database.typeDao().insertType(TYPE_DEMO);
         this.database.bienImmobilierDao().insertBienImmobilier(BIEN_DEMO);
-        this.database.photoDao().insertPhoto(PHOTO_DEMO);
         this.database.pointInteretDao().insertPointInteret(POI_DEMO);
 
         // TEST
@@ -90,7 +88,6 @@ public class PointInteretDaoTest {
         this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
         this.database.typeDao().insertType(TYPE_DEMO);
         this.database.bienImmobilierDao().insertBienImmobilier(BIEN_DEMO);
-        this.database.photoDao().insertPhoto(PHOTO_DEMO);
         this.database.pointInteretDao().insertPointInteret(POI_DEMO);
         PointInteret pointInteret = LiveDataTestUtil.getValue(this.database.pointInteretDao().getPointInteret(ID));
         pointInteret.setLibelle("test");
@@ -107,7 +104,6 @@ public class PointInteretDaoTest {
         this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
         this.database.typeDao().insertType(TYPE_DEMO);
         this.database.bienImmobilierDao().insertBienImmobilier(BIEN_DEMO);
-        this.database.photoDao().insertPhoto(PHOTO_DEMO);
         this.database.pointInteretDao().insertPointInteret(POI_DEMO);
         PointInteret pointInteret = LiveDataTestUtil.getValue(this.database.pointInteretDao().getPointInteret(ID));
         this.database.pointInteretDao().deleteItem(pointInteret.getId());
