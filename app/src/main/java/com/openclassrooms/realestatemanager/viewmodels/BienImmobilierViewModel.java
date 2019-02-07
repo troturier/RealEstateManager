@@ -16,8 +16,9 @@ import java.util.concurrent.Executor;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
-public class BienImmobilierViewModel {
+public class BienImmobilierViewModel extends ViewModel {
 
     // REPOSITORIES
     private final BienImmobilierDataRepository bienImmobilierDataSource;
