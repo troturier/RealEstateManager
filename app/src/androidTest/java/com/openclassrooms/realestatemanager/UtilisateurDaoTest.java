@@ -10,6 +10,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.List;
+
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
 import androidx.test.InstrumentationRegistry;
@@ -24,7 +26,7 @@ public class UtilisateurDaoTest {
     private RealEstateManagerDatabase database;
 
     // DATA SET FOR TEST
-    private static int USER_ID = 2;
+    private static int USER_ID = 1;
     private static Utilisateur USER_DEMO = new Utilisateur(USER_ID, "Roturier", "Thibault");
 
     @Rule
@@ -47,8 +49,34 @@ public class UtilisateurDaoTest {
     public void insertAndGetUtilisateur() throws InterruptedException {
         // BEFORE : Adding a new user
         this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
+
         // TEST
         Utilisateur utilisateur = LiveDataTestUtil.getValue(this.database.utilisateurDao().getUtilisateur(USER_ID));
-        assertTrue(utilisateur.getNom().equals(USER_DEMO.getNom()) && utilisateur.getPrenom().equals(USER_DEMO.getPrenom()));
+        assertTrue(utilisateur.getId() == USER_ID && utilisateur.getNom().equals(USER_DEMO.getNom()) && utilisateur.getPrenom().equals(USER_DEMO.getPrenom()));
+    }
+
+    @Test
+    public void insertAndUpdateUtilisateur() throws InterruptedException {
+        // BEFORE : Adding a new user
+        this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
+        Utilisateur utilisateur = LiveDataTestUtil.getValue(this.database.utilisateurDao().getUtilisateur(USER_ID));
+        utilisateur.setPrenom("test");
+        this.database.utilisateurDao().updateUtilisateur(utilisateur);
+
+        // TEST
+        List<Utilisateur> utilisateurs = LiveDataTestUtil.getValue(this.database.utilisateurDao().getUtilisateurs());
+        assertTrue(utilisateurs.size() == 1 && utilisateurs.get(0).getPrenom().equals("test"));
+    }
+
+    @Test
+    public void insertAndDeleteUtilisateur() throws InterruptedException {
+        // BEFORE : Adding a new user
+        this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
+        Utilisateur utilisateur = LiveDataTestUtil.getValue(this.database.utilisateurDao().getUtilisateur(USER_ID));
+        this.database.utilisateurDao().deleteItem(utilisateur.getId());
+
+        // TEST
+        List<Utilisateur> utilisateurs = LiveDataTestUtil.getValue(this.database.utilisateurDao().getUtilisateurs());
+        assertTrue(utilisateurs.isEmpty());
     }
 }
