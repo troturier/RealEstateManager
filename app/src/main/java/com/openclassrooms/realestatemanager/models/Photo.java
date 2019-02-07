@@ -1,22 +1,22 @@
 package com.openclassrooms.realestatemanager.models;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.PrimaryKey;
+
+import androidx.room.*;
 
 @Entity(foreignKeys = @ForeignKey(
         entity = BienImmobilier.class,
-        parentColumns = "_id",
-        childColumns = "idBien"))
+        parentColumns = "id",
+        childColumns = "idBien"),
+        indices = {@Index(value = "idBien", name = "idBien_Photo")})
 public class Photo {
     @PrimaryKey(autoGenerate = true)
-    private int _id;
+    private int id;
     private String description;
     private String cheminAcces;
     private int idBien;
 
-    public Photo(int _id, String description, String cheminAcces, int idBien) {
-        this._id = _id;
+    public Photo(int id, String description, String cheminAcces, int idBien) {
+        this.id = id;
         this.description = description;
         this.cheminAcces = cheminAcces;
         this.idBien = idBien;
@@ -32,12 +32,12 @@ public class Photo {
         return idBien;
     }
 
-    public int get_id() {
-        return _id;
+    public int getId() {
+        return id;
     }
 
-    public void set_id(int _id) {
-        this._id = _id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDescription() {

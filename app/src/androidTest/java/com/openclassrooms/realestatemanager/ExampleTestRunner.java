@@ -1,9 +1,10 @@
 package com.openclassrooms.realestatemanager;
 
 import android.os.Bundle;
-import android.support.test.runner.AndroidJUnitRunner;
 
 import com.linkedin.android.testbutler.TestButler;
+
+import androidx.test.runner.AndroidJUnitRunner;
 
 public class ExampleTestRunner extends AndroidJUnitRunner {
 

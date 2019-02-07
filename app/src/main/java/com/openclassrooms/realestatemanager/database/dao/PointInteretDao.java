@@ -1,24 +1,29 @@
 package com.openclassrooms.realestatemanager.database.dao;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
-
 import com.openclassrooms.realestatemanager.models.PointInteret;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
+
+@Dao
 public interface PointInteretDao {
-    @Query("SELECT * FROM PointInteret WHERE _id = :_id")
-    LiveData<List<PointInteret>> getPointInterets(int _id);
+    @Query("SELECT * FROM PointInteret WHERE idBien = :idBien")
+    LiveData<List<PointInteret>> getPointInterets(int idBien);
+
+    @Query("SELECT * FROM PointInteret WHERE id = :id")
+    LiveData<PointInteret> getPointInteret(int id);
 
     @Insert
-    int insertPointInteret(PointInteret pointInteret);
+    long insertPointInteret(PointInteret pointInteret);
 
     @Update
     int updatePointInteret(PointInteret pointInteret);
 
-    @Query("DELETE FROM PointInteret WHERE _id = :pointInteretId")
+    @Query("DELETE FROM PointInteret WHERE id = :pointInteretId")
     int deleteItem(int pointInteretId);
 }

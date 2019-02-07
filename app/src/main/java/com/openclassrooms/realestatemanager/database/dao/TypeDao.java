@@ -1,24 +1,29 @@
 package com.openclassrooms.realestatemanager.database.dao;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
-
 import com.openclassrooms.realestatemanager.models.Type;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
+
+@Dao
 public interface TypeDao {
-    @Query("SELECT * FROM Type WHERE _id = :_id")
-    LiveData<List<Type>> getTypes(int _id);
+    @Query("SELECT * FROM Type")
+    LiveData<List<Type>> getTypes();
+
+    @Query("SELECT * FROM Type WHERE id = :id")
+    LiveData<Type> getType(int id);
 
     @Insert
-    int insertType(Type type);
+    long insertType(Type type);
 
     @Update
     int updateType(Type type);
 
-    @Query("DELETE FROM Type WHERE _id = :typeId")
+    @Query("DELETE FROM Type WHERE id = :typeId")
     int deleteItem(int typeId);
 }

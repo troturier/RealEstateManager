@@ -1,24 +1,26 @@
 package com.openclassrooms.realestatemanager.models;
 
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.ForeignKey;
-import android.arch.persistence.room.PrimaryKey;
+
+import androidx.room.*;
 
 @Entity(foreignKeys = {@ForeignKey(
         entity = Photo.class,
-        parentColumns = "_id",
+        parentColumns = "id",
         childColumns = "idPhotoCouverture"),
         @ForeignKey(
                 entity = Utilisateur.class,
-                parentColumns = "_id",
+                parentColumns = "id",
                 childColumns = "idAgent"),
         @ForeignKey(
                 entity = Type.class,
-                parentColumns = "_id",
-                childColumns = "idType")})
+                parentColumns = "id",
+                childColumns = "idType")},
+        indices = {@Index(value = "idPhotoCouverture", name = "idPhotoCouverture"),
+                @Index(value = "idAgent", name = "idAgent"),
+                @Index(value = "idType", name = "idType")})
 public class BienImmobilier {
     @PrimaryKey(autoGenerate = true)
-    private int _id;
+    private int id;
     private int surface;
     private int chambres;
     private int sdb;
@@ -33,12 +35,12 @@ public class BienImmobilier {
     private String dateVente;
     private int prix;
     private boolean statut;
-    private Integer idPhotoCouverture;
+    private int idPhotoCouverture;
     private int idAgent;
     private int idType;
 
-    public BienImmobilier(int _id, int surface, int chambres, int sdb, int pieces, String rue, String complementRue, String ville, String pays, String cp, String description, String dateEntree, String dateVente, int prix, boolean statut, int idPhotoCouverture, int idAgent, int idType) {
-        this._id = _id;
+    public BienImmobilier(int id, int surface, int chambres, int sdb, int pieces, String rue, String complementRue, String ville, String pays, String cp, String description, String dateEntree, String dateVente, int prix, boolean statut, int idPhotoCouverture, int idAgent, int idType) {
+        this.id = id;
         this.surface = surface;
         this.chambres = chambres;
         this.sdb = sdb;
@@ -60,12 +62,12 @@ public class BienImmobilier {
 
     // GETTERS - SETTERS //
 
-    public int get_id() {
-        return _id;
+    public int getId() {
+        return id;
     }
 
-    public void set_id(int _id) {
-        this._id = _id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getSurface() {

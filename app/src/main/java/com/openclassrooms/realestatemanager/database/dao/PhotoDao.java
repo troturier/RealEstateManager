@@ -1,24 +1,29 @@
 package com.openclassrooms.realestatemanager.database.dao;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
-
 import com.openclassrooms.realestatemanager.models.Photo;
 
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
+
+@Dao
 public interface PhotoDao {
-    @Query("SELECT * FROM Photo WHERE _id = :_id")
-    LiveData<List<Photo>> getPhotos(int _id);
+    @Query("SELECT * FROM Photo WHERE idBien = :idBien")
+    LiveData<List<Photo>> getPhotos(int idBien);
+
+    @Query("SELECT * FROM Photo WHERE id = :id")
+    LiveData<Photo> getPhoto(int id);
 
     @Insert
-    int insertPhoto(Photo photo);
+    long insertPhoto(Photo photo);
 
     @Update
     int updatePhoto(Photo photo);
 
-    @Query("DELETE FROM Photo WHERE _id = :photoId")
+    @Query("DELETE FROM Photo WHERE id = :photoId")
     int deleteItem(int photoId);
 }
