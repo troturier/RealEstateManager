@@ -1,12 +1,12 @@
 package com.openclassrooms.realestatemanager;
 
+import androidx.test.runner.AndroidJUnit4;
+
 import com.linkedin.android.testbutler.TestButler;
 
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import androidx.test.runner.AndroidJUnit4;
 
 import static com.openclassrooms.realestatemanager.utils.Utils.isInternetAvailable;
 import static org.junit.Assert.assertFalse;

@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.viewholders;
 
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -9,7 +10,6 @@ import com.openclassrooms.realestatemanager.models.BienImmobilier;
 
 import java.lang.ref.WeakReference;
 
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

@@ -1,12 +1,12 @@
 package com.openclassrooms.realestatemanager.models;
 
 
-import com.openclassrooms.realestatemanager.utils.Utils;
-
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
+
+import com.openclassrooms.realestatemanager.utils.Utils;
 
 @Entity(foreignKeys = {
         @ForeignKey(
