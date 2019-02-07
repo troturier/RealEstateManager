@@ -47,7 +47,7 @@ public class UtilisateurDaoTest {
 
     @Test
     public void insertAndGetUtilisateur() throws InterruptedException {
-        // BEFORE : Adding a new user
+        // BEFORE
         this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
 
         // TEST
@@ -57,7 +57,7 @@ public class UtilisateurDaoTest {
 
     @Test
     public void insertAndUpdateUtilisateur() throws InterruptedException {
-        // BEFORE : Adding a new user
+        // BEFORE
         this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
         Utilisateur utilisateur = LiveDataTestUtil.getValue(this.database.utilisateurDao().getUtilisateur(USER_ID));
         utilisateur.setPrenom("test");
@@ -70,7 +70,7 @@ public class UtilisateurDaoTest {
 
     @Test
     public void insertAndDeleteUtilisateur() throws InterruptedException {
-        // BEFORE : Adding a new user
+        // BEFORE
         this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
         Utilisateur utilisateur = LiveDataTestUtil.getValue(this.database.utilisateurDao().getUtilisateur(USER_ID));
         this.database.utilisateurDao().deleteItem(utilisateur.getId());
