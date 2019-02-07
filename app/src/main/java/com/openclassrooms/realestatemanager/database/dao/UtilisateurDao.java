@@ -25,5 +25,5 @@ public interface UtilisateurDao {
     int updateUtilisateur(Utilisateur utilisateur);
 
     @Query("DELETE FROM Utilisateur WHERE id = :utilisateurId")
-    int deleteItem(int utilisateurId);
+    int deleteUtilisateur(int utilisateurId);
 }

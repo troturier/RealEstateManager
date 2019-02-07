@@ -74,7 +74,7 @@ public class UtilisateurDaoTest {
         // BEFORE
         this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
         Utilisateur utilisateur = LiveDataTestUtil.getValue(this.database.utilisateurDao().getUtilisateur(USER_ID));
-        this.database.utilisateurDao().deleteItem(utilisateur.getId());
+        this.database.utilisateurDao().deleteUtilisateur(utilisateur.getId());
 
         // TEST
         List<Utilisateur> utilisateurs = LiveDataTestUtil.getValue(this.database.utilisateurDao().getUtilisateurs());

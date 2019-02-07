@@ -25,5 +25,5 @@ public interface PointInteretDao {
     int updatePointInteret(PointInteret pointInteret);
 
     @Query("DELETE FROM PointInteret WHERE id = :pointInteretId")
-    int deleteItem(int pointInteretId);
+    int deletePointInteret(int pointInteretId);
 }

@@ -25,5 +25,5 @@ public interface TypeDao {
     int updateType(Type type);
 
     @Query("DELETE FROM Type WHERE id = :typeId")
-    int deleteItem(int typeId);
+    int deleteType(int typeId);
 }

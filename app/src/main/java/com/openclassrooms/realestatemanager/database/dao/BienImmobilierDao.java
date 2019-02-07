@@ -23,5 +23,5 @@ public interface BienImmobilierDao {
     int updateBienImmobilier(BienImmobilier bienImmobilier);
 
     @Query("DELETE FROM BienImmobilier WHERE id = :bienImmobilierId")
-    int deleteItem(int bienImmobilierId);
+    int deleteBienImmobilier(int bienImmobilierId);
 }

@@ -1,10 +1,8 @@
 package com.openclassrooms.realestatemanager.testDao;
 
-
 import com.openclassrooms.realestatemanager.LiveDataTestUtil;
 import com.openclassrooms.realestatemanager.database.RealEstateManagerDatabase;
 import com.openclassrooms.realestatemanager.models.BienImmobilier;
-import com.openclassrooms.realestatemanager.models.PointInteret;
 import com.openclassrooms.realestatemanager.models.Type;
 import com.openclassrooms.realestatemanager.models.Utilisateur;
 
@@ -24,8 +22,7 @@ import androidx.test.runner.AndroidJUnit4;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(AndroidJUnit4.class)
-public class PointInteretDaoTest {
-
+public class BienImmobilierDaoTest {
     // FOR DATA
     private RealEstateManagerDatabase database;
 
@@ -51,7 +48,6 @@ public class PointInteretDaoTest {
             true,
             1,
             1);
-    private static PointInteret POI_DEMO = new PointInteret(ID, ID, "Ecole");
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -70,16 +66,15 @@ public class PointInteretDaoTest {
     }
 
     @Test
-    public void insertAndGetPointInteret() throws InterruptedException {
+    public void insertAndGetBienImmobilier() throws InterruptedException {
         // BEFORE
         this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
         this.database.typeDao().insertType(TYPE_DEMO);
         this.database.bienImmobilierDao().insertBienImmobilier(BIEN_DEMO);
-        this.database.pointInteretDao().insertPointInteret(POI_DEMO);
 
         // TEST
-        PointInteret pointInteret = LiveDataTestUtil.getValue(this.database.pointInteretDao().getPointInteret(ID));
-        assertTrue(pointInteret.getId() == ID && pointInteret.getLibelle().equals(POI_DEMO.getLibelle()));
+        BienImmobilier bienImmobilier = LiveDataTestUtil.getValue(this.database.bienImmobilierDao().getBienImmobilier(ID));
+        assertTrue(bienImmobilier.getId() == ID && bienImmobilier.getIdAgent() == ID);
     }
 
     @Test
@@ -88,14 +83,13 @@ public class PointInteretDaoTest {
         this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
         this.database.typeDao().insertType(TYPE_DEMO);
         this.database.bienImmobilierDao().insertBienImmobilier(BIEN_DEMO);
-        this.database.pointInteretDao().insertPointInteret(POI_DEMO);
-        PointInteret pointInteret = LiveDataTestUtil.getValue(this.database.pointInteretDao().getPointInteret(ID));
-        pointInteret.setLibelle("test");
-        this.database.pointInteretDao().updatePointInteret(pointInteret);
+        BienImmobilier bienImmobilier = LiveDataTestUtil.getValue(this.database.bienImmobilierDao().getBienImmobilier(ID));
+        bienImmobilier.setDescription("test");
+        this.database.bienImmobilierDao().updateBienImmobilier(bienImmobilier);
 
         // TEST
-        List<PointInteret> pointInterets = LiveDataTestUtil.getValue(this.database.pointInteretDao().getPointInterets(ID));
-        assertTrue(pointInterets.size() == 1 && pointInterets.get(0).getLibelle().equals("test"));
+        List<BienImmobilier> bienImmobiliers = LiveDataTestUtil.getValue(this.database.bienImmobilierDao().getBienImmobiliers());
+        assertTrue(bienImmobiliers.size() == 1 && bienImmobiliers.get(0).getDescription().equals("test"));
     }
 
     @Test
@@ -104,12 +98,11 @@ public class PointInteretDaoTest {
         this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
         this.database.typeDao().insertType(TYPE_DEMO);
         this.database.bienImmobilierDao().insertBienImmobilier(BIEN_DEMO);
-        this.database.pointInteretDao().insertPointInteret(POI_DEMO);
-        PointInteret pointInteret = LiveDataTestUtil.getValue(this.database.pointInteretDao().getPointInteret(ID));
-        this.database.pointInteretDao().deletePointInteret(pointInteret.getId());
+        BienImmobilier bienImmobilier = LiveDataTestUtil.getValue(this.database.bienImmobilierDao().getBienImmobilier(ID));
+        this.database.bienImmobilierDao().deleteBienImmobilier(bienImmobilier.getId());
 
         // TEST
-        List<PointInteret> pointInterets = LiveDataTestUtil.getValue(this.database.pointInteretDao().getPointInterets(ID));
-        assertTrue(pointInterets.isEmpty());
+        List<BienImmobilier> bienImmobiliers = LiveDataTestUtil.getValue(this.database.bienImmobilierDao().getBienImmobiliers());
+        assertTrue(bienImmobiliers.isEmpty());
     }
 }

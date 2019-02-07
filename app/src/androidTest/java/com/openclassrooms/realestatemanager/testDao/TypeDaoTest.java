@@ -74,7 +74,7 @@ public class TypeDaoTest {
         // BEFORE
         this.database.typeDao().insertType(TYPE_DEMO);
         Type type = LiveDataTestUtil.getValue(this.database.typeDao().getType(TYPE_ID));
-        this.database.typeDao().deleteItem(type.getId());
+        this.database.typeDao().deleteType(type.getId());
 
         // TEST
         List<Type> types = LiveDataTestUtil.getValue(this.database.typeDao().getTypes());

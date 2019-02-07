@@ -25,5 +25,5 @@ public interface PhotoDao {
     int updatePhoto(Photo photo);
 
     @Query("DELETE FROM Photo WHERE id = :photoId")
-    int deleteItem(int photoId);
+    int deletePhoto(int photoId);
 }
