@@ -153,6 +153,66 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
 
                 db.insert("BienImmobilier", OnConflictStrategy.IGNORE, contentValues);
 
+
+                contentValues = new ContentValues();
+                contentValues.put("id", 4);
+                contentValues.put("surface", 129);
+                contentValues.put("chambres", 5);
+                contentValues.put("sdb", 1);
+                contentValues.put("pieces", 9);
+                contentValues.put("dateEntree", "15/01/2019");
+                contentValues.put("rue", "3, boulevard Aristide Briand");
+                contentValues.put("ville", "Lyon");
+                contentValues.put("pays", "France");
+                contentValues.put("cp", "71200");
+                contentValues.put("description", "Bel appartement en duplex de 129 m² offrant en 1er niveau cuisine entièrement équipée et aménagée vaste pièce de vie de 44 m² baignée de lumière avec cheminée et accès sur terrasse de 33 m² au sud. l'étage : 2 chambres une suite parentale avec salle d'eau privative et dressing salle de bain wc et rangements.Garage fermé et une cave viennent compléter ce bien.Quartier calme proche toutes commodités et écoles.");
+                contentValues.put("prix", 126000);
+                contentValues.put("statut", true);
+                contentValues.put("idAgent", 1);
+                contentValues.put("idType", 2);
+
+                db.insert("BienImmobilier", OnConflictStrategy.IGNORE, contentValues);
+
+
+                contentValues = new ContentValues();
+                contentValues.put("id", 5);
+                contentValues.put("surface", 129);
+                contentValues.put("chambres", 5);
+                contentValues.put("sdb", 1);
+                contentValues.put("pieces", 9);
+                contentValues.put("dateEntree", "15/01/2019");
+                contentValues.put("rue", "3, boulevard Aristide Briand");
+                contentValues.put("ville", "Toulouse");
+                contentValues.put("pays", "France");
+                contentValues.put("cp", "71200");
+                contentValues.put("description", "Bel appartement en duplex de 129 m² offrant en 1er niveau cuisine entièrement équipée et aménagée vaste pièce de vie de 44 m² baignée de lumière avec cheminée et accès sur terrasse de 33 m² au sud. l'étage : 2 chambres une suite parentale avec salle d'eau privative et dressing salle de bain wc et rangements.Garage fermé et une cave viennent compléter ce bien.Quartier calme proche toutes commodités et écoles.");
+                contentValues.put("prix", 143000);
+                contentValues.put("statut", true);
+                contentValues.put("idAgent", 1);
+                contentValues.put("idType", 3);
+
+                db.insert("BienImmobilier", OnConflictStrategy.IGNORE, contentValues);
+
+
+                contentValues = new ContentValues();
+                contentValues.put("id", 6);
+                contentValues.put("surface", 129);
+                contentValues.put("chambres", 5);
+                contentValues.put("sdb", 1);
+                contentValues.put("pieces", 9);
+                contentValues.put("dateEntree", "15/01/2019");
+                contentValues.put("rue", "3, boulevard Aristide Briand");
+                contentValues.put("ville", "Paris");
+                contentValues.put("pays", "France");
+                contentValues.put("cp", "71200");
+                contentValues.put("description", "Bel appartement en duplex de 129 m² offrant en 1er niveau cuisine entièrement équipée et aménagée vaste pièce de vie de 44 m² baignée de lumière avec cheminée et accès sur terrasse de 33 m² au sud. l'étage : 2 chambres une suite parentale avec salle d'eau privative et dressing salle de bain wc et rangements.Garage fermé et une cave viennent compléter ce bien.Quartier calme proche toutes commodités et écoles.");
+                contentValues.put("prix", 272000);
+                contentValues.put("statut", true);
+                contentValues.put("idAgent", 1);
+                contentValues.put("idType", 1);
+
+                db.insert("BienImmobilier", OnConflictStrategy.IGNORE, contentValues);
+
                 // --- POINTS INTERET ---
 
                 contentValues = new ContentValues();

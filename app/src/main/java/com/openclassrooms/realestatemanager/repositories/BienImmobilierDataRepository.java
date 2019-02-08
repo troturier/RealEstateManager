@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.repositories;
 
 import com.openclassrooms.realestatemanager.database.dao.BienImmobilierDao;
 import com.openclassrooms.realestatemanager.models.BienImmobilier;
+import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 
 import java.util.List;
 
@@ -17,6 +18,8 @@ public class BienImmobilierDataRepository {
     public LiveData<BienImmobilier> getBienImmobilier(int bienId) { return this.bienImmobilierDao.getBienImmobilier(bienId); }
 
     public LiveData<List<BienImmobilier>> getBienImmobiliers() { return this.bienImmobilierDao.getBienImmobiliers(); }
+
+    public LiveData<List<BienImmobilierComplete>> getBienImmobiliersComplete() { return this.bienImmobilierDao.getBienImmobiliersComplete(); }
 
     // --- CREATE ---
 

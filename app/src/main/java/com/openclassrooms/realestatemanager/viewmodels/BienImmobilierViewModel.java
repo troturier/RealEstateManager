@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.viewmodels;
 
 import com.openclassrooms.realestatemanager.models.BienImmobilier;
+import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.PointInteret;
 import com.openclassrooms.realestatemanager.models.Type;
@@ -62,6 +63,10 @@ public class BienImmobilierViewModel extends ViewModel {
 
     public LiveData<List<BienImmobilier>> getBienImmobiliers(){
         return bienImmobilierDataSource.getBienImmobiliers();
+    }
+
+    public LiveData<List<BienImmobilierComplete>> ggetBienImmobiliersComplete(){
+        return bienImmobilierDataSource.getBienImmobiliersComplete();
     }
 
     public LiveData<BienImmobilier> getBienImmobilier(int bienImmobilierId){

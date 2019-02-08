@@ -1,17 +1,18 @@
 package com.openclassrooms.realestatemanager.adapters;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.models.BienImmobilier;
+import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.viewholders.RealEstateViewHolder;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder> {
     // CALLBACK
@@ -19,7 +20,7 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
     private final Listener callback;
 
     // FOR DATA
-    private List<BienImmobilier> items;
+    private List<BienImmobilierComplete> items;
 
     // CONSTRUCTOR
     public RealEstateAdapter(Listener callback) {
@@ -46,11 +47,11 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
         return this.items.size();
     }
 
-    public BienImmobilier getItem(int position){
+    public BienImmobilierComplete getItem(int position){
         return this.items.get(position);
     }
 
-    public void updateData(List<BienImmobilier> items){
+    public void updateData(List<BienImmobilierComplete> items){
         this.items = items;
         this.notifyDataSetChanged();
     }
