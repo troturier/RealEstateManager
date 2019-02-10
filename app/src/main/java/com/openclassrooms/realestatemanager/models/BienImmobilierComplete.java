@@ -22,6 +22,9 @@ public class BienImmobilierComplete {
     @Relation(parentColumn = "id", entityColumn = "idBien", entity = Photo.class)
     private List<Photo> photos;
 
+    @Relation(parentColumn = "idPhotoCouverture", entityColumn = "id", entity = Photo.class)
+    private List<Photo> photoCouverture;
+
     public BienImmobilierComplete(BienImmobilier bienImmobilier) {
         this.bienImmobilier = bienImmobilier;
     }
@@ -64,5 +67,13 @@ public class BienImmobilierComplete {
 
     public void setPhotos(List<Photo> photos) {
         this.photos = photos;
+    }
+
+    public List<Photo> getPhotoCouverture() {
+        return photoCouverture;
+    }
+
+    public void setPhotoCouverture(List<Photo> photoCouverture) {
+        this.photoCouverture = photoCouverture;
     }
 }

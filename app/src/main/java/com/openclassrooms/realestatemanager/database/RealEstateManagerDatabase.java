@@ -213,6 +213,91 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
 
                 db.insert("BienImmobilier", OnConflictStrategy.IGNORE, contentValues);
 
+                // --- PHOTOS ---
+
+                contentValues = new ContentValues();
+                contentValues.put("id", 1);
+                contentValues.put("cheminAcces", "flat.jpg");
+                contentValues.put("idBien", 1);
+                contentValues.put("description", "Façade");
+                db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
+
+                contentValues = new ContentValues();
+                contentValues.put("idPhotoCouverture", 1);
+                String where = "id=?";
+                String[] whereArgs = new String[] {String.valueOf(1)};
+                db.update("BienImmobilier", OnConflictStrategy.IGNORE,contentValues, where, whereArgs);
+
+                // --------------------------------
+
+                contentValues = new ContentValues();
+                contentValues.put("id", 2);
+                contentValues.put("cheminAcces", "house.jpg");
+                contentValues.put("idBien", 2);
+                contentValues.put("description", "Façade");
+                db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
+
+                contentValues = new ContentValues();
+                contentValues.put("idPhotoCouverture", 2);
+                whereArgs = new String[] {String.valueOf(2)};
+                db.update("BienImmobilier", OnConflictStrategy.IGNORE,contentValues, where, whereArgs);
+
+                // --------------------------------
+
+                contentValues = new ContentValues();
+                contentValues.put("id", 3);
+                contentValues.put("cheminAcces", "duplex.jpg");
+                contentValues.put("idBien", 3);
+                contentValues.put("description", "Façade");
+                db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
+
+                contentValues = new ContentValues();
+                contentValues.put("idPhotoCouverture", 3);
+                whereArgs = new String[] {String.valueOf(3)};
+                db.update("BienImmobilier", OnConflictStrategy.IGNORE,contentValues, where, whereArgs);
+
+                // --------------------------------
+
+                contentValues = new ContentValues();
+                contentValues.put("id", 4);
+                contentValues.put("cheminAcces", "house2.jpg");
+                contentValues.put("idBien", 4);
+                contentValues.put("description", "Façade");
+                db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
+
+                contentValues = new ContentValues();
+                contentValues.put("idPhotoCouverture", 4);
+                whereArgs = new String[] {String.valueOf(4)};
+                db.update("BienImmobilier", OnConflictStrategy.IGNORE,contentValues, where, whereArgs);
+
+                // --------------------------------
+
+                contentValues = new ContentValues();
+                contentValues.put("id", 5);
+                contentValues.put("cheminAcces", "duplex2.jpg");
+                contentValues.put("idBien", 5);
+                contentValues.put("description", "Façade");
+                db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
+
+                contentValues = new ContentValues();
+                contentValues.put("idPhotoCouverture", 5);
+                whereArgs = new String[] {String.valueOf(5)};
+                db.update("BienImmobilier", OnConflictStrategy.IGNORE,contentValues, where, whereArgs);
+
+                // --------------------------------
+
+                contentValues = new ContentValues();
+                contentValues.put("id", 6);
+                contentValues.put("cheminAcces", "flat2.jpg");
+                contentValues.put("idBien", 6);
+                contentValues.put("description", "Façade");
+                db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
+
+                contentValues = new ContentValues();
+                contentValues.put("idPhotoCouverture", 6);
+                whereArgs = new String[] {String.valueOf(6)};
+                db.update("BienImmobilier", OnConflictStrategy.IGNORE,contentValues, where, whereArgs);
+
                 // --- POINTS INTERET ---
 
                 contentValues = new ContentValues();
