@@ -1,16 +1,26 @@
 package com.openclassrooms.realestatemanager.utils;
 
+import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.Build;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import androidx.core.app.ActivityCompat;
+
 /**
  * Created by Philippe on 21/02/2018.
  */
 
 public class Utils {
+
+    private static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 1;
 
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
@@ -55,5 +65,23 @@ public class Utils {
         catch (InterruptedException e) { e.printStackTrace(); }
 
         return false;
+    }
+
+    public static boolean checkPermissionForReadExtertalStorage(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int result = context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+            return result == PackageManager.PERMISSION_GRANTED;
+        }
+        return false;
+    }
+
+    public static void requestPermissionForReadExtertalStorage(Context context) throws Exception {
+        try {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    READ_STORAGE_PERMISSION_REQUEST_CODE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 }

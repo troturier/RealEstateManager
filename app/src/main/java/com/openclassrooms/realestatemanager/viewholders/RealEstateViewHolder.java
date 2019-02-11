@@ -40,6 +40,7 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder implements Vie
                     .load(new File(Environment.getExternalStorageDirectory() + "/DCIM/" + bienImmobilierComplete.getPhotoCouverture().get(0).getCheminAcces()))
                     .resize(400, 400)
                     .centerCrop()
+                    .error(R.mipmap.ic_iv_placeholder_no_image)
                     .into(reIV);
         }
         this.typeTV.setText(bienImmobilierComplete.getType().get(0).getLibelle());

@@ -8,6 +8,7 @@ import com.openclassrooms.realestatemanager.injection.Injection;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.BienImmobilier;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
+import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.viewmodels.BienImmobilierViewModel;
 
 import java.util.List;
@@ -36,13 +37,16 @@ public class MainActivity extends AppCompatActivity implements RealEstateAdapter
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        // 8 - Configure RecyclerView & ViewModel
-        this.configureRecyclerView();
-        this.configureViewModel();
-
-        // 9 - Get current user & items from Database
-        this.getCurrentUtilisateur(USER_ID);
-        this.getBienImmobiliers();
+        if(!Utils.checkPermissionForReadExtertalStorage(this)){
+            try {
+                Utils.requestPermissionForReadExtertalStorage(this);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            configure();
+        }
 
     }
 
@@ -114,5 +118,20 @@ public class MainActivity extends AppCompatActivity implements RealEstateAdapter
     @Override
     public void onClickDeleteButton(int position) {
         // ---- //
+    }
+
+    private void configure(){
+        // 8 - Configure RecyclerView & ViewModel
+        this.configureRecyclerView();
+        this.configureViewModel();
+
+        // 9 - Get current user & items from Database
+        this.getCurrentUtilisateur(USER_ID);
+        this.getBienImmobiliers();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+        configure();
     }
 }
