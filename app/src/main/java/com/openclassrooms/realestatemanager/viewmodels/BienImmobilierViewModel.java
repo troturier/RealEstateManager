@@ -65,7 +65,7 @@ public class BienImmobilierViewModel extends ViewModel {
         return bienImmobilierDataSource.getBienImmobiliers();
     }
 
-    public LiveData<List<BienImmobilierComplete>> ggetBienImmobiliersComplete(){
+    public LiveData<List<BienImmobilierComplete>> getBienImmobiliersComplete(){
         return bienImmobilierDataSource.getBienImmobiliersComplete();
     }
 

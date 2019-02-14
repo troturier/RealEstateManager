@@ -3,7 +3,7 @@ package com.openclassrooms.realestatemanager.controllers;
 import android.os.Bundle;
 
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.adapters.RealEstateAdapter;
+import com.openclassrooms.realestatemanager.controllers.fragments.RealEstateListFragment;
 import com.openclassrooms.realestatemanager.injection.Injection;
 import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.BienImmobilier;
@@ -15,27 +15,18 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements RealEstateAdapter.Listener {
-
-    // FOR DESIGN
-    @BindView(R.id.main_recycler_view) RecyclerView recyclerView;
+public class MainActivity extends AppCompatActivity {
 
     // 1 - FOR DATA
     private BienImmobilierViewModel bienImmobilierViewModel;
     private List<BienImmobilierComplete> bienImmobilierList;
-    private RealEstateAdapter adapter;
     private static int USER_ID = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
 
         if(!Utils.checkPermissionForReadExtertalStorage(this)){
             try {
@@ -47,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements RealEstateAdapter
         else {
             configure();
         }
-
     }
 
     // -------------------
@@ -70,21 +60,21 @@ public class MainActivity extends AppCompatActivity implements RealEstateAdapter
 
     // 3 - Get all BienImmobiliers
     private void getBienImmobiliers(){
-        this.bienImmobilierViewModel.ggetBienImmobiliersComplete().observe(this, this::updateBienImmobiliersList);
+        this.bienImmobilierViewModel.getBienImmobiliersComplete().observe(this, this::updateBienImmobiliersList);
     }
 
     // 3 - Create a new BienImmobilier
     /**private void createBienImmobilier(){
-        BienImmobilier bienImmobilier = new BienImmobilier(//FORM FIELDS DATA);
-        this.bienImmobilierViewModel.createBienImmobilier(bienImmobilier);
-    }*/
+     BienImmobilier bienImmobilier = new BienImmobilier(//FORM FIELDS DATA);
+     this.bienImmobilierViewModel.createBienImmobilier(bienImmobilier);
+     }*/
 
-    // 3 - Delete an bienImmobilier
+    // 3 - Delete a bienImmobilier
     private void deleteBienImmobilier(BienImmobilier bienImmobilier){
         this.bienImmobilierViewModel.deleteBienImmobilier(bienImmobilier);
     }
 
-    // 3 - Update an bienImmobilier
+    // 3 - Update a bienImmobilier
     private void updateBienImmobilier(BienImmobilier bienImmobilier){
         this.bienImmobilierViewModel.updateBienImmobilier(bienImmobilier);
     }
@@ -93,45 +83,22 @@ public class MainActivity extends AppCompatActivity implements RealEstateAdapter
     // UI
     // -------------------
 
-    // 4 - Configure RecyclerView
-    private void configureRecyclerView(){
-        this.adapter = new RealEstateAdapter(this);
-        this.recyclerView.setAdapter(this.adapter);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
-
     // 5 - Update header
     /**private void updateHeader(Utilisateur utilisateur){
-        this.profileText.setText(utilisateur.getPrenom());
-    }*/
+     this.profileText.setText(utilisateur.getPrenom());
+     }*/
 
     // 6 - Update the list of items
     private void updateBienImmobiliersList(List<BienImmobilierComplete> bienImmobilierList){
         this.bienImmobilierList = bienImmobilierList;
-        updateAdapter();
-    }
-
-    private void updateAdapter(){
-        this.adapter.updateData(bienImmobilierList);
-    }
-
-    @Override
-    public void onClickDeleteButton(int position) {
-        // ---- //
+        RealEstateListFragment realEstateListFragment = (RealEstateListFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentRealEstateList);
+        realEstateListFragment.updateAdapter(this.bienImmobilierList);
     }
 
     private void configure(){
         // 8 - Configure RecyclerView & ViewModel
-        this.configureRecyclerView();
         this.configureViewModel();
-
-        // 9 - Get current user & items from Database
-        this.getCurrentUtilisateur(USER_ID);
+        // 9 - Get BienImmobiliers from Database
         this.getBienImmobiliers();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
-        configure();
     }
 }
