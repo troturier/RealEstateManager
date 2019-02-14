@@ -1,11 +1,14 @@
 package com.openclassrooms.realestatemanager.models;
 
+import java.io.Serializable;
 import java.util.List;
 
 import androidx.room.Embedded;
 import androidx.room.Relation;
 
-public class BienImmobilierComplete {
+public class BienImmobilierComplete implements Serializable {
+
+    private static final long serialVersionUID = -1213949467658913456L;
 
     @Embedded
     private BienImmobilier bienImmobilier;

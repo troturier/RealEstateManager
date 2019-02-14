@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.controllers.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,7 +8,9 @@ import android.view.ViewGroup;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.adapters.RealEstateAdapter;
+import com.openclassrooms.realestatemanager.controllers.activities.DetailActivity;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
+import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
 
 import java.util.List;
 
@@ -37,10 +40,24 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
         adapter = new RealEstateAdapter(this);
         this.recyclerView.setAdapter(adapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        this.configureOnClickRecyclerView();
         return view;
     }
 
-    @Override
+    private void configureOnClickRecyclerView(){
+        ItemClickSupport.addTo(recyclerView, R.layout.main_recycler_view_item)
+                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        Intent i = new Intent(getActivity(), DetailActivity.class);
+                        i.putExtra("bienImmobilier", adapter.getItem(position));
+                        startActivity(i);
+                    }
+                });
+    }
+
+
+        @Override
     public void onClickDeleteButton(int position) {
         // ---- //
     }

@@ -1,10 +1,12 @@
 package com.openclassrooms.realestatemanager.models;
 
 
+import java.io.Serializable;
+
 import androidx.room.*;
 
 @Entity(indices = {@Index(value = "id")})
-public class Utilisateur {
+public class Utilisateur implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private String nom;

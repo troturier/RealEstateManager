@@ -3,6 +3,8 @@ package com.openclassrooms.realestatemanager.models;
 
 import com.openclassrooms.realestatemanager.utils.Utils;
 
+import java.io.Serializable;
+
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Index;
@@ -23,7 +25,7 @@ import androidx.room.PrimaryKey;
                 childColumns = "idType")},
         indices = {@Index(value = "idAgent", name = "idAgent"),
                 @Index(value = "idType", name = "idType")})
-public class BienImmobilier {
+public class BienImmobilier implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private int surface;

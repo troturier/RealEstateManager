@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.controllers;
+package com.openclassrooms.realestatemanager.controllers.activities;
 
 import android.os.Bundle;
 

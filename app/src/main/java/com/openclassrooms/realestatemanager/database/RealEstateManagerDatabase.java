@@ -107,7 +107,7 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
                 contentValues.put("ville", "Bordeaux");
                 contentValues.put("pays", "France");
                 contentValues.put("cp", "33800");
-                contentValues.put("description", "Petit appartement étudiant situé à proximité de la gare St Jean de Bordeaux.");
+                contentValues.put("description", "Bel appartement en duplex de 129 m² offrant en 1er niveau cuisine entièrement équipée et aménagée vaste pièce de vie de 44 m² baignée de lumière avec cheminée et accès sur terrasse de 33 m² au sud. l'étage : 2 chambres une suite parentale avec salle d'eau privative et dressing salle de bain wc et rangements.Garage fermé et une cave viennent compléter ce bien.Quartier calme proche toutes commodités et écoles.");
                 contentValues.put("prix", 160000);
                 contentValues.put("statut", true);
                 contentValues.put("idAgent", 1);
@@ -126,7 +126,7 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
                 contentValues.put("ville", "Marseille");
                 contentValues.put("pays", "France");
                 contentValues.put("cp", "13006");
-                contentValues.put("description", "Maison de ville.");
+                contentValues.put("description", "Bel appartement en duplex de 129 m² offrant en 1er niveau cuisine entièrement équipée et aménagée vaste pièce de vie de 44 m² baignée de lumière avec cheminée et accès sur terrasse de 33 m² au sud. l'étage : 2 chambres une suite parentale avec salle d'eau privative et dressing salle de bain wc et rangements.Garage fermé et une cave viennent compléter ce bien.Quartier calme proche toutes commodités et écoles.");
                 contentValues.put("prix", 280000);
                 contentValues.put("statut", true);
                 contentValues.put("idAgent", 2);

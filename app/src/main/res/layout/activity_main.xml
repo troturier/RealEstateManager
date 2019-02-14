@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.openclassrooms.realestatemanager.controllers.MainActivity">
+    tools:context="com.openclassrooms.realestatemanager.controllers.activities.MainActivity">
 
         <fragment
             android:id="@+id/fragmentRealEstateList"

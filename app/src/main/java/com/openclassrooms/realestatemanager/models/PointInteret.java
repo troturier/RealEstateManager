@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.models;
 
 
+import java.io.Serializable;
+
 import androidx.room.*;
 
 @Entity(foreignKeys = @ForeignKey(
@@ -8,7 +10,7 @@ import androidx.room.*;
         parentColumns = "id",
         childColumns = "idBien"),
         indices = {@Index(value = "idBien", name = "idBien_POI")})
-public class PointInteret {
+public class PointInteret implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private int idBien;
