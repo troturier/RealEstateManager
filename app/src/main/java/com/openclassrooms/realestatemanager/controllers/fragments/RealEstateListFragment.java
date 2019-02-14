@@ -9,12 +9,15 @@ import android.view.ViewGroup;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.adapters.RealEstateAdapter;
 import com.openclassrooms.realestatemanager.controllers.activities.DetailActivity;
+import com.openclassrooms.realestatemanager.controllers.activities.MainActivity;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
 
 import java.util.List;
+import java.util.Objects;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -49,9 +52,20 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
                 .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        Intent i = new Intent(getActivity(), DetailActivity.class);
-                        i.putExtra("bienImmobilier", adapter.getItem(position));
-                        startActivity(i);
+                        adapter.row_index = position;
+                        adapter.notifyDataSetChanged();
+                        boolean isTwoPane = ((MainActivity) Objects.requireNonNull(getActivity())).isTwoPane;
+                        if (isTwoPane){
+                            RealEstateDetailFragment realEstateDetailFragment = RealEstateDetailFragment.newInstance(adapter.getItem(position));
+                            FragmentTransaction ft = (((MainActivity) Objects.requireNonNull(getActivity())).getSupportFragmentManager().beginTransaction());
+                            ft.replace(R.id.flDetailContainer, realEstateDetailFragment);
+                            ft.commit();
+                        }
+                        else {
+                            Intent i = new Intent(getActivity(), DetailActivity.class);
+                            i.putExtra("bienImmobilier", adapter.getItem(position));
+                            startActivity(i);
+                        }
                     }
                 });
     }

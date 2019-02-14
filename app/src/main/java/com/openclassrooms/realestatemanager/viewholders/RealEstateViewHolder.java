@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.viewholders;
 import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.openclassrooms.realestatemanager.R;
@@ -23,15 +24,17 @@ import butterknife.ButterKnife;
 public class RealEstateViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
     @BindView(R.id.type_TV) TextView typeTV;
     @BindView(R.id.city_TV) TextView cityTV;
-    @BindView(R.id.price_TV) TextView priceTV;
+    @BindView(R.id.price_TV) public TextView priceTV;
     @BindView(R.id.imageView) ImageView reIV;
 
     // FOR DATA
     private WeakReference<RealEstateAdapter.Listener> callbackWeakRef;
+    public LinearLayout row_linearlayout;
 
     public RealEstateViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+        row_linearlayout=(LinearLayout)itemView.findViewById(R.id.row_linrLayout);
     }
 
     public void updateWithRealEstate(BienImmobilierComplete bienImmobilierComplete, RealEstateAdapter.Listener callback){

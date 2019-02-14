@@ -9,14 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.openclassrooms.realestatemanager.R;
-import com.openclassrooms.realestatemanager.controllers.activities.DetailActivity;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.models.PointInteret;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -54,7 +52,7 @@ public class RealEstateDetailFragment extends Fragment {
         ImageView ivMedia= view.findViewById(R.id.ivMedia);
         Picasso.get()
                 .load(new File(Environment.getExternalStorageDirectory() + "/DCIM/" + bienImmobilierComplete.getPhotoCouverture().get(0).getCheminAcces()))
-                .resize(400, 400)
+                .resize(250, 250)
                 .centerCrop()
                 .error(R.mipmap.ic_iv_placeholder_no_image)
                 .into(ivMedia);
@@ -89,12 +87,6 @@ public class RealEstateDetailFragment extends Fragment {
 
 
         tvLocation.setText(String.format("%s%s%s%s%s", rue, complement, ville, cp, pays));
-
-        // -------------------
-        // TITLE BAR
-        // -------------------
-        ((DetailActivity) Objects.requireNonNull(getActivity()))
-                .setActionBarTitle(bienImmobilierComplete.getType().get(0).getLibelle());
 
         // -------------------
         // POINTS OF INTEREST

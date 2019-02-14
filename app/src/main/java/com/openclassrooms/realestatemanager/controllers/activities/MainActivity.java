@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.controllers.activities;
 
 import android.os.Bundle;
+import android.widget.FrameLayout;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controllers.fragments.RealEstateListFragment;
@@ -23,11 +24,13 @@ public class MainActivity extends AppCompatActivity {
     private List<BienImmobilierComplete> bienImmobilierList;
     private static int USER_ID = 1;
 
+    public boolean isTwoPane = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        determinePaneLayout();
         if(!Utils.checkPermissionForReadExtertalStorage(this)){
             try {
                 Utils.requestPermissionForReadExtertalStorage(this);
@@ -100,5 +103,12 @@ public class MainActivity extends AppCompatActivity {
         this.configureViewModel();
         // 9 - Get BienImmobiliers from Database
         this.getBienImmobiliers();
+    }
+
+    private void determinePaneLayout() {
+        FrameLayout fragmentDetail = (FrameLayout) findViewById(R.id.flDetailContainer);
+        if(fragmentDetail != null){
+            isTwoPane = true;
+        }
     }
 }

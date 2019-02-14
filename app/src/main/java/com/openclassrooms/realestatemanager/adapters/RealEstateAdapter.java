@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +22,13 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
 
     // FOR DATA
     private List<BienImmobilierComplete> items;
+    public int row_index;
 
     // CONSTRUCTOR
     public RealEstateAdapter(Listener callback) {
         this.items = new ArrayList<>();
         this.callback = callback;
+        this.row_index = -1;
     }
 
     @Override
@@ -40,6 +43,15 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
     @Override
     public void onBindViewHolder(RealEstateViewHolder viewHolder, int position) {
         viewHolder.updateWithRealEstate(this.items.get(position), this.callback);
+        if(row_index==position){
+            viewHolder.row_linearlayout.setBackgroundColor(Color.parseColor("#FFFF4081"));
+            viewHolder.priceTV.setTextColor(Color.parseColor("#ffffff"));
+        }
+        else
+        {
+            viewHolder.row_linearlayout.setBackgroundColor(Color.parseColor("#ffffff"));
+            viewHolder.priceTV.setTextColor(Color.parseColor("#FFFF4081"));
+        }
     }
 
     @Override
