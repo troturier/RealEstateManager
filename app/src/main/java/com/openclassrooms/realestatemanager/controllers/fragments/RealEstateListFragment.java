@@ -52,10 +52,10 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
                 .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
                     @Override
                     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        adapter.row_index = position;
-                        adapter.notifyDataSetChanged();
                         boolean isTwoPane = ((MainActivity) Objects.requireNonNull(getActivity())).isTwoPane;
                         if (isTwoPane){
+                            adapter.row_index = position;
+                            adapter.notifyDataSetChanged();
                             RealEstateDetailFragment realEstateDetailFragment = RealEstateDetailFragment.newInstance(adapter.getItem(position));
                             FragmentTransaction ft = (((MainActivity) Objects.requireNonNull(getActivity())).getSupportFragmentManager().beginTransaction());
                             ft.replace(R.id.flDetailContainer, realEstateDetailFragment);

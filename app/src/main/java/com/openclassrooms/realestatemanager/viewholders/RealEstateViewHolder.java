@@ -41,8 +41,8 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder implements Vie
         if(bienImmobilierComplete.getPhotoCouverture().size() > 0) {
             Picasso.get()
                     .load(new File(Environment.getExternalStorageDirectory() + "/DCIM/" + bienImmobilierComplete.getPhotoCouverture().get(0).getCheminAcces()))
-                    .resize(400, 400)
                     .centerCrop()
+                    .fit()
                     .error(R.mipmap.ic_iv_placeholder_no_image)
                     .into(reIV);
         }

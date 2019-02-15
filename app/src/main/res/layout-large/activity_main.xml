@@ -13,7 +13,7 @@
         android:name="com.openclassrooms.realestatemanager.controllers.fragments.RealEstateListFragment"
         android:layout_height="wrap_content"
         android:layout_width="0dp"
-        android:layout_weight="40"
+        android:layout_weight="30"
         tools:layout="@layout/fragment_real_estate_list" />
 
     <View android:background="@android:color/darker_gray"
@@ -25,6 +25,6 @@
         android:id="@+id/flDetailContainer"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="60" />
+        android:layout_weight="70" />
 
 </LinearLayout>

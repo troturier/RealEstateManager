@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.controllers.fragments;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,17 +8,25 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.adapters.PhotoAdapter;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
+import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.PointInteret;
-import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class RealEstateDetailFragment extends Fragment {
+public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.Listener{
+
+    // FOR DESIGN
+    @BindView(R.id.detail_recycler_view) RecyclerView recyclerView;
+    private PhotoAdapter adapter;
 
     private BienImmobilierComplete bienImmobilierComplete;
 
@@ -36,6 +43,13 @@ public class RealEstateDetailFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_real_estate_detail, container, false);
 
+        ButterKnife.bind(this, view);
+        adapter = new PhotoAdapter(this);
+        this.recyclerView.setAdapter(adapter);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        List<Photo> photos = bienImmobilierComplete.getPhotos();
+        this.adapter.updateData(photos);
+
         // -------------------
         // DESCRIPTION
         // -------------------
@@ -45,17 +59,6 @@ public class RealEstateDetailFragment extends Fragment {
         else {
             tvDescription.setText(getString(R.string.no_description));
         }
-
-        // -------------------
-        // PICTURES (TEMPORARY)
-        // -------------------
-        ImageView ivMedia= view.findViewById(R.id.ivMedia);
-        Picasso.get()
-                .load(new File(Environment.getExternalStorageDirectory() + "/DCIM/" + bienImmobilierComplete.getPhotoCouverture().get(0).getCheminAcces()))
-                .resize(250, 250)
-                .centerCrop()
-                .error(R.mipmap.ic_iv_placeholder_no_image)
-                .into(ivMedia);
 
         TextView tvSurface = view.findViewById(R.id.tvSurface);
         tvSurface.setText(String.format("%s sq m", String.valueOf(bienImmobilierComplete.getBienImmobilier().getSurface())));
@@ -108,7 +111,7 @@ public class RealEstateDetailFragment extends Fragment {
             tvPoI.setVisibility(View.GONE);
             tvPoItitle.setVisibility(View.GONE);
             ivPoI.setVisibility(View.GONE);
-            divider.setVisibility(View.GONE);
+            if(divider != null) divider.setVisibility(View.GONE);
         }
 
         return view;
@@ -120,5 +123,10 @@ public class RealEstateDetailFragment extends Fragment {
         args.putSerializable("bienImmobilier", bienImmobilierComplete);
         realEstateDetailFragment.setArguments(args);
         return realEstateDetailFragment;
+    }
+
+    @Override
+    public void onClickDeleteButton(int position) {
+        // ---- //
     }
 }
