@@ -5,6 +5,7 @@ import android.content.ContentValues;
 
 import java.io.Serializable;
 
+import androidx.annotation.NonNull;
 import androidx.room.*;
 
 @Entity(indices = {@Index(value = "id")})
@@ -53,5 +54,10 @@ public class Utilisateur implements Serializable {
         if (values.containsKey("nom")) utilisateur.setNom(values.getAsString("nom"));
         if (values.containsKey("prenom")) utilisateur.setPrenom(values.getAsString("prenom"));
         return utilisateur;
+    }
+
+    @NonNull
+    public String toString(){
+        return (id + " - " + nom + " " + prenom);
     }
 }

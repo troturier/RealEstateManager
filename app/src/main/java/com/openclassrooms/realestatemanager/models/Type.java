@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.models;
 
 import java.io.Serializable;
 
+import androidx.annotation.NonNull;
 import androidx.room.*;
 
 @Entity(indices = {@Index(value = "id")})
@@ -32,5 +33,12 @@ public class Type implements Serializable {
 
     public void setLibelle(String libelle) {
         this.libelle = libelle;
+    }
+
+    // UTILS
+
+    @NonNull
+    public String toString(){
+       return (id + " - " + libelle);
     }
 }

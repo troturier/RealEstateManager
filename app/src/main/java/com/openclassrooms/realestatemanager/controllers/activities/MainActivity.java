@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.controllers.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -61,40 +62,10 @@ public class MainActivity extends AppCompatActivity {
         this.bienImmobilierViewModel.init(USER_ID);
     }
 
-    // --Commented out by Inspection START (17/02/2019 18:47):
-    //    // 3 - Get Current Utilisateur
-    //    private void getCurrentUtilisateur(int utilisateurId){
-    //        this.bienImmobilierViewModel.getUtilisateur(utilisateurId);
-    //        // this.bienImmobilierViewModel.getUtilisateur(utilisateurId).observe(this, this::updateHeader);
-    //    }
-    // --Commented out by Inspection STOP (17/02/2019 18:47)
-
     // 3 - Get all BienImmobiliers
     private void getBienImmobiliers(){
         this.bienImmobilierViewModel.getBienImmobiliersComplete().observe(this, this::updateBienImmobiliersList);
     }
-
-    // 3 - Create a new BienImmobilier
-    // --Commented out by Inspection START (17/02/2019 18:47):
-    //    /**private void createBienImmobilier(){
-    //     BienImmobilier bienImmobilier = new BienImmobilier(//FORM FIELDS DATA);
-    //     this.bienImmobilierViewModel.createBienImmobilier(bienImmobilier);
-    // --Commented out by Inspection START (17/02/2019 18:47):
-    ////     }*/
-    ////
-    ////    // 3 - Delete a bienImmobilier
-    ////    private void deleteBienImmobilier(BienImmobilier bienImmobilier){
-    ////        this.bienImmobilierViewModel.deleteBienImmobilier(bienImmobilier);
-    // --Commented out by Inspection STOP (17/02/2019 18:47)
-    //    }
-    // --Commented out by Inspection STOP (17/02/2019 18:47)
-
-    // --Commented out by Inspection START (17/02/2019 18:47):
-    //    // 3 - Update a bienImmobilier
-    //    private void updateBienImmobilier(BienImmobilier bienImmobilier){
-    //        this.bienImmobilierViewModel.updateBienImmobilier(bienImmobilier);
-    //    }
-    // --Commented out by Inspection STOP (17/02/2019 18:47)
 
     // -------------------
     // UI
@@ -136,11 +107,12 @@ public class MainActivity extends AppCompatActivity {
                 RealEstateDetailFragment realEstateDetailFragment;
                 if (getSupportFragmentManager().findFragmentById(R.id.flDetailContainer) != null) {
                     realEstateDetailFragment = (RealEstateDetailFragment) getSupportFragmentManager().findFragmentById(R.id.flDetailContainer);
-                    Toast.makeText(this, "Edit button selected for " + realEstateDetailFragment.bienImmobilierComplete.getType().get(0).getLibelle(), Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, EditActivity.class);
+                    intent.putExtra("bienImmobilier", realEstateDetailFragment.bienImmobilierComplete);
+                    startActivityForResult(intent, 1);
                 } else {
                     Toast.makeText(this, "Please select an item first", Toast.LENGTH_SHORT).show();
                 }
-
                 return true;
 
             case R.id.action_search:
@@ -160,6 +132,17 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == 1) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                getBienImmobiliers();
+            }
+        }
     }
 
     @Override

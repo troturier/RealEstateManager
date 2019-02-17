@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.controllers.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,7 +40,9 @@ public class DetailActivity extends AppCompatActivity {
 
             case R.id.action_edit:
                 RealEstateDetailFragment realEstateDetailFragment = (RealEstateDetailFragment) getSupportFragmentManager().findFragmentById(R.id.flDetailContainer);
-                Toast.makeText(this, "Edit button selected for " + realEstateDetailFragment.bienImmobilierComplete.getType().get(0).getLibelle(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, EditActivity.class);
+                intent.putExtra("bienImmobilier", realEstateDetailFragment.bienImmobilierComplete);
+                startActivity(intent);
                 return true;
 
             case R.id.action_search:
