@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 3 - Get all BienImmobiliers
-    private void getBienImmobiliers(){
+    public void getBienImmobiliers(){
         this.bienImmobilierViewModel.getBienImmobiliersComplete().observe(this, this::updateBienImmobiliersList);
     }
 
@@ -136,9 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Check which request we're responding to
         if (requestCode == 1) {
-            // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 getBienImmobiliers();
             }

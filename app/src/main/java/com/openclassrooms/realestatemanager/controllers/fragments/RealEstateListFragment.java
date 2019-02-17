@@ -23,6 +23,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_OK;
+
 public class RealEstateListFragment extends Fragment implements RealEstateAdapter.Listener {
 
     // FOR DESIGN
@@ -64,10 +66,21 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
                         else {
                             Intent i = new Intent(getActivity(), DetailActivity.class);
                             i.putExtra("bienImmobilier", adapter.getItem(position));
-                            startActivity(i);
+                            startActivityForResult(i, 1);
                         }
                     }
                 });
+    }
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                ((MainActivity) Objects.requireNonNull(getActivity())).getBienImmobiliers();
+            }
+        }
     }
 
 

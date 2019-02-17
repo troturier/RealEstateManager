@@ -42,7 +42,7 @@ public class DetailActivity extends AppCompatActivity {
                 RealEstateDetailFragment realEstateDetailFragment = (RealEstateDetailFragment) getSupportFragmentManager().findFragmentById(R.id.flDetailContainer);
                 Intent intent = new Intent(this, EditActivity.class);
                 intent.putExtra("bienImmobilier", realEstateDetailFragment.bienImmobilierComplete);
-                startActivity(intent);
+                startActivityForResult(intent, 1);
                 return true;
 
             case R.id.action_search:
@@ -54,6 +54,18 @@ public class DetailActivity extends AppCompatActivity {
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                Intent intent = new Intent();
+                setResult(RESULT_OK);
+                finish();
+                Toast.makeText(this, "Update successfully executed", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
