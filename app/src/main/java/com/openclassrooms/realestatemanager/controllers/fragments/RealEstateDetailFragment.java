@@ -26,7 +26,8 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
 
     // FOR DESIGN
     @BindView(R.id.detail_recycler_view) RecyclerView recyclerView;
-    private PhotoAdapter adapter;
+
+    private View view;
 
     private BienImmobilierComplete bienImmobilierComplete;
 
@@ -41,59 +42,29 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_real_estate_detail, container, false);
+        view = inflater.inflate(R.layout.fragment_real_estate_detail, container, false);
+        configureRecyclerView();
 
-        ButterKnife.bind(this, view);
-        adapter = new PhotoAdapter(this);
-        this.recyclerView.setAdapter(adapter);
-        this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        List<Photo> photos = bienImmobilierComplete.getPhotos();
-        this.adapter.updateData(photos);
-
-        // -------------------
         // DESCRIPTION
-        // -------------------
-        TextView tvDescription = view.findViewById(R.id.tvDescription);
-        if(bienImmobilierComplete.getBienImmobilier().getDescription() != null)
-        tvDescription.setText(bienImmobilierComplete.getBienImmobilier().getDescription());
-        else {
-            tvDescription.setText(getString(R.string.no_description));
-        }
+        configureDescription();
 
-        TextView tvSurface = view.findViewById(R.id.tvSurface);
-        tvSurface.setText(String.format("%s sq m", String.valueOf(bienImmobilierComplete.getBienImmobilier().getSurface())));
-
-        // -------------------
         // ROOMS
-        // -------------------
-        TextView tvRooms = view.findViewById(R.id.tvRooms);
-        tvRooms.setText(String.valueOf(bienImmobilierComplete.getBienImmobilier().getPieces()));
+        configureRooms();
 
-        TextView tvBathrooms = view.findViewById(R.id.tvBathrooms);
-        tvBathrooms.setText(String.valueOf(bienImmobilierComplete.getBienImmobilier().getSdb()));
-
-        TextView tvBedrooms = view.findViewById(R.id.tvBedrooms);
-        tvBedrooms.setText(String.valueOf(bienImmobilierComplete.getBienImmobilier().getChambres()));
-
-        // -------------------
         // LOCATION
-        // -------------------
-        TextView tvLocation = view.findViewById(R.id.tvLocation);
-        String rue = bienImmobilierComplete.getBienImmobilier().getRue() + "\n";
-        String complement = "";
-        if(bienImmobilierComplete.getBienImmobilier().getComplementRue() != null) {
-            complement = bienImmobilierComplete.getBienImmobilier().getComplementRue() + "\n";
-        }
-        String cp = bienImmobilierComplete.getBienImmobilier().getCp() + "\n";
-        String ville = bienImmobilierComplete.getBienImmobilier().getVille() + "\n";
-        String pays = bienImmobilierComplete.getBienImmobilier().getPays();
+        configureLocation();
 
-
-        tvLocation.setText(String.format("%s%s%s%s%s", rue, complement, ville, cp, pays));
-
-        // -------------------
         // POINTS OF INTEREST
-        // -------------------
+        configurePOI();
+
+        return view;
+    }
+
+    // -------------------
+    // UI UPDATE
+    // -------------------
+
+    private void configurePOI(){
         View divider = view.findViewById(R.id.divider4);
         TextView tvPoI = view.findViewById(R.id.tvPoI);
         TextView tvPoItitle = view.findViewById(R.id.tvPoItitle);
@@ -113,8 +84,58 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
             ivPoI.setVisibility(View.GONE);
             if(divider != null) divider.setVisibility(View.GONE);
         }
+    }
 
-        return view;
+    private void configureLocation(){
+        TextView tvLocation = view.findViewById(R.id.tvLocation);
+        String rue = bienImmobilierComplete.getBienImmobilier().getRue() + "\n";
+        String complement = "";
+        if(bienImmobilierComplete.getBienImmobilier().getComplementRue() != null) {
+            complement = bienImmobilierComplete.getBienImmobilier().getComplementRue() + "\n";
+        }
+        String cp = bienImmobilierComplete.getBienImmobilier().getCp() + "\n";
+        String ville = bienImmobilierComplete.getBienImmobilier().getVille() + "\n";
+        String pays = bienImmobilierComplete.getBienImmobilier().getPays();
+
+
+        tvLocation.setText(String.format("%s%s%s%s%s", rue, complement, ville, cp, pays));
+    }
+
+    private void configureDescription(){
+        TextView tvDescription = view.findViewById(R.id.tvDescription);
+        if(bienImmobilierComplete.getBienImmobilier().getDescription() != null)
+            tvDescription.setText(bienImmobilierComplete.getBienImmobilier().getDescription());
+        else {
+            tvDescription.setText(getString(R.string.no_description));
+        }
+
+        TextView tvSurface = view.findViewById(R.id.tvSurface);
+        tvSurface.setText(String.format("%s sq m", String.valueOf(bienImmobilierComplete.getBienImmobilier().getSurface())));
+
+    }
+
+    private void configureRooms(){
+        TextView tvRooms = view.findViewById(R.id.tvRooms);
+        tvRooms.setText(String.valueOf(bienImmobilierComplete.getBienImmobilier().getPieces()));
+
+        TextView tvBathrooms = view.findViewById(R.id.tvBathrooms);
+        tvBathrooms.setText(String.valueOf(bienImmobilierComplete.getBienImmobilier().getSdb()));
+
+        TextView tvBedrooms = view.findViewById(R.id.tvBedrooms);
+        tvBedrooms.setText(String.valueOf(bienImmobilierComplete.getBienImmobilier().getChambres()));
+    }
+
+    // -------------------
+    // UI SETUP
+    // -------------------
+
+    private void configureRecyclerView(){
+        ButterKnife.bind(this, view);
+        PhotoAdapter adapter = new PhotoAdapter(this);
+        this.recyclerView.setAdapter(adapter);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        List<Photo> photos = bienImmobilierComplete.getPhotos();
+        adapter.updateData(photos);
     }
 
     public static RealEstateDetailFragment newInstance(BienImmobilierComplete bienImmobilierComplete){
