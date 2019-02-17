@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.controllers.fragments.RealEstateDetailFragment;
 import com.openclassrooms.realestatemanager.controllers.fragments.RealEstateListFragment;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.repositories.injections.Injection;
@@ -132,7 +133,14 @@ public class MainActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_edit:
-                Toast.makeText(this, "Edit button selected", Toast.LENGTH_SHORT).show();
+                RealEstateDetailFragment realEstateDetailFragment;
+                if (getSupportFragmentManager().findFragmentById(R.id.flDetailContainer) != null) {
+                    realEstateDetailFragment = (RealEstateDetailFragment) getSupportFragmentManager().findFragmentById(R.id.flDetailContainer);
+                    Toast.makeText(this, "Edit button selected for " + realEstateDetailFragment.bienImmobilierComplete.getType().get(0).getLibelle(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Please select an item first", Toast.LENGTH_SHORT).show();
+                }
+
                 return true;
 
             case R.id.action_search:

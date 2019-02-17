@@ -29,7 +29,7 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
 
     private View view;
 
-    private BienImmobilierComplete bienImmobilierComplete;
+    public BienImmobilierComplete bienImmobilierComplete;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
