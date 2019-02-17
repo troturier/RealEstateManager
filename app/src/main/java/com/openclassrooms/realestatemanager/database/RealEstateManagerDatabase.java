@@ -126,7 +126,7 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
                 contentValues.put("ville", "Marseille");
                 contentValues.put("pays", "France");
                 contentValues.put("cp", "13006");
-                contentValues.put("description", " Une villa de type 4 de 83.89 m² avec jardin et garage située dans un lotissement. Cette villa sur deux niveaux est composée au rez-de-chaussée d'un WC, d'un salon/séjour avec cuisine ouverte sur un bel extérieur avec un accès garage (aujourd'hui aménagé en studio indépendant). L'étage se compose de trois chambres avec rangements, d'un WC et d'une salle d'eau. Chauffage individuel électrique et climatisation réversible, double vitrage. Charges annuelles de 930 e.");
+                contentValues.put("description", "Une villa de type 4 de 83.89 m² avec jardin et garage située dans un lotissement. Cette villa sur deux niveaux est composée au rez-de-chaussée d'un WC, d'un salon/séjour avec cuisine ouverte sur un bel extérieur avec un accès garage (aujourd'hui aménagé en studio indépendant). L'étage se compose de trois chambres avec rangements, d'un WC et d'une salle d'eau. Chauffage individuel électrique et climatisation réversible, double vitrage. Charges annuelles de 930 e.");
                 contentValues.put("prix", 280000);
                 contentValues.put("statut", true);
                 contentValues.put("idAgent", 2);

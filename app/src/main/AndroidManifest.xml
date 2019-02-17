@@ -18,7 +18,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".controllers.activities.DetailActivity"></activity>
+
+        <provider
+            android:name=".providers.UtilisateurContentProvider"
+            android:authorities="com.openclassrooms.realestatemanager.providers"
+            android:exported="true"/>
+
+        <activity android:name=".controllers.activities.DetailActivity"/>
+
         <activity android:name=".controllers.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

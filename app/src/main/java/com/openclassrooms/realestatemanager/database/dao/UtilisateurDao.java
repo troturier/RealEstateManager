@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager.database.dao;
 
+import android.database.Cursor;
+
 import com.openclassrooms.realestatemanager.models.Utilisateur;
 
 import java.util.List;
@@ -26,4 +28,7 @@ public interface UtilisateurDao {
 
     @Query("DELETE FROM Utilisateur WHERE id = :utilisateurId")
     int deleteUtilisateur(int utilisateurId);
+
+    @Query("SELECT * FROM Utilisateur")
+    Cursor getUtilisateursWithCursor();
 }

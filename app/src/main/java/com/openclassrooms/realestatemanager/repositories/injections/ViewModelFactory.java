@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.injections;
+package com.openclassrooms.realestatemanager.repositories.injections;
 
 import com.openclassrooms.realestatemanager.repositories.BienImmobilierDataRepository;
 import com.openclassrooms.realestatemanager.repositories.PhotoDataRepository;

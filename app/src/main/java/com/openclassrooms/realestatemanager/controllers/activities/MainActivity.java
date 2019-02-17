@@ -5,8 +5,8 @@ import android.widget.FrameLayout;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controllers.fragments.RealEstateListFragment;
-import com.openclassrooms.realestatemanager.injection.Injection;
-import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.repositories.injections.Injection;
+import com.openclassrooms.realestatemanager.repositories.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.models.BienImmobilier;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.utils.Utils;

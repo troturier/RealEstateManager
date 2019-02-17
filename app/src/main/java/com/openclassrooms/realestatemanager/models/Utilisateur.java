@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.models;
 
 
+import android.content.ContentValues;
+
 import java.io.Serializable;
 
 import androidx.room.*;
@@ -17,6 +19,8 @@ public class Utilisateur implements Serializable {
         this.nom = nom;
         this.prenom = prenom;
     }
+
+    public Utilisateur() {}
 
     // GETTERS - SETTERS //
 
@@ -40,5 +44,14 @@ public class Utilisateur implements Serializable {
 
     public void setPrenom(String prenom) {
         this.prenom = prenom;
+    }
+
+    // --- UTILS ---
+    public static Utilisateur fromContentValues(ContentValues values){
+        final Utilisateur utilisateur = new Utilisateur();
+        if (values.containsKey("id")) utilisateur.setId(values.getAsInteger("id"));
+        if (values.containsKey("nom")) utilisateur.setNom(values.getAsString("nom"));
+        if (values.containsKey("prenom")) utilisateur.setPrenom(values.getAsString("prenom"));
+        return utilisateur;
     }
 }

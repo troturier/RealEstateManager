@@ -1,9 +1,8 @@
-package com.openclassrooms.realestatemanager.injection;
+package com.openclassrooms.realestatemanager.repositories.injections;
 
 import android.content.Context;
 
 import com.openclassrooms.realestatemanager.database.RealEstateManagerDatabase;
-import com.openclassrooms.realestatemanager.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.repositories.BienImmobilierDataRepository;
 import com.openclassrooms.realestatemanager.repositories.PhotoDataRepository;
 import com.openclassrooms.realestatemanager.repositories.PointInteretDataRepository;
