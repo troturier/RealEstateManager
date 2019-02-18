@@ -17,6 +17,8 @@ public class Type implements Serializable {
         this.libelle = libelle;
     }
 
+    public Type(){}
+
     // GETTERS - SETTERS //
 
     public int getId() {
