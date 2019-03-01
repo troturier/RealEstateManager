@@ -80,6 +80,9 @@ public class MainActivity extends AppCompatActivity {
     private void updateBienImmobiliersList(List<BienImmobilierComplete> bienImmobilierList){
         RealEstateListFragment realEstateListFragment = (RealEstateListFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentRealEstateList);
         Objects.requireNonNull(realEstateListFragment).updateAdapter(bienImmobilierList);
+        if(isTwoPane && realEstateListFragment.adapter.row_index > -1){
+            realEstateListFragment.updateDetailFragment();
+        }
     }
 
     private void configure(){

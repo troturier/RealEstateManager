@@ -29,7 +29,9 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
 
     // FOR DESIGN
     @BindView(R.id.main_recycler_view) RecyclerView recyclerView;
-    private RealEstateAdapter adapter;
+    public RealEstateAdapter adapter;
+
+    private RealEstateDetailFragment realEstateDetailFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,11 +59,7 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
                         boolean isTwoPane = ((MainActivity) Objects.requireNonNull(getActivity())).isTwoPane;
                         if (isTwoPane){
                             adapter.row_index = position;
-                            adapter.notifyDataSetChanged();
-                            RealEstateDetailFragment realEstateDetailFragment = RealEstateDetailFragment.newInstance(adapter.getItem(position));
-                            FragmentTransaction ft = (((MainActivity) Objects.requireNonNull(getActivity())).getSupportFragmentManager().beginTransaction());
-                            ft.replace(R.id.flDetailContainer, realEstateDetailFragment);
-                            ft.commit();
+                            updateDetailFragment();
                         }
                         else {
                             Intent i = new Intent(getActivity(), DetailActivity.class);
@@ -72,6 +70,13 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
                 });
     }
 
+    public void updateDetailFragment() {
+        adapter.notifyDataSetChanged();
+        RealEstateDetailFragment realEstateDetailFragment = RealEstateDetailFragment.newInstance(adapter.getItem(adapter.row_index));
+        FragmentTransaction ft = (((MainActivity) Objects.requireNonNull(getActivity())).getSupportFragmentManager().beginTransaction());
+        ft.replace(R.id.flDetailContainer, realEstateDetailFragment);
+        ft.commitAllowingStateLoss();
+    }
 
 
     @Override
@@ -79,12 +84,15 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 ((MainActivity) Objects.requireNonNull(getActivity())).getBienImmobiliers();
+                if(((MainActivity) Objects.requireNonNull(getActivity())).isTwoPane){
+                    updateDetailFragment();
+                }
             }
         }
     }
 
 
-        @Override
+    @Override
     public void onClickDeleteButton(int position) {
         // ---- //
     }

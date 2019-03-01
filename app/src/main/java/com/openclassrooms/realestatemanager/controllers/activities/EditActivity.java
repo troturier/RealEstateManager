@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.controllers.activities;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -19,12 +20,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.adapters.PhotoAdapter;
 import com.openclassrooms.realestatemanager.models.BienImmobilier;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
+import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.Type;
 import com.openclassrooms.realestatemanager.models.Utilisateur;
 import com.openclassrooms.realestatemanager.repositories.injections.Injection;
 import com.openclassrooms.realestatemanager.repositories.injections.ViewModelFactory;
+import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
 import com.openclassrooms.realestatemanager.viewmodels.BienImmobilierViewModel;
 
 import java.util.List;
@@ -32,11 +36,22 @@ import java.util.List;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class EditActivity extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity implements PhotoAdapter.Listener {
 
     private BienImmobilierComplete bienImmobilierComplete;
     private BienImmobilierViewModel bienImmobilierViewModel;
+    private List<Photo> photos;
+
+    // FOR DESIGN
+    @BindView(R.id.detail_recycler_view)
+    RecyclerView recyclerView;
+
+    PhotoAdapter adapter;
 
     // UI
     private EditText streetEt;
@@ -62,11 +77,38 @@ public class EditActivity extends AppCompatActivity {
         // Configure ViewModel for database operations
         configureViewModel();
 
+        // Configure RecyclerView for media
+        configureMediaRecyclerView();
+
         // Update UI from selected item
         updateDescriptionUI();
         updateSurfaceUI();
         updateRoomsUI();
         updateLocationUI();
+    }
+
+    // -----------------------
+    // RECYCLERVIEW UPDATE
+    // -----------------------
+
+    private void configureMediaRecyclerView() {
+        ButterKnife.bind(this);
+        this.adapter = new PhotoAdapter(this);
+        this.recyclerView.setAdapter(adapter);
+        this.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        this.photos = bienImmobilierComplete.getPhotos();
+        this.adapter.updateData(photos);
+        this.configureOnClickRecyclerView();
+    }
+
+    private void configureOnClickRecyclerView(){
+        ItemClickSupport.addTo(recyclerView, R.layout.detail_recycler_view_item)
+                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        createEditMediaDialog(position);
+                    }
+                });
     }
 
     // -----------------------
@@ -222,6 +264,64 @@ public class EditActivity extends AppCompatActivity {
         dialogBuilder.show();
     }
 
+    private void createEditMediaDialog(int position){
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
+        LayoutInflater inflater = this.getLayoutInflater();
+        @SuppressLint("InflateParams") View dialogView = inflater.inflate(R.layout.edit_media_dialog, null);
+
+        final EditText mediaDescription = dialogView.findViewById(R.id.etMediaDescription);
+        Button submitButton = dialogView.findViewById(R.id.editMedia_buttonSubmit);
+        Button cancelButton = dialogView.findViewById(R.id.editMedia_buttonCancel);
+        Button deleteButton = dialogView.findViewById(R.id.editMedia_buttonDelete);
+        Button defaultButton = dialogView.findViewById(R.id.editMedia_buttonDefault);
+
+        mediaDescription.setText(adapter.getItem(position).getDescription());
+
+        cancelButton.setOnClickListener(view -> dialogBuilder.dismiss());
+
+        submitButton.setOnClickListener(view -> {
+            if (!mediaDescription.getText().toString().isEmpty()) {
+                adapter.getItem(position).setDescription(mediaDescription.getText().toString());
+                dialogBuilder.dismiss();
+                this.photos = bienImmobilierComplete.getPhotos();
+                this.adapter.updateData(photos);
+                this.bienImmobilierViewModel.updatePhoto(adapter.getItem(position));
+            } else {
+                Toast.makeText(EditActivity.this, "Please fill all the fields before editing a media", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        defaultButton.setOnClickListener(v -> {
+            bienImmobilierComplete.getBienImmobilier().setIdPhotoCouverture(adapter.getItem(position).getId());
+            dialogBuilder.dismiss();
+        });
+
+        deleteButton.setOnClickListener(v -> {
+            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        bienImmobilierViewModel.deletePhoto(adapter.getItem(position));
+                        dialogBuilder.dismiss();
+                        this.bienImmobilierComplete.getPhotos().remove(adapter.getItem(position));
+                        this.photos = bienImmobilierComplete.getPhotos();
+                        this.adapter.updateData(photos);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.dismiss();
+                        break;
+                }
+            };
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                    .setNegativeButton("No", dialogClickListener).show();
+        });
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
+    }
+
     // -----------------------
     // DATABASE
     // -----------------------
@@ -294,5 +394,10 @@ public class EditActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.edit_menu, menu);
         return true;
+    }
+
+    @Override
+    public void onClickDeleteButton(int position) {
+
     }
 }
