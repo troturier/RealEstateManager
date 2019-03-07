@@ -104,12 +104,7 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
 
     private void configureOnClickRecyclerView(){
         ItemClickSupport.addTo(recyclerView, R.layout.detail_recycler_view_item)
-                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        createEditMediaDialog(position);
-                    }
-                });
+                .setOnItemClickListener((recyclerView, position, v) -> createEditMediaDialog(position));
     }
 
     // -----------------------
