@@ -349,18 +349,64 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
     }
 
     private void updateBienImmobilier(BienImmobilier bienImmobilier){
-        bienImmobilier.setDescription(this.descriptionEt.getText().toString());
-        bienImmobilier.setSurface(Integer.parseInt(this.surfaceEt.getText().toString()));
-        bienImmobilier.setPieces(Integer.parseInt(this.roomsEt.getText().toString()));
-        bienImmobilier.setChambres(Integer.parseInt(this.bedroomsEt.getText().toString()));
-        bienImmobilier.setSdb(Integer.parseInt(this.bathroomsEt.getText().toString()));
-        bienImmobilier.setRue(this.streetEt.getText().toString());
-        bienImmobilier.setComplementRue(this.street2Et.getText().toString());
-        bienImmobilier.setVille(this.cityEt.getText().toString());
-        bienImmobilier.setCp(this.cpEt.getText().toString());
-        bienImmobilier.setPays(this.stateEt.getText().toString());
+        boolean allFieldsFilled = true;
+        if(!this.descriptionEt.getText().toString().isEmpty())
+            bienImmobilier.setDescription(this.descriptionEt.getText().toString());
+        else
+            allFieldsFilled = false;
+        if(!this.surfaceEt.getText().toString().isEmpty())
+            bienImmobilier.setSurface(Integer.parseInt(this.surfaceEt.getText().toString()));
+        else
+            allFieldsFilled = false;
+        if(!this.roomsEt.getText().toString().isEmpty())
+            bienImmobilier.setPieces(Integer.parseInt(this.roomsEt.getText().toString()));
+        else
+            allFieldsFilled = false;
+        if(!this.bedroomsEt.getText().toString().isEmpty())
+            bienImmobilier.setChambres(Integer.parseInt(this.bedroomsEt.getText().toString()));
+        else
+            allFieldsFilled = false;
+        if(!this.bathroomsEt.getText().toString().isEmpty())
+            bienImmobilier.setSdb(Integer.parseInt(this.bathroomsEt.getText().toString()));
+        else
+            allFieldsFilled = false;
+        if(!this.streetEt.getText().toString().isEmpty())
+            bienImmobilier.setRue(this.streetEt.getText().toString());
+        else
+            allFieldsFilled = false;
+        if (!this.street2Et.getText().toString().isEmpty()) {
+            bienImmobilier.setComplementRue(this.street2Et.getText().toString());
+        } else {
+            bienImmobilier.setComplementRue(null);
+        }
+        if(!this.cityEt.getText().toString().isEmpty())
+            bienImmobilier.setVille(this.cityEt.getText().toString());
+        else
+            allFieldsFilled = false;
+        if(!this.cpEt.getText().toString().isEmpty())
+            bienImmobilier.setCp(this.cpEt.getText().toString());
+        else
+            allFieldsFilled = false;
+        if(!this.stateEt.getText().toString().isEmpty())
+            bienImmobilier.setPays(this.stateEt.getText().toString());
+        else
+            allFieldsFilled = false;
 
-        this.bienImmobilierViewModel.updateBienImmobilier(bienImmobilier);
+        if (allFieldsFilled) {
+            this.bienImmobilierViewModel.updateBienImmobilier(bienImmobilier);
+            Intent intent;
+            intent = new Intent();
+            setResult(Activity.RESULT_OK, intent);
+            finish();
+        } else {
+            AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Error");
+            alertDialog.setMessage("A field or more is empty, please fill in all fields before proceeding.");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    (dialog, which) -> dialog.dismiss());
+            alertDialog.show();
+        }
+
     }
 
     // -----------------------
@@ -373,9 +419,6 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         switch (item.getItemId()) {
             case R.id.action_accept:
                 updateBienImmobilier(bienImmobilierComplete.getBienImmobilier());
-                intent = new Intent();
-                setResult(Activity.RESULT_OK, intent);
-                finish();
                 return true;
 
             case R.id.action_cancel:
