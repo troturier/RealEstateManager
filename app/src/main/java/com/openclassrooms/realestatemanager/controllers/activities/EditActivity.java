@@ -35,13 +35,14 @@ import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EditActivity extends AppCompatActivity implements PhotoAdapter.Listener {
+public class EditActivity extends AppCompatActivity implements PhotoAdapter.Listener, LifecycleOwner {
 
     private BienImmobilierComplete bienImmobilierComplete;
     private BienImmobilierViewModel bienImmobilierViewModel;
@@ -97,7 +98,7 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         this.recyclerView.setAdapter(adapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         this.photos = bienImmobilierComplete.getPhotos();
-        this.adapter.updateData(photos);
+        this.adapter.updateData(photos, bienImmobilierComplete);
         this.configureOnClickRecyclerView();
     }
 
@@ -284,7 +285,7 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
                 adapter.getItem(position).setDescription(mediaDescription.getText().toString());
                 dialogBuilder.dismiss();
                 this.photos = bienImmobilierComplete.getPhotos();
-                this.adapter.updateData(photos);
+                this.adapter.updateData(photos, bienImmobilierComplete);
                 this.bienImmobilierViewModel.updatePhoto(adapter.getItem(position));
             } else {
                 Toast.makeText(EditActivity.this, "Please fill all the fields before editing a media", Toast.LENGTH_LONG).show();
@@ -294,6 +295,8 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         defaultButton.setOnClickListener(v -> {
             bienImmobilierComplete.getBienImmobilier().setIdPhotoCouverture(adapter.getItem(position).getId());
             dialogBuilder.dismiss();
+            this.photos = bienImmobilierComplete.getPhotos();
+            this.adapter.updateData(photos, bienImmobilierComplete);
         });
 
         deleteButton.setOnClickListener(v -> {
@@ -304,7 +307,7 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
                         dialogBuilder.dismiss();
                         this.bienImmobilierComplete.getPhotos().remove(adapter.getItem(position));
                         this.photos = bienImmobilierComplete.getPhotos();
-                        this.adapter.updateData(photos);
+                        this.adapter.updateData(photos, bienImmobilierComplete);
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -330,19 +333,19 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         ViewModelFactory mViewModelFactory = Injection.provideViewModelFactory(this);
         bienImmobilierViewModel = ViewModelProviders.of(this, mViewModelFactory).get(BienImmobilierViewModel.class);
 
-        bienImmobilierViewModel.getUtilisateurs().observe(this, this::updateUtilisateurSpinner);
+        bienImmobilierViewModel.getUtilisateurs().observe( this, this::updateUtilisateurSpinner);
 
-        bienImmobilierViewModel.getTypes().observe(this, this::updateTypeSpinner);
+        bienImmobilierViewModel.getTypes().observe( this, this::updateTypeSpinner);
     }
 
     private void addType(Type type){
         bienImmobilierViewModel.createType(type);
-        bienImmobilierViewModel.getTypes().observe(this, this::updateTypeSpinner);
+        bienImmobilierViewModel.getTypes().observe( this, this::updateTypeSpinner);
     }
 
     private void addUser(Utilisateur user){
         bienImmobilierViewModel.createUtilisateur(user);
-        bienImmobilierViewModel.getUtilisateurs().observe(this, this::updateUtilisateurSpinner);
+        bienImmobilierViewModel.getUtilisateurs().observe( this, this::updateUtilisateurSpinner);
     }
 
     private void updateBienImmobilier(BienImmobilier bienImmobilier){

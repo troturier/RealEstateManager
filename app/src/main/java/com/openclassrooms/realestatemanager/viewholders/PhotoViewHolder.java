@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 public class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     // FOR UI
-    @BindView(R.id.detail_rv_tv) TextView detailTV;
+    @BindView(R.id.detail_rv_tv) public TextView detailTV;
     @BindView(R.id.detail_rv_iv) ImageView detailIV;
 
     // FOR DATA

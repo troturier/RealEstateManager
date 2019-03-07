@@ -135,7 +135,7 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         this.recyclerView.setAdapter(adapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         List<Photo> photos = bienImmobilierComplete.getPhotos();
-        adapter.updateData(photos);
+        adapter.updateData(photos,bienImmobilierComplete);
     }
 
     public static RealEstateDetailFragment newInstance(BienImmobilierComplete bienImmobilierComplete){

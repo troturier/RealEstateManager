@@ -1,11 +1,13 @@
 package com.openclassrooms.realestatemanager.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.viewholders.PhotoViewHolder;
 
@@ -20,6 +22,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     // CALLBACK
     public interface Listener { void onClickDeleteButton(int position); }
     private final PhotoAdapter.Listener callback;
+    private BienImmobilierComplete bienImmobilierComplete;
 
     // FOR DATA
     private List<Photo> items;
@@ -27,6 +30,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     // CONSTRUCTOR
     public PhotoAdapter(Listener callback){
         this.items = new ArrayList<>();
+        this.bienImmobilierComplete = null;
         this.callback = callback;
     }
 
@@ -43,6 +47,12 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     @Override
     public void onBindViewHolder(PhotoViewHolder holder, int position) {
         holder.updateWithPhoto(this.items.get(position), this.callback);
+        if(bienImmobilierComplete != null) {
+            if (items.get(position).getId() == bienImmobilierComplete.getBienImmobilier().getIdPhotoCouverture())
+                holder.detailTV.setBackgroundColor(Color.parseColor("#A8FF0C40"));
+            else
+                holder.detailTV.setBackgroundColor(Color.parseColor("#A80C0C0C"));
+        }
     }
 
     @Override
@@ -52,8 +62,9 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
 
     public Photo getItem(int position){ return this.items.get(position);}
 
-    public void updateData(List<Photo> items){
+    public void updateData(List<Photo> items, BienImmobilierComplete bienImmobilierComplete){
         this.items = items;
+        this.bienImmobilierComplete = bienImmobilierComplete;
         this.notifyDataSetChanged();
     }
 }

@@ -147,8 +147,7 @@
             android:hint="@string/description"
             android:padding="5dp"
             android:textColorHint="@color/colorAccent"
-            app:boxBackgroundMode="outline"
-            app:hintTextAppearance="@style/TextAppearance.AppCompat.Medium.Inverse">
+            app:boxBackgroundMode="outline">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etDescription"
