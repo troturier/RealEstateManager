@@ -5,12 +5,14 @@ import android.content.Context;
 
 import com.openclassrooms.realestatemanager.database.dao.BienImmobilierDao;
 import com.openclassrooms.realestatemanager.database.dao.PhotoDao;
+import com.openclassrooms.realestatemanager.database.dao.PointInteretBienImmobilierDao;
 import com.openclassrooms.realestatemanager.database.dao.PointInteretDao;
 import com.openclassrooms.realestatemanager.database.dao.TypeDao;
 import com.openclassrooms.realestatemanager.database.dao.UtilisateurDao;
 import com.openclassrooms.realestatemanager.models.BienImmobilier;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.PointInteret;
+import com.openclassrooms.realestatemanager.models.PointInteretBienImmobilier;
 import com.openclassrooms.realestatemanager.models.Type;
 import com.openclassrooms.realestatemanager.models.Utilisateur;
 
@@ -21,7 +23,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {BienImmobilier.class, Photo.class, PointInteret.class, Type.class, Utilisateur.class}, version = 1, exportSchema = false)
+@Database(entities = {BienImmobilier.class, Photo.class, PointInteretBienImmobilier.class, Type.class, Utilisateur.class, PointInteret.class}, version = 4, exportSchema = false)
 public abstract class RealEstateManagerDatabase extends RoomDatabase {
 
     // --- SINGLETON ---
@@ -30,8 +32,9 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
     // --- DAO ---
     public abstract BienImmobilierDao bienImmobilierDao();
     public abstract PhotoDao photoDao();
-    public abstract PointInteretDao pointInteretDao();
+    public abstract PointInteretBienImmobilierDao pointInteretBienImmobilierDao();
     public abstract TypeDao typeDao();
+    public abstract PointInteretDao pointInteretDao();
     public abstract UtilisateurDao utilisateurDao();
 
     // --- INSTANCE ---
@@ -332,54 +335,73 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
                 // --- POINTS INTERET ---
 
                 contentValues = new ContentValues();
-                contentValues.put("id", 1);
                 contentValues.put("libelle", "Gare ferroviaire");
-                contentValues.put("idBien", 1);
 
                 db.insert("PointInteret", OnConflictStrategy.IGNORE, contentValues);
 
                 contentValues = new ContentValues();
-                contentValues.put("id", 2);
                 contentValues.put("libelle", "Commerces de proximité");
-                contentValues.put("idBien", 1);
 
                 db.insert("PointInteret", OnConflictStrategy.IGNORE, contentValues);
 
                 contentValues = new ContentValues();
-                contentValues.put("id", 3);
                 contentValues.put("libelle", "Médecin");
-                contentValues.put("idBien", 1);
 
                 db.insert("PointInteret", OnConflictStrategy.IGNORE, contentValues);
 
                 contentValues = new ContentValues();
-                contentValues.put("id", 4);
                 contentValues.put("libelle", "Ecole");
-                contentValues.put("idBien", 2);
 
                 db.insert("PointInteret", OnConflictStrategy.IGNORE, contentValues);
 
                 contentValues = new ContentValues();
-                contentValues.put("id", 5);
                 contentValues.put("libelle", "Hôpital");
+
+                db.insert("PointInteret", OnConflictStrategy.IGNORE, contentValues);
+
+                // --- POINTS INTERET BIEN IMMO ---
+
+                contentValues = new ContentValues();
+                contentValues.put("idBien", 1);
+                contentValues.put("idPoi", 1);
+
+                db.insert("PointInteretBienImmobilier", OnConflictStrategy.IGNORE, contentValues);
+
+                contentValues = new ContentValues();
+                contentValues.put("idBien", 1);
+                contentValues.put("idPoi", 2);
+
+                db.insert("PointInteretBienImmobilier", OnConflictStrategy.IGNORE, contentValues);
+
+                contentValues = new ContentValues();
+                contentValues.put("idBien", 1);
+                contentValues.put("idPoi", 3);
+
+                db.insert("PointInteretBienImmobilier", OnConflictStrategy.IGNORE, contentValues);
+
+                contentValues = new ContentValues();
                 contentValues.put("idBien", 2);
+                contentValues.put("idPoi", 4);
 
-                db.insert("PointInteret", OnConflictStrategy.IGNORE, contentValues);
-
-                contentValues = new ContentValues();
-                contentValues.put("id", 6);
-                contentValues.put("libelle", "Ecole");
-                contentValues.put("idBien", 3);
-
-                db.insert("PointInteret", OnConflictStrategy.IGNORE, contentValues);
+                db.insert("PointInteretBienImmobilier", OnConflictStrategy.IGNORE, contentValues);
 
                 contentValues = new ContentValues();
-                contentValues.put("id", 7);
-                contentValues.put("libelle", "Commerces de proximité");
+                contentValues.put("idBien", 2);
+                contentValues.put("idPoi", 5);
+
+                db.insert("PointInteretBienImmobilier", OnConflictStrategy.IGNORE, contentValues);
+
+                contentValues = new ContentValues();
                 contentValues.put("idBien", 3);
+                contentValues.put("idPoi", 4);
 
-                db.insert("PointInteret", OnConflictStrategy.IGNORE, contentValues);
+                db.insert("PointInteretBienImmobilier", OnConflictStrategy.IGNORE, contentValues);
 
+                contentValues = new ContentValues();
+                contentValues.put("idBien", 3);
+                contentValues.put("idPoi", 2);
+
+                db.insert("PointInteretBienImmobilier", OnConflictStrategy.IGNORE, contentValues);
             }
         };
     }

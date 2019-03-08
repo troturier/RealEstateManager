@@ -5,6 +5,7 @@ import android.content.Context;
 import com.openclassrooms.realestatemanager.database.RealEstateManagerDatabase;
 import com.openclassrooms.realestatemanager.repositories.BienImmobilierDataRepository;
 import com.openclassrooms.realestatemanager.repositories.PhotoDataRepository;
+import com.openclassrooms.realestatemanager.repositories.PointInteretBienImmobilierDataRepository;
 import com.openclassrooms.realestatemanager.repositories.PointInteretDataRepository;
 import com.openclassrooms.realestatemanager.repositories.TypeDataRepository;
 import com.openclassrooms.realestatemanager.repositories.UtilisateurDataRepository;
@@ -22,6 +23,11 @@ public class Injection {
     public static PhotoDataRepository providePhotoDataSource(Context context){
         RealEstateManagerDatabase database = RealEstateManagerDatabase.getInstance(context);
         return new PhotoDataRepository(database.photoDao());
+    }
+
+    public static PointInteretBienImmobilierDataRepository providePointInteretBienImmobilierDataSource(Context context){
+        RealEstateManagerDatabase database = RealEstateManagerDatabase.getInstance(context);
+        return new PointInteretBienImmobilierDataRepository(database.pointInteretBienImmobilierDao());
     }
 
     public static PointInteretDataRepository providePointInteretDataSource(Context context){
@@ -44,10 +50,11 @@ public class Injection {
     public static ViewModelFactory provideViewModelFactory(Context context) {
         BienImmobilierDataRepository dataSourceBienImmobilier = provideBienImmobilierDataSource(context);
         PhotoDataRepository dataSourcePhoto = providePhotoDataSource(context);
-        PointInteretDataRepository dataSourcePointInteret = providePointInteretDataSource(context);
+        PointInteretBienImmobilierDataRepository dataSourcePointInteretBienImmobilier = providePointInteretBienImmobilierDataSource(context);
         TypeDataRepository dataSourceType = provideTypeDataSource(context);
+        PointInteretDataRepository dataSourcePointInteret = providePointInteretDataSource(context);
         UtilisateurDataRepository dataSourceUtilisateur = provideUtilisateurDataSource(context);
         Executor executor = provideExecutor();
-        return new ViewModelFactory(dataSourceBienImmobilier, dataSourcePhoto, dataSourcePointInteret, dataSourceType, dataSourceUtilisateur, executor);
+        return new ViewModelFactory(dataSourceBienImmobilier, dataSourcePhoto, dataSourcePointInteretBienImmobilier, dataSourceType, dataSourceUtilisateur, dataSourcePointInteret,executor);
     }
 }

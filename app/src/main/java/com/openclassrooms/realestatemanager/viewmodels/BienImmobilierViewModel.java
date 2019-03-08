@@ -4,10 +4,12 @@ import com.openclassrooms.realestatemanager.models.BienImmobilier;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.PointInteret;
+import com.openclassrooms.realestatemanager.models.PointInteretBienImmobilier;
 import com.openclassrooms.realestatemanager.models.Type;
 import com.openclassrooms.realestatemanager.models.Utilisateur;
 import com.openclassrooms.realestatemanager.repositories.BienImmobilierDataRepository;
 import com.openclassrooms.realestatemanager.repositories.PhotoDataRepository;
+import com.openclassrooms.realestatemanager.repositories.PointInteretBienImmobilierDataRepository;
 import com.openclassrooms.realestatemanager.repositories.PointInteretDataRepository;
 import com.openclassrooms.realestatemanager.repositories.TypeDataRepository;
 import com.openclassrooms.realestatemanager.repositories.UtilisateurDataRepository;
@@ -24,18 +26,20 @@ public class BienImmobilierViewModel extends ViewModel {
     // REPOSITORIES
     private final BienImmobilierDataRepository bienImmobilierDataSource;
     private final PhotoDataRepository photoDataSource;
-    private final PointInteretDataRepository pointInteretDataSource;
+    private final PointInteretBienImmobilierDataRepository pointInteretBienImmobilierDataSource;
     private final TypeDataRepository typeDataSource;
     private final UtilisateurDataRepository utilisateurDataSource;
+    private final PointInteretDataRepository pointInteretDataSource;
     private final Executor executor;
 
     // DATA
     @Nullable
     private LiveData<Utilisateur> currentUtilisateur;
 
-    public BienImmobilierViewModel(BienImmobilierDataRepository bienImmobilierDataSource, PhotoDataRepository photoDataSource, PointInteretDataRepository pointInteretDataSource, TypeDataRepository typeDataSource, UtilisateurDataRepository utilisateurDataSource, Executor executor){
+    public BienImmobilierViewModel(BienImmobilierDataRepository bienImmobilierDataSource, PhotoDataRepository photoDataSource, PointInteretBienImmobilierDataRepository pointInteretBienImmobilierDataSource, TypeDataRepository typeDataSource, UtilisateurDataRepository utilisateurDataSource, PointInteretDataRepository pointInteretDataSource, Executor executor){
         this.bienImmobilierDataSource = bienImmobilierDataSource;
         this.photoDataSource = photoDataSource;
+        this.pointInteretBienImmobilierDataSource = pointInteretBienImmobilierDataSource;
         this.pointInteretDataSource = pointInteretDataSource;
         this.typeDataSource = typeDataSource;
         this.utilisateurDataSource = utilisateurDataSource;
@@ -125,8 +129,8 @@ public class BienImmobilierViewModel extends ViewModel {
     // FOR POINT INTERET
     // --------
 
-    public LiveData<List<PointInteret>> getPointInterets(int bienImmobilierId){
-        return pointInteretDataSource.getPointInterets(bienImmobilierId);
+    public LiveData<List<PointInteret>> getPointInterets(){
+        return pointInteretDataSource.getPointInterets();
     }
 
     public LiveData<PointInteret> getPointInteret(int pointInteretId){
@@ -148,6 +152,40 @@ public class BienImmobilierViewModel extends ViewModel {
     public void updatePointInteret(PointInteret pointInteret){
         executor.execute(() -> {
             pointInteretDataSource.updateePointInteret(pointInteret);
+        });
+    }
+
+    // --------
+    // FOR POINT_INTERET_BIEN_IMMOBILIER
+    // --------
+
+    public LiveData<List<PointInteretBienImmobilier>> getPointInteretsBienImmobilier(int bienImmobilierId){
+        return pointInteretBienImmobilierDataSource.getPointInteretsBienImmobilier(bienImmobilierId);
+    }
+
+    public LiveData<List<PointInteretBienImmobilier>> getAllPointInteretsBienImmobilier(){
+        return pointInteretBienImmobilierDataSource.getAllPointInteretsBienImmobilier();
+    }
+
+    public LiveData<PointInteretBienImmobilier> getPointInteretBienImmobilier(int pointInteretId){
+        return pointInteretBienImmobilierDataSource.getPointInteretBienImmobilier(pointInteretId);
+    }
+
+    public void createPointInteretBienImmobilier(PointInteretBienImmobilier pointInteretBienImmobilier){
+        executor.execute(() -> {
+            pointInteretBienImmobilierDataSource.createPointInteretBienImmobilier(pointInteretBienImmobilier);
+        });
+    }
+
+    public void deletePointInteretBienImmobilier(PointInteretBienImmobilier pointInteretBienImmobilier){
+        executor.execute(() -> {
+            pointInteretBienImmobilierDataSource.deletePointInteretBienImmobilier(pointInteretBienImmobilier);
+        });
+    }
+
+    public void updatePointInteretBienImmobilier(PointInteretBienImmobilier pointInteretBienImmobilier){
+        executor.execute(() -> {
+            pointInteretBienImmobilierDataSource.updateePointInteretBienImmobilier(pointInteretBienImmobilier);
         });
     }
 

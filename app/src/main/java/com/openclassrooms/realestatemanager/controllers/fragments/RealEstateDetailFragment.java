@@ -12,7 +12,10 @@ import com.openclassrooms.realestatemanager.adapters.PhotoAdapter;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.PointInteret;
+import com.openclassrooms.realestatemanager.models.PointInteretBienImmobilier;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -30,12 +33,14 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
     private View view;
 
     public BienImmobilierComplete bienImmobilierComplete;
+    public List<PointInteret> pointInteretList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         assert getArguments() != null;
         this.bienImmobilierComplete = (BienImmobilierComplete) getArguments().getSerializable("bienImmobilier");
+        this.pointInteretList = (List<PointInteret>) getArguments().getSerializable("poi");
     }
 
     @Override
@@ -69,12 +74,26 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         TextView tvPoI = view.findViewById(R.id.tvPoI);
         TextView tvPoItitle = view.findViewById(R.id.tvPoItitle);
         ImageView ivPoI = view.findViewById(R.id.ivPoI);
-        List<PointInteret> pointInteretList = bienImmobilierComplete.getPointInterets();
+
+        List<PointInteret> pointInteretBienImmobilierList = new ArrayList<>();
+        for (PointInteret poi2 : this.pointInteretList) {
+            // Loop arrayList1 items
+            boolean found = false;
+            for (PointInteretBienImmobilier poi1 : bienImmobilierComplete.getPointInteretBienImmobiliers()) {
+                if (poi2.getId() == poi1.getIdPoi()) {
+                    found = true;
+                }
+            }
+            if (found) {
+                pointInteretBienImmobilierList.add(poi2);
+            }
+        }
+
         String poi = "";
         if(pointInteretList.size()>0){
-            for (int i = 0; i<pointInteretList.size(); i++){
+            for (int i = 0; i< pointInteretBienImmobilierList.size(); i++){
                 if(i > 0) poi = poi + "\n";
-                poi = String.format("%s- %s", poi, pointInteretList.get(i).getLibelle());
+                poi = String.format("%s- %s", poi, pointInteretBienImmobilierList.get(i).getLibelle());
             }
             tvPoI.setText(poi);
         }
@@ -138,10 +157,11 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         adapter.updateData(photos,bienImmobilierComplete);
     }
 
-    public static RealEstateDetailFragment newInstance(BienImmobilierComplete bienImmobilierComplete){
+    public static RealEstateDetailFragment newInstance(BienImmobilierComplete bienImmobilierComplete, List<PointInteret> pointInteretList){
         RealEstateDetailFragment realEstateDetailFragment = new RealEstateDetailFragment();
         Bundle args = new Bundle();
         args.putSerializable("bienImmobilier", bienImmobilierComplete);
+        args.putSerializable("poi", (Serializable) pointInteretList);
         realEstateDetailFragment.setArguments(args);
         return realEstateDetailFragment;
     }

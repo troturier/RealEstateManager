@@ -16,7 +16,7 @@ public class PointInteretDataRepository {
 
     public LiveData<PointInteret> getPointInteret(int pointInteretId) { return this.pointInteretDao.getPointInteret(pointInteretId); }
 
-    public LiveData<List<PointInteret>> getPointInterets(int bienId) { return this.pointInteretDao.getPointInterets(bienId); }
+    public LiveData<List<PointInteret>> getPointInterets() { return this.pointInteretDao.getPointInterets(); }
 
     // --- CREATE ---
 
@@ -24,7 +24,7 @@ public class PointInteretDataRepository {
 
     // --- DELETE ---
 
-    public void deletePointInteret(PointInteret pointInteret){ this.pointInteretDao.deletePointInteret(pointInteret.getId()); }
+    public void deletePointInteret(PointInteret pointInteret){ this.pointInteretDao.deletePointInteret(pointInteret); }
 
     // --- UPDATE ---
 

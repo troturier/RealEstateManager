@@ -19,8 +19,8 @@ public class BienImmobilierComplete implements Serializable {
     @Relation(parentColumn = "idAgent", entityColumn = "id", entity = Utilisateur.class)
     private List<Utilisateur> utilisateurs;
 
-    @Relation(parentColumn = "id", entityColumn = "idBien", entity = PointInteret.class)
-    private List<PointInteret> pointInterets;
+    @Relation(parentColumn = "id", entityColumn = "idBien", entity = PointInteretBienImmobilier.class)
+    private List<PointInteretBienImmobilier> pointInteretBienImmobiliers;
 
     @Relation(parentColumn = "id", entityColumn = "idBien", entity = Photo.class)
     private List<Photo> photos;
@@ -56,12 +56,12 @@ public class BienImmobilierComplete implements Serializable {
         this.utilisateurs = utilisateurs;
     }
 
-    public List<PointInteret> getPointInterets() {
-        return pointInterets;
+    public List<PointInteretBienImmobilier> getPointInteretBienImmobiliers() {
+        return pointInteretBienImmobiliers;
     }
 
-    public void setPointInterets(List<PointInteret> pointInterets) {
-        this.pointInterets = pointInterets;
+    public void setPointInteretBienImmobiliers(List<PointInteretBienImmobilier> pointInteretBienImmobiliers) {
+        this.pointInteretBienImmobiliers = pointInteretBienImmobiliers;
     }
 
     public List<Photo> getPhotos() {

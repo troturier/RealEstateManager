@@ -12,11 +12,13 @@ import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controllers.fragments.RealEstateDetailFragment;
 import com.openclassrooms.realestatemanager.controllers.fragments.RealEstateListFragment;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
+import com.openclassrooms.realestatemanager.models.PointInteret;
 import com.openclassrooms.realestatemanager.repositories.injections.Injection;
 import com.openclassrooms.realestatemanager.repositories.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.viewmodels.BienImmobilierViewModel;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
 
     // 1 - FOR DATA
     private BienImmobilierViewModel bienImmobilierViewModel;
+
+    public List<PointInteret> pointInteretList;
+    private List<BienImmobilierComplete> bienImmobilierCompleteList;
 
     public boolean isTwoPane = false;
 
@@ -68,6 +73,10 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         this.bienImmobilierViewModel.getBienImmobiliersComplete().observe(this, this::updateBienImmobiliersList);
     }
 
+    public void getPoi(){
+        this.bienImmobilierViewModel.getPointInterets().observe(this, this::updatePoiList);
+    }
+
     // -------------------
     // UI
     // -------------------
@@ -79,8 +88,14 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
 
     // 6 - Update the list of items
     private void updateBienImmobiliersList(List<BienImmobilierComplete> bienImmobilierList){
+        this.bienImmobilierCompleteList = bienImmobilierList;
+        getPoi();
+    }
+
+    private void updatePoiList(List<PointInteret> pointInteretList){
+        this.pointInteretList = pointInteretList;
         RealEstateListFragment realEstateListFragment = (RealEstateListFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentRealEstateList);
-        Objects.requireNonNull(realEstateListFragment).updateAdapter(bienImmobilierList);
+        Objects.requireNonNull(realEstateListFragment).updateAdapter(this.bienImmobilierCompleteList, this.pointInteretList);
         if(isTwoPane && realEstateListFragment.adapter.row_index > -1){
             realEstateListFragment.updateDetailFragment();
         }
@@ -113,6 +128,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
                     realEstateDetailFragment = (RealEstateDetailFragment) getSupportFragmentManager().findFragmentById(R.id.flDetailContainer);
                     Intent intent = new Intent(this, EditActivity.class);
                     intent.putExtra("bienImmobilier", realEstateDetailFragment.bienImmobilierComplete);
+                    intent.putExtra("poi", (Serializable) pointInteretList);
                     startActivityForResult(intent, 1);
                 } else {
                     Toast.makeText(this, "Please select an item first", Toast.LENGTH_SHORT).show();

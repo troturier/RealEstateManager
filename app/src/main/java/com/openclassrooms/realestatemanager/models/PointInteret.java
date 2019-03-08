@@ -1,28 +1,23 @@
 package com.openclassrooms.realestatemanager.models;
 
-
 import java.io.Serializable;
 
-import androidx.room.*;
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
 
-@Entity(foreignKeys = @ForeignKey(
-        entity = BienImmobilier.class,
-        parentColumns = "id",
-        childColumns = "idBien"),
-        indices = {@Index(value = "idBien", name = "idBien_POI")})
+@Entity(indices = {@Index(value = "id")})
 public class PointInteret implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int idBien;
     private String libelle;
 
-    public PointInteret(int id, int idBien, String libelle) {
+    public PointInteret(int id, String libelle) {
         this.id = id;
-        this.idBien = idBien;
         this.libelle = libelle;
     }
 
-    // GETTERS - SETTERS //
+    public PointInteret(){}
 
     public int getId() {
         return id;
@@ -38,13 +33,5 @@ public class PointInteret implements Serializable {
 
     public void setLibelle(String libelle) {
         this.libelle = libelle;
-    }
-
-    public int getIdBien() {
-        return idBien;
-    }
-
-    public void setIdBien(int idBien) {
-        this.idBien = idBien;
     }
 }

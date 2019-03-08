@@ -11,8 +11,10 @@ import com.openclassrooms.realestatemanager.adapters.RealEstateAdapter;
 import com.openclassrooms.realestatemanager.controllers.activities.DetailActivity;
 import com.openclassrooms.realestatemanager.controllers.activities.MainActivity;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
+import com.openclassrooms.realestatemanager.models.PointInteret;
 import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,6 +34,7 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
     public RealEstateAdapter adapter;
 
     private RealEstateDetailFragment realEstateDetailFragment;
+    private List<PointInteret> pointInteretList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
                         else {
                             Intent i = new Intent(getActivity(), DetailActivity.class);
                             i.putExtra("bienImmobilier", adapter.getItem(position));
+                            i.putExtra("poi", (Serializable) pointInteretList);
                             startActivityForResult(i, 1);
                         }
                     }
@@ -72,7 +76,7 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
 
     public void updateDetailFragment() {
         adapter.notifyDataSetChanged();
-        RealEstateDetailFragment realEstateDetailFragment = RealEstateDetailFragment.newInstance(adapter.getItem(adapter.row_index));
+        RealEstateDetailFragment realEstateDetailFragment = RealEstateDetailFragment.newInstance(adapter.getItem(adapter.row_index), pointInteretList);
         FragmentTransaction ft = (((MainActivity) Objects.requireNonNull(getActivity())).getSupportFragmentManager().beginTransaction());
         ft.replace(R.id.flDetailContainer, realEstateDetailFragment);
         ft.commitAllowingStateLoss();
@@ -97,7 +101,8 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
         // ---- //
     }
 
-    public void updateAdapter(List<BienImmobilierComplete> bienImmobilierList){
+    public void updateAdapter(List<BienImmobilierComplete> bienImmobilierList, List<PointInteret> pointInteretList){
         this.adapter.updateData(bienImmobilierList);
+        this.pointInteretList = pointInteretList;
     }
 }

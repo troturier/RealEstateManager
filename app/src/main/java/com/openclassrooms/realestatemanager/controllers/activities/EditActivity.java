@@ -21,9 +21,12 @@ import android.widget.Toast;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.adapters.PhotoAdapter;
+import com.openclassrooms.realestatemanager.adapters.PoiAdapter;
 import com.openclassrooms.realestatemanager.models.BienImmobilier;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.models.Photo;
+import com.openclassrooms.realestatemanager.models.PointInteret;
+import com.openclassrooms.realestatemanager.models.PointInteretBienImmobilier;
 import com.openclassrooms.realestatemanager.models.Type;
 import com.openclassrooms.realestatemanager.models.Utilisateur;
 import com.openclassrooms.realestatemanager.repositories.injections.Injection;
@@ -31,6 +34,7 @@ import com.openclassrooms.realestatemanager.repositories.injections.ViewModelFac
 import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
 import com.openclassrooms.realestatemanager.viewmodels.BienImmobilierViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
@@ -42,17 +46,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class EditActivity extends AppCompatActivity implements PhotoAdapter.Listener, LifecycleOwner {
+public class EditActivity extends AppCompatActivity implements PhotoAdapter.Listener, LifecycleOwner, PoiAdapter.Listener {
 
     private BienImmobilierComplete bienImmobilierComplete;
     private BienImmobilierViewModel bienImmobilierViewModel;
     private List<Photo> photos;
+    private List<PointInteretBienImmobilier> pointInteretBienImmobiliers;
 
     // FOR DESIGN
     @BindView(R.id.detail_recycler_view)
     RecyclerView recyclerView;
 
+    @BindView(R.id.poi_recyclerview)
+    RecyclerView recyclerViewPoi;
+
     PhotoAdapter adapter;
+    PoiAdapter poiAdapter;
+
+    public List<PointInteret> pointInteretList;
 
     // UI
     private EditText streetEt;
@@ -72,6 +83,8 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
 
+        pointInteretList = (List<PointInteret>) getIntent().getSerializableExtra("poi");
+
         // Retrieve selected item
         bienImmobilierComplete = (BienImmobilierComplete) getIntent().getSerializableExtra("bienImmobilier");
 
@@ -80,6 +93,8 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
 
         // Configure RecyclerView for media
         configureMediaRecyclerView();
+
+        configurePoiRecyclerView();
 
         // Update UI from selected item
         updateDescriptionUI();
@@ -105,6 +120,21 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
     private void configureOnClickRecyclerView(){
         ItemClickSupport.addTo(recyclerView, R.layout.detail_recycler_view_item)
                 .setOnItemClickListener((recyclerView, position, v) -> createEditMediaDialog(position));
+    }
+
+    private void configurePoiRecyclerView(){
+        this.poiAdapter = new PoiAdapter(this, bienImmobilierViewModel);
+        this.recyclerViewPoi.setAdapter(poiAdapter);
+        this.recyclerViewPoi.setLayoutManager(new LinearLayoutManager(this));
+        this.pointInteretBienImmobiliers = new ArrayList<>();
+        this.pointInteretBienImmobiliers.addAll(this.bienImmobilierComplete.getPointInteretBienImmobiliers());
+        this.poiAdapter.updateData(pointInteretList, bienImmobilierComplete);
+        ImageButton addPoiIB = findViewById(R.id.action_add_poi);
+        addPoiIB.setOnClickListener(v -> createAddPoiDialog());
+    }
+
+    private void updatePoiRecyclerView(List<PointInteret> pointInteretList){
+        this.poiAdapter.updateData(pointInteretList, bienImmobilierComplete);
     }
 
     // -----------------------
@@ -260,6 +290,31 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         dialogBuilder.show();
     }
 
+    private void createAddPoiDialog(){
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
+        LayoutInflater inflater = this.getLayoutInflater();
+        @SuppressLint("InflateParams") View dialogView = inflater.inflate(R.layout.add_poi_dialog, null);
+
+        final EditText editText = dialogView.findViewById(R.id.poi_name);
+        Button submitButton = dialogView.findViewById(R.id.addPoi_buttonSubmit);
+        Button cancelButton = dialogView.findViewById(R.id.addPoi_buttonCancel);
+
+        cancelButton.setOnClickListener(view -> dialogBuilder.dismiss());
+        submitButton.setOnClickListener(view -> {
+            if (!editText.getText().toString().isEmpty()) {
+                PointInteret pointInteret = new PointInteret();
+                pointInteret.setLibelle(editText.getText().toString());
+                addPoi(pointInteret);
+                dialogBuilder.dismiss();
+            } else {
+                Toast.makeText(EditActivity.this, "Please enter a name for the new point of interest", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
+    }
+
     private void createEditMediaDialog(int position){
         final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
         LayoutInflater inflater = this.getLayoutInflater();
@@ -338,6 +393,11 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         bienImmobilierViewModel.getTypes().observe( this, this::updateTypeSpinner);
     }
 
+    private void addPoi(PointInteret pointInteret){
+        bienImmobilierViewModel.createPointInteret(pointInteret);
+        bienImmobilierViewModel.getPointInterets().observe( this, this::updatePoiRecyclerView);
+    }
+
     private void addUser(Utilisateur user){
         bienImmobilierViewModel.createUtilisateur(user);
         bienImmobilierViewModel.getUtilisateurs().observe( this, this::updateUtilisateurSpinner);
@@ -401,7 +461,25 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
                     (dialog, which) -> dialog.dismiss());
             alertDialog.show();
         }
+    }
 
+    public void updatePointsInteret() {
+        /*// Loop arrayList2 items
+        for (PointInteretBienImmobilier poi2 : bienImmobilierComplete.getPointInteretBienImmobiliers()) {
+            // Loop arrayList1 items
+            boolean found = false;
+            for (PointInteretBienImmobilier poi1 : pointInteretBienImmobiliers) {
+                if (poi2.getIdPoi() == poi1.getIdPoi()) {
+                    found = true;
+                }
+            }
+            if (!found && !poi2.getLibelle().isEmpty()) {
+                this.bienImmobilierViewModel.createPointInteret(poi2);
+            }
+            else if (found && poi2.getLibelle().isEmpty()){
+                this.bienImmobilierViewModel.deletePointInteret(poi2);
+            }
+        }*/
     }
 
     // -----------------------
@@ -414,6 +492,8 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         switch (item.getItemId()) {
             case R.id.action_accept:
                 updateBienImmobilier(bienImmobilierComplete.getBienImmobilier());
+                updatePointsInteret();
+
                 return true;
 
             case R.id.action_cancel:

@@ -10,11 +10,17 @@ import android.widget.Toast;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controllers.fragments.RealEstateDetailFragment;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
+import com.openclassrooms.realestatemanager.models.PointInteret;
+
+import java.io.Serializable;
+import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 public class DetailActivity extends AppCompatActivity {
+
+    private List<PointInteret> pointInteretList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +28,10 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_real_estate_detail);
         // Fetch the bienImmobilier to display from bundle
         BienImmobilierComplete bienImmobilierComplete = (BienImmobilierComplete) getIntent().getSerializableExtra("bienImmobilier");
+        pointInteretList = (List<PointInteret>) getIntent().getSerializableExtra("poi");
         if (savedInstanceState == null){
             // Insert detail fragment based on the bienImmobilier passed
-            RealEstateDetailFragment realEstateDetailFragment = RealEstateDetailFragment.newInstance(bienImmobilierComplete);
+            RealEstateDetailFragment realEstateDetailFragment = RealEstateDetailFragment.newInstance(bienImmobilierComplete, pointInteretList);
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.replace(R.id.flDetailContainer, realEstateDetailFragment);
             fragmentTransaction.commit();
@@ -42,6 +49,7 @@ public class DetailActivity extends AppCompatActivity {
                 RealEstateDetailFragment realEstateDetailFragment = (RealEstateDetailFragment) getSupportFragmentManager().findFragmentById(R.id.flDetailContainer);
                 Intent intent = new Intent(this, EditActivity.class);
                 intent.putExtra("bienImmobilier", realEstateDetailFragment.bienImmobilierComplete);
+                intent.putExtra("poi", (Serializable) pointInteretList);
                 startActivityForResult(intent, 1);
                 return true;
 
