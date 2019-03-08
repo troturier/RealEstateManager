@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.viewholders;
 
-import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,7 +33,7 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
     public void updateWithPhoto(Photo photo, PhotoAdapter.Listener callback){
         Picasso.get()
-                .load(new File(Environment.getExternalStorageDirectory() + "/DCIM/" + photo.getCheminAcces()))
+                .load(new File(photo.getCheminAcces()))
                 .resize(250, 250)
                 .centerCrop()
                 .error(R.mipmap.ic_iv_placeholder_no_image)

@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.viewholders;
 
-import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,7 +39,7 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder implements Vie
     public void updateWithRealEstate(BienImmobilierComplete bienImmobilierComplete, RealEstateAdapter.Listener callback){
         if(bienImmobilierComplete.getPhotoCouverture().size() > 0) {
             Picasso.get()
-                    .load(new File(Environment.getExternalStorageDirectory() + "/DCIM/" + bienImmobilierComplete.getPhotoCouverture().get(0).getCheminAcces()))
+                    .load(new File(bienImmobilierComplete.getPhotoCouverture().get(0).getCheminAcces()))
                     .centerCrop()
                     .fit()
                     .error(R.mipmap.ic_iv_placeholder_no_image)

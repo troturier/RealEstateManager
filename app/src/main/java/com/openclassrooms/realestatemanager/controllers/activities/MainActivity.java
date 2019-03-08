@@ -53,6 +53,14 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         else {
             configure();
         }
+
+        if (!Utils.checkPermissionForCamera(this)){
+            try {
+                Utils.requestPermissionForRCamera(this);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     // -------------------

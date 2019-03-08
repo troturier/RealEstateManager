@@ -21,6 +21,7 @@ import androidx.core.app.ActivityCompat;
 public class Utils {
 
     private static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 1;
+    private static final int CAMERA_REQUEST_CODE = 2;
 
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
@@ -79,6 +80,24 @@ public class Utils {
         try {
             ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     READ_STORAGE_PERMISSION_REQUEST_CODE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
+    public static boolean checkPermissionForCamera(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int result = context.checkSelfPermission(Manifest.permission.CAMERA);
+            return result == PackageManager.PERMISSION_GRANTED;
+        }
+        return false;
+    }
+
+    public static void requestPermissionForRCamera(Context context) throws Exception {
+        try {
+            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA},
+                    CAMERA_REQUEST_CODE);
         } catch (Exception e) {
             e.printStackTrace();
             throw e;

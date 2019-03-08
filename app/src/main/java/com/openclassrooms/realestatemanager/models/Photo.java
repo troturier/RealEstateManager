@@ -26,6 +26,8 @@ public class Photo implements Serializable {
         this.idBien = idBien;
     }
 
+    public Photo(){}
+
     // GETTERS - SETTERS //
 
     public void setIdBien(int idBien) {

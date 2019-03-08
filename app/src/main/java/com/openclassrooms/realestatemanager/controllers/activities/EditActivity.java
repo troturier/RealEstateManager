@@ -4,8 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +23,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -33,8 +41,11 @@ import com.openclassrooms.realestatemanager.repositories.injections.Injection;
 import com.openclassrooms.realestatemanager.repositories.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
 import com.openclassrooms.realestatemanager.viewmodels.BienImmobilierViewModel;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
@@ -60,10 +71,15 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
     @BindView(R.id.poi_recyclerview)
     RecyclerView recyclerViewPoi;
 
+    private ImageView add_media_iv;
+    private EditText add_media_path;
+
     PhotoAdapter adapter;
     PoiAdapter poiAdapter;
 
     public List<PointInteret> pointInteretList;
+
+    private Uri uriFilePath;
 
     // UI
     private EditText streetEt;
@@ -82,6 +98,12 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit);
+
+        if (savedInstanceState != null) {
+            if (uriFilePath == null && savedInstanceState.getString("uri_file_path") != null) {
+                uriFilePath = Uri.parse(savedInstanceState.getString("uri_file_path"));
+            }
+        }
 
         pointInteretList = (List<PointInteret>) getIntent().getSerializableExtra("poi");
 
@@ -115,11 +137,17 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         this.photos = bienImmobilierComplete.getPhotos();
         this.adapter.updateData(photos, bienImmobilierComplete);
         this.configureOnClickRecyclerView();
+        ImageButton addMediaIB = findViewById(R.id.action_add_media);
+        addMediaIB.setOnClickListener(v -> createAddMediaDialog());
     }
 
     private void configureOnClickRecyclerView(){
         ItemClickSupport.addTo(recyclerView, R.layout.detail_recycler_view_item)
                 .setOnItemClickListener((recyclerView, position, v) -> createEditMediaDialog(position));
+    }
+
+    private void updateMediaRecyclerView(List<Photo> photos){
+        this.adapter.updateData(photos, bienImmobilierComplete);
     }
 
     private void configurePoiRecyclerView(){
@@ -290,6 +318,118 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         dialogBuilder.show();
     }
 
+    // ---------- MEDIA --------------
+
+    private void createAddMediaDialog(){
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
+        LayoutInflater inflater = this.getLayoutInflater();
+        @SuppressLint("InflateParams") View dialogView = inflater.inflate(R.layout.add_media_dialog, null);
+
+        final EditText description = dialogView.findViewById(R.id.etMediaDescription);
+        Button submitButton = dialogView.findViewById(R.id.add_media_submit);
+        Button cancelButton = dialogView.findViewById(R.id.add_media_cancel);
+        ImageButton cameraButton = dialogView.findViewById(R.id.add_media_camera);
+        ImageButton galleryButton = dialogView.findViewById(R.id.add_media_gallery);
+
+        this.add_media_iv = dialogView.findViewById(R.id.add_media_iv);
+        this.add_media_path = dialogView.findViewById(R.id.etMediaPath);
+
+        galleryButton.setOnClickListener(view -> {
+            getImageFromAlbum();
+        });
+
+        cameraButton.setOnClickListener(v -> getImageFromCamera());
+
+        cancelButton.setOnClickListener(view -> dialogBuilder.dismiss());
+        submitButton.setOnClickListener(view -> {
+            if (!description.getText().toString().isEmpty() || this.add_media_path.getText().toString().isEmpty()) {
+                Photo photo = new Photo();
+                photo.setDescription(description.getText().toString());
+                photo.setCheminAcces(this.add_media_path.getText().toString());
+                photo.setIdBien(bienImmobilierComplete.getBienImmobilier().getId());
+                addMedia(photo);
+                dialogBuilder.dismiss();
+            } else {
+                Toast.makeText(EditActivity.this, "Please fill all the fields before adding a new media", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
+    }
+
+    private void getImageFromAlbum(){
+        try{
+            Intent i = new Intent(Intent.ACTION_PICK,
+                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(i, 1);
+        }catch(Exception exp){
+            Log.i("Error",exp.toString());
+        }
+    }
+
+    private void getImageFromCamera(){
+        PackageManager packageManager = this.getPackageManager();
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            File mainDirectory = new File(Environment.getExternalStorageDirectory(), "DCIM");
+            if (!mainDirectory.exists())
+                mainDirectory.mkdirs();
+
+            Calendar calendar = Calendar.getInstance();
+
+            uriFilePath = Uri.fromFile(new File(mainDirectory, "IMG_" + calendar.getTimeInMillis()));
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uriFilePath);
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+            startActivityForResult(intent, 2);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (uriFilePath != null)
+            outState.putString("uri_file_path", uriFilePath.toString());
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            Picasso.get()
+                    .load(new File(picturePath))
+                    .resize(250, 250)
+                    .centerCrop()
+                    .error(R.mipmap.ic_iv_placeholder_no_image)
+                    .into(add_media_iv);
+            this.add_media_path.setText(picturePath);
+            cursor.close();
+        }
+        else if(resultCode == RESULT_OK && requestCode == 2){
+            String filePath = uriFilePath.getPath();
+            Picasso.get()
+                    .load(new File(filePath))
+                    .resize(250, 250)
+                    .centerCrop()
+                    .error(R.mipmap.ic_iv_placeholder_no_image)
+                    .into(add_media_iv);
+            this.add_media_path.setText(filePath);
+        }
+
+    }
+
+    // ----------------------------------------------------------------------
+
     private void createAddPoiDialog(){
         final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
         LayoutInflater inflater = this.getLayoutInflater();
@@ -353,11 +493,16 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        bienImmobilierViewModel.deletePhoto(adapter.getItem(position));
-                        dialogBuilder.dismiss();
-                        this.bienImmobilierComplete.getPhotos().remove(adapter.getItem(position));
-                        this.photos = bienImmobilierComplete.getPhotos();
-                        this.adapter.updateData(photos, bienImmobilierComplete);
+                        if(bienImmobilierComplete.getBienImmobilier().getIdPhotoCouverture() != adapter.getItem(position).getId()){
+                            bienImmobilierViewModel.deletePhoto(adapter.getItem(position));
+                            dialogBuilder.dismiss();
+                            this.bienImmobilierComplete.getPhotos().remove(adapter.getItem(position));
+                            this.photos = bienImmobilierComplete.getPhotos();
+                            this.adapter.updateData(photos, bienImmobilierComplete);
+                        }
+                        else {
+                            Toast.makeText(this, "Please set another picture as default and validate the changes before deleting this one", Toast.LENGTH_LONG).show();
+                        }
                         break;
 
                     case DialogInterface.BUTTON_NEGATIVE:
@@ -401,6 +546,11 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
     private void addUser(Utilisateur user){
         bienImmobilierViewModel.createUtilisateur(user);
         bienImmobilierViewModel.getUtilisateurs().observe( this, this::updateUtilisateurSpinner);
+    }
+
+    private void addMedia(Photo photo){
+        bienImmobilierViewModel.createPhoto(photo);
+        bienImmobilierViewModel.getPhotos(bienImmobilierComplete.getBienImmobilier().getId()).observe( this, this::updateMediaRecyclerView);
     }
 
     private void updateBienImmobilier(BienImmobilier bienImmobilier){
@@ -463,25 +613,6 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         }
     }
 
-    public void updatePointsInteret() {
-        /*// Loop arrayList2 items
-        for (PointInteretBienImmobilier poi2 : bienImmobilierComplete.getPointInteretBienImmobiliers()) {
-            // Loop arrayList1 items
-            boolean found = false;
-            for (PointInteretBienImmobilier poi1 : pointInteretBienImmobiliers) {
-                if (poi2.getIdPoi() == poi1.getIdPoi()) {
-                    found = true;
-                }
-            }
-            if (!found && !poi2.getLibelle().isEmpty()) {
-                this.bienImmobilierViewModel.createPointInteret(poi2);
-            }
-            else if (found && poi2.getLibelle().isEmpty()){
-                this.bienImmobilierViewModel.deletePointInteret(poi2);
-            }
-        }*/
-    }
-
     // -----------------------
     // TOOLBAR BUTTON ACTIONS
     // -----------------------
@@ -492,8 +623,6 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         switch (item.getItemId()) {
             case R.id.action_accept:
                 updateBienImmobilier(bienImmobilierComplete.getBienImmobilier());
-                updatePointsInteret();
-
                 return true;
 
             case R.id.action_cancel:

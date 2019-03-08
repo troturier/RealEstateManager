@@ -220,7 +220,7 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
 
                 contentValues = new ContentValues();
                 contentValues.put("id", 1);
-                contentValues.put("cheminAcces", "flat.jpg");
+                contentValues.put("cheminAcces", "/storage/emulated/0/DCIM/flat.jpg");
                 contentValues.put("idBien", 1);
                 contentValues.put("description", "Façade");
                 db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
@@ -235,7 +235,7 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
 
                 contentValues = new ContentValues();
                 contentValues.put("id", 2);
-                contentValues.put("cheminAcces", "house.jpg");
+                contentValues.put("cheminAcces", "/storage/emulated/0/DCIM/house.jpg");
                 contentValues.put("idBien", 2);
                 contentValues.put("description", "Façade");
                 db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
@@ -249,7 +249,7 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
 
                 contentValues = new ContentValues();
                 contentValues.put("id", 3);
-                contentValues.put("cheminAcces", "duplex.jpg");
+                contentValues.put("cheminAcces", "/storage/emulated/0/DCIM/duplex.jpg");
                 contentValues.put("idBien", 3);
                 contentValues.put("description", "Façade");
                 db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
@@ -263,7 +263,7 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
 
                 contentValues = new ContentValues();
                 contentValues.put("id", 4);
-                contentValues.put("cheminAcces", "house2.jpg");
+                contentValues.put("cheminAcces", "/storage/emulated/0/DCIM/house2.jpg");
                 contentValues.put("idBien", 4);
                 contentValues.put("description", "Façade");
                 db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
@@ -277,7 +277,7 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
 
                 contentValues = new ContentValues();
                 contentValues.put("id", 5);
-                contentValues.put("cheminAcces", "duplex2.jpg");
+                contentValues.put("cheminAcces", "/storage/emulated/0/DCIM/duplex2.jpg");
                 contentValues.put("idBien", 5);
                 contentValues.put("description", "Façade");
                 db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
@@ -291,7 +291,7 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
 
                 contentValues = new ContentValues();
                 contentValues.put("id", 6);
-                contentValues.put("cheminAcces", "flat2.jpg");
+                contentValues.put("cheminAcces", "/storage/emulated/0/DCIM/flat2.jpg");
                 contentValues.put("idBien", 6);
                 contentValues.put("description", "Façade");
                 db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
@@ -305,28 +305,28 @@ public abstract class RealEstateManagerDatabase extends RoomDatabase {
 
                 contentValues = new ContentValues();
                 contentValues.put("id", 7);
-                contentValues.put("cheminAcces", "duplex.jpg");
+                contentValues.put("cheminAcces", "/storage/emulated/0/DCIM/duplex.jpg");
                 contentValues.put("idBien", 1);
                 contentValues.put("description", "Salon");
                 db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
 
                 contentValues = new ContentValues();
                 contentValues.put("id", 8);
-                contentValues.put("cheminAcces", "duplex2.jpg");
+                contentValues.put("cheminAcces", "/storage/emulated/0/DCIM/duplex2.jpg");
                 contentValues.put("idBien", 1);
                 contentValues.put("description", "Chambre");
                 db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
 
                 contentValues = new ContentValues();
                 contentValues.put("id", 9);
-                contentValues.put("cheminAcces", "duplex3.jpg");
+                contentValues.put("cheminAcces", "/storage/emulated/0/DCIM/duplex3.jpg");
                 contentValues.put("idBien", 1);
                 contentValues.put("description", "Salle de bain");
                 db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
 
                 contentValues = new ContentValues();
                 contentValues.put("id", 10);
-                contentValues.put("cheminAcces", "flat2.jpg");
+                contentValues.put("cheminAcces", "/storage/emulated/0/DCIM/flat2.jpg");
                 contentValues.put("idBien", 1);
                 contentValues.put("description", "Cuisine");
                 db.insert("Photo", OnConflictStrategy.IGNORE, contentValues);
