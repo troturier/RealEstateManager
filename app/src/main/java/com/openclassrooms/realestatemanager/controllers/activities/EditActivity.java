@@ -35,7 +35,6 @@ import com.openclassrooms.realestatemanager.models.BienImmobilier;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.PointInteret;
-import com.openclassrooms.realestatemanager.models.PointInteretBienImmobilier;
 import com.openclassrooms.realestatemanager.models.Type;
 import com.openclassrooms.realestatemanager.models.Utilisateur;
 import com.openclassrooms.realestatemanager.repositories.injections.Injection;
@@ -46,10 +45,11 @@ import com.openclassrooms.realestatemanager.viewmodels.BienImmobilierViewModel;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
@@ -64,7 +64,6 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
     private BienImmobilierComplete bienImmobilierComplete;
     private BienImmobilierViewModel bienImmobilierViewModel;
     private List<Photo> photos;
-    private List<PointInteretBienImmobilier> pointInteretBienImmobiliers;
 
     // FOR DESIGN
     @BindView(R.id.detail_recycler_view)
@@ -76,10 +75,10 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
     private ImageView add_media_iv;
     private EditText add_media_path;
 
-    PhotoAdapter adapter;
-    PoiAdapter poiAdapter;
+    private PhotoAdapter adapter;
+    private PoiAdapter poiAdapter;
 
-    public List<PointInteret> pointInteretList;
+    private List<PointInteret> pointInteretList;
 
     private Uri uriFilePath;
 
@@ -98,6 +97,7 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
     private TextView soldTv;
     private Button soldButton;
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -136,19 +136,22 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
 
     private void configureMediaRecyclerView() {
         ButterKnife.bind(this);
-        this.adapter = new PhotoAdapter(this);
+        this.adapter = new PhotoAdapter(this, true, this);
         this.recyclerView.setAdapter(adapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         this.photos = bienImmobilierComplete.getPhotos();
         this.adapter.updateData(photos, bienImmobilierComplete);
         this.configureOnClickRecyclerView();
-        ImageButton addMediaIB = findViewById(R.id.action_add_media);
-        addMediaIB.setOnClickListener(v -> createAddMediaDialog());
+        //addMediaIB.setOnClickListener(v -> createAddMediaDialog());
     }
 
     private void configureOnClickRecyclerView(){
-        ItemClickSupport.addTo(recyclerView, R.layout.detail_recycler_view_item)
-                .setOnItemClickListener((recyclerView, position, v) -> createEditMediaDialog(position));
+        ItemClickSupport.addTo(recyclerView, R.layout.detail_recycler_view_item).setOnItemClickListener((recyclerView, position, v) -> {
+            if (position == adapter.getItemCount()-1)
+                createAddMediaDialog();
+            else
+                createEditMediaDialog(position);
+        });
     }
 
     private void updateMediaRecyclerView(List<Photo> photos){
@@ -159,8 +162,6 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         this.poiAdapter = new PoiAdapter(this, bienImmobilierViewModel);
         this.recyclerViewPoi.setAdapter(poiAdapter);
         this.recyclerViewPoi.setLayoutManager(new LinearLayoutManager(this));
-        this.pointInteretBienImmobiliers = new ArrayList<>();
-        this.pointInteretBienImmobiliers.addAll(this.bienImmobilierComplete.getPointInteretBienImmobiliers());
         this.poiAdapter.updateData(pointInteretList, bienImmobilierComplete);
         ImageButton addPoiIB = findViewById(R.id.action_add_poi);
         addPoiIB.setOnClickListener(v -> createAddPoiDialog());
@@ -180,12 +181,12 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         if(bienImmobilierComplete.getBienImmobilier().getDateVente() != null){
             if(!bienImmobilierComplete.getBienImmobilier().getDateVente().isEmpty()) {
                 soldTv.setVisibility(View.VISIBLE);
-                soldTv.setText("Sold on : " + bienImmobilierComplete.getBienImmobilier().getDateVente());
-                soldButton.setText("Not sold");
+                soldTv.setText(String.format("%s%s", getString(R.string.sold_on), bienImmobilierComplete.getBienImmobilier().getDateVente()));
+                soldButton.setText(getString(R.string.not_sold));
             }
         }
         else
-            soldTv.setText("This property is not sold yet");
+            soldTv.setText(getString(R.string.is_not_sold_yet));
         soldButton.setOnClickListener(v -> sold());
     }
 
@@ -193,13 +194,13 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         if(bienImmobilierComplete.getBienImmobilier().getDateVente() == null) {
             bienImmobilierComplete.getBienImmobilier().setDateVente(Utils.getTodayDate());
             soldTv.setVisibility(View.VISIBLE);
-            soldTv.setText("Sold on : " + Utils.getTodayDate());
-            soldButton.setText("Not sold");
+            soldTv.setText(String.format("%s%s", getString(R.string.sold_on), Utils.getTodayDate()));
+            soldButton.setText(getString(R.string.not_sold));
         }
         else {
             bienImmobilierComplete.getBienImmobilier().setDateVente(null);
-            soldTv.setText("This property is not sold yet");
-            soldButton.setText("Sold");
+            soldTv.setText(getString(R.string.is_not_sold_yet));
+            soldButton.setText(getString(R.string.sold));
         }
     }
 
@@ -368,9 +369,7 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         this.add_media_iv = dialogView.findViewById(R.id.add_media_iv);
         this.add_media_path = dialogView.findViewById(R.id.etMediaPath);
 
-        galleryButton.setOnClickListener(view -> {
-            getImageFromAlbum();
-        });
+        galleryButton.setOnClickListener(view -> getImageFromAlbum());
 
         cameraButton.setOnClickListener(v -> getImageFromCamera());
 
@@ -407,6 +406,7 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             File mainDirectory = new File(Environment.getExternalStorageDirectory(), "DCIM");
             if (!mainDirectory.exists())
+                //noinspection ResultOfMethodCallIgnored
                 mainDirectory.mkdirs();
 
             Calendar calendar = Calendar.getInstance();
@@ -421,7 +421,7 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         if (uriFilePath != null)
             outState.putString("uri_file_path", uriFilePath.toString());
         super.onSaveInstanceState(outState);
@@ -434,9 +434,9 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
             Uri selectedImage = data.getData();
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
 
-            Cursor cursor = getContentResolver().query(selectedImage,
+            Cursor cursor = getContentResolver().query(Objects.requireNonNull(selectedImage),
                     filePathColumn, null, null, null);
-            cursor.moveToFirst();
+            Objects.requireNonNull(cursor).moveToFirst();
 
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);

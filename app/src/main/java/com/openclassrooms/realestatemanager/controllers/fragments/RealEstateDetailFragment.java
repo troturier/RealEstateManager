@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+@SuppressWarnings("unchecked")
 public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.Listener{
 
     // FOR DESIGN
@@ -33,7 +34,7 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
     private View view;
 
     public BienImmobilierComplete bienImmobilierComplete;
-    public List<PointInteret> pointInteretList;
+    private List<PointInteret> pointInteretList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -150,7 +151,7 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
 
     private void configureRecyclerView(){
         ButterKnife.bind(this, view);
-        PhotoAdapter adapter = new PhotoAdapter(this);
+        PhotoAdapter adapter = new PhotoAdapter(this, false, getActivity());
         this.recyclerView.setAdapter(adapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
         List<Photo> photos = bienImmobilierComplete.getPhotos();

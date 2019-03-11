@@ -13,6 +13,7 @@ import java.io.File;
 import java.lang.ref.WeakReference;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -21,7 +22,8 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnC
 
     // FOR UI
     @BindView(R.id.detail_rv_tv) public TextView detailTV;
-    @BindView(R.id.detail_rv_iv) ImageView detailIV;
+    @BindView(R.id.detail_rv_iv) public ImageView detailIV;
+    @BindView(R.id.photo_cv) public CardView photoCv;
 
     // FOR DATA
     private WeakReference<PhotoAdapter.Listener> callbackWeakRef;
@@ -42,6 +44,7 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnC
         detailTV.setText(photo.getDescription());
     }
 
+    @SuppressWarnings("unused")
     @Override
     public void onClick(View v) {
         PhotoAdapter.Listener callback = callbackWeakRef.get();

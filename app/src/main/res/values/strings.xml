@@ -5,4 +5,9 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="no_description">No description.</string>
     <string name="description">Description</string>
+    <string name="sold_on">Sold on :</string>
+    <string name="not_sold">Not sold</string>
+    <string name="is_not_sold_yet">This property is not sold yet</string>
+    <string name="sold">Sold</string>
+    <string name="a_photo_of_the_property">A photo of the property</string>
 </resources>
