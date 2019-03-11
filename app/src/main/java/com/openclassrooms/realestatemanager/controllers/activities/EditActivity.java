@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.openclassrooms.realestatemanager.R;
@@ -40,6 +41,7 @@ import com.openclassrooms.realestatemanager.models.Utilisateur;
 import com.openclassrooms.realestatemanager.repositories.injections.Injection;
 import com.openclassrooms.realestatemanager.repositories.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
+import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.viewmodels.BienImmobilierViewModel;
 import com.squareup.picasso.Picasso;
 
@@ -93,36 +95,39 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
     private EditText surfaceEt;
     private EditText descriptionEt;
     private Spinner typeSpinner;
+    private TextView soldTv;
+    private Button soldButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit);
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_edit);
 
-        if (savedInstanceState != null) {
-            if (uriFilePath == null && savedInstanceState.getString("uri_file_path") != null) {
-                uriFilePath = Uri.parse(savedInstanceState.getString("uri_file_path"));
+            if (savedInstanceState != null) {
+                if (uriFilePath == null && savedInstanceState.getString("uri_file_path") != null) {
+                    uriFilePath = Uri.parse(savedInstanceState.getString("uri_file_path"));
+                }
             }
-        }
 
-        pointInteretList = (List<PointInteret>) getIntent().getSerializableExtra("poi");
+            pointInteretList = (List<PointInteret>) getIntent().getSerializableExtra("poi");
 
-        // Retrieve selected item
-        bienImmobilierComplete = (BienImmobilierComplete) getIntent().getSerializableExtra("bienImmobilier");
+            // Retrieve selected item
+            bienImmobilierComplete = (BienImmobilierComplete) getIntent().getSerializableExtra("bienImmobilier");
 
-        // Configure ViewModel for database operations
-        configureViewModel();
+            // Configure ViewModel for database operations
+            configureViewModel();
 
-        // Configure RecyclerView for media
-        configureMediaRecyclerView();
+            // Configure RecyclerView for media
+            configureMediaRecyclerView();
 
-        configurePoiRecyclerView();
+            configurePoiRecyclerView();
 
-        // Update UI from selected item
-        updateDescriptionUI();
-        updateSurfaceUI();
-        updateRoomsUI();
+            // Update UI from selected item
+            updateDescriptionUI();
+            updateSurfaceUI();
+            updateRoomsUI();
         updateLocationUI();
+        updateSoldUI();
     }
 
     // -----------------------
@@ -168,6 +173,35 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
     // -----------------------
     // EDITTEXT UPDATE
     // -----------------------
+
+    private void updateSoldUI(){
+        soldTv = findViewById(R.id.tvDateSold);
+        soldButton = findViewById(R.id.action_sold);
+        if(bienImmobilierComplete.getBienImmobilier().getDateVente() != null){
+            if(!bienImmobilierComplete.getBienImmobilier().getDateVente().isEmpty()) {
+                soldTv.setVisibility(View.VISIBLE);
+                soldTv.setText("Sold on : " + bienImmobilierComplete.getBienImmobilier().getDateVente());
+                soldButton.setText("Not sold");
+            }
+        }
+        else
+            soldTv.setText("This property is not sold yet");
+        soldButton.setOnClickListener(v -> sold());
+    }
+
+    private void sold(){
+        if(bienImmobilierComplete.getBienImmobilier().getDateVente() == null) {
+            bienImmobilierComplete.getBienImmobilier().setDateVente(Utils.getTodayDate());
+            soldTv.setVisibility(View.VISIBLE);
+            soldTv.setText("Sold on : " + Utils.getTodayDate());
+            soldButton.setText("Not sold");
+        }
+        else {
+            bienImmobilierComplete.getBienImmobilier().setDateVente(null);
+            soldTv.setText("This property is not sold yet");
+            soldButton.setText("Sold");
+        }
+    }
 
     private void updateLocationUI(){
         streetEt = findViewById(R.id.etStreet);
@@ -220,7 +254,7 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
 
     private void updateUtilisateurSpinner(List<Utilisateur> utilisateurList){
         Spinner utilisateurSpinner = findViewById(R.id.spinner_utilisateur);
-        ArrayAdapter<Utilisateur> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, utilisateurList);
+        ArrayAdapter<Utilisateur> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, utilisateurList);
         utilisateurSpinner.setAdapter(arrayAdapter);
         utilisateurSpinner.setSelection(bienImmobilierComplete.getUtilisateurs().get(0).getId()-1);
         utilisateurSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -242,7 +276,7 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
 
     private void updateTypeSpinner(List<Type> types){
         typeSpinner = findViewById(R.id.spinner_type);
-        ArrayAdapter<Type> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, types);
+        ArrayAdapter<Type> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, types);
         typeSpinner.setAdapter(arrayAdapter);
         typeSpinner.setSelection(bienImmobilierComplete.getType().get(0).getId()-1);
         typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -465,7 +499,14 @@ public class EditActivity extends AppCompatActivity implements PhotoAdapter.List
         Button cancelButton = dialogView.findViewById(R.id.editMedia_buttonCancel);
         Button deleteButton = dialogView.findViewById(R.id.editMedia_buttonDelete);
         Button defaultButton = dialogView.findViewById(R.id.editMedia_buttonDefault);
+        ImageView editMediaIv = dialogView.findViewById(R.id.edit_media_iv);
 
+        Picasso.get()
+                .load(new File(adapter.getItem(position).getCheminAcces()))
+                .resize(250, 250)
+                .centerCrop()
+                .error(R.mipmap.ic_iv_placeholder_no_image)
+                .into(editMediaIv);
         mediaDescription.setText(adapter.getItem(position).getDescription());
 
         cancelButton.setOnClickListener(view -> dialogBuilder.dismiss());

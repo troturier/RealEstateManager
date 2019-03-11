@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
-        app:srcCompat="@android:drawable/screen_background_dark_transparent" />
+        app:srcCompat="@mipmap/ic_iv_placeholder_no_image" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -94,6 +94,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="50"
+            android:backgroundTint="@color/colorAccent"
             app:srcCompat="@drawable/ic_camera" />
 
         <ImageButton
@@ -101,6 +102,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="50"
+            android:backgroundTint="@color/colorAccent"
             app:srcCompat="@drawable/ic_photo_library" />
     </LinearLayout>
 

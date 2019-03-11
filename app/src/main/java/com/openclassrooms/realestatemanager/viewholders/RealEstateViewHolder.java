@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 
 public class RealEstateViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
     @BindView(R.id.type_TV) TextView typeTV;
-    @BindView(R.id.city_TV) TextView cityTV;
+    @BindView(R.id.city_TV) public TextView cityTV;
     @BindView(R.id.price_TV) public TextView priceTV;
     @BindView(R.id.imageView) ImageView reIV;
 

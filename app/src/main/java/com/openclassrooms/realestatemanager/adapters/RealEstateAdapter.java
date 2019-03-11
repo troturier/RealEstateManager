@@ -46,11 +46,13 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
         if(row_index==position){
             viewHolder.row_linearlayout.setBackgroundColor(Color.parseColor("#FFFF4081"));
             viewHolder.priceTV.setTextColor(Color.parseColor("#ffffff"));
+            viewHolder.cityTV.setTextColor(Color.parseColor("#CFCFCF"));
         }
         else
         {
             viewHolder.row_linearlayout.setBackgroundColor(Color.parseColor("#ffffff"));
             viewHolder.priceTV.setTextColor(Color.parseColor("#FFFF4081"));
+            viewHolder.cityTV.setTextColor(Color.parseColor("#5D5D5E"));
         }
     }
 
