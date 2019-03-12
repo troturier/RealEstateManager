@@ -41,9 +41,15 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.ViewHolder>{
                     pointInteretBienImmobilier.setIdPoi(items.get(getAdapterPosition()).getId());
                     if(isChecked){
                         bienImmobilierViewModel.createPointInteretBienImmobilier(pointInteretBienImmobilier);
+                        List<PointInteretBienImmobilier> pointInteretBienImmobiliers = bienImmobilierComplete.getPointInteretBienImmobiliers();
+                        pointInteretBienImmobiliers.add(pointInteretBienImmobilier);
+                        bienImmobilierComplete.setPointInteretBienImmobiliers(pointInteretBienImmobiliers);
                     }
                     else {
                         bienImmobilierViewModel.deletePointInteretBienImmobilier(pointInteretBienImmobilier);
+                        List<PointInteretBienImmobilier> pointInteretBienImmobiliers = bienImmobilierComplete.getPointInteretBienImmobiliers();
+                        pointInteretBienImmobiliers.remove(pointInteretBienImmobilier);
+                        bienImmobilierComplete.setPointInteretBienImmobiliers(pointInteretBienImmobiliers);
                     }
                 }
             });

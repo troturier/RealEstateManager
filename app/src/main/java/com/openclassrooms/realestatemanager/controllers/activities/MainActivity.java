@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 getBienImmobiliers();
+                Toast.makeText(this, "Update successfully executed", Toast.LENGTH_SHORT).show();
             }
         }
     }

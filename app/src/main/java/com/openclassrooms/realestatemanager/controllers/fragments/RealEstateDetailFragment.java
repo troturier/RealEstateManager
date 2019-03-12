@@ -94,6 +94,26 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         return view;
     }
 
+    public void updateContent(BienImmobilierComplete bienImmobilierComplete, List<PointInteret> pointInteretList){
+        this.bienImmobilierComplete = bienImmobilierComplete;
+        this.pointInteretList = pointInteretList;
+
+        // MEDIA
+        configureRecyclerView();
+
+        // DESCRIPTION
+        configureDescription();
+
+        // ROOMS
+        configureRooms();
+
+        // LOCATION
+        configureLocation();
+
+        // POINTS OF INTEREST
+        configurePOI();
+    }
+
     // -------------------
     // UI UPDATE
     // -------------------

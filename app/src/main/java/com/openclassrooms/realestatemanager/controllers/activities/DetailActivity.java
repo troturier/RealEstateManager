@@ -69,9 +69,10 @@ public class DetailActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
-                Intent intent = new Intent();
-                setResult(RESULT_OK);
-                finish();
+                BienImmobilierComplete bienImmobilierComplete = (BienImmobilierComplete) data.getSerializableExtra("bienImmobilier");
+                pointInteretList = (List<PointInteret>) data.getSerializableExtra("poi");
+                RealEstateDetailFragment realEstateDetailFragment = (RealEstateDetailFragment) getSupportFragmentManager().findFragmentById(R.id.flDetailContainer);
+                realEstateDetailFragment.updateContent(bienImmobilierComplete, this.pointInteretList);
                 Toast.makeText(this, "Update successfully executed", Toast.LENGTH_SHORT).show();
             }
         }

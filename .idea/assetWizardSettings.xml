@@ -167,7 +167,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="jar:file:/F:/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/image/ic_add_a_photo_black_24dp.xml" />
+                                      <entry key="url" value="jar:file:/F:/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_euro_symbol_black_24dp.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -178,7 +178,7 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_add_media" />
+                            <entry key="outputName" value="ic_euro" />
                             <entry key="sourceFile" value="C:\Users\thiba" />
                           </map>
                         </option>
