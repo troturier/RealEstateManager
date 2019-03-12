@@ -1,12 +1,25 @@
 package com.openclassrooms.realestatemanager.controllers.fragments;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.adapters.PhotoAdapter;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
@@ -14,9 +27,11 @@ import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.PointInteret;
 import com.openclassrooms.realestatemanager.models.PointInteretBienImmobilier;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -26,15 +41,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 @SuppressWarnings("unchecked")
-public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.Listener{
+public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.Listener, OnMapReadyCallback {
 
     // FOR DESIGN
     @BindView(R.id.detail_recycler_view) RecyclerView recyclerView;
 
     private View view;
+    private MapView mMapView;
 
     public BienImmobilierComplete bienImmobilierComplete;
     private List<PointInteret> pointInteretList;
+    private String address;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,8 +64,19 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_real_estate_detail, container, false);
+        try {
+            // Inflate the layout for this fragment
+            view = inflater.inflate(R.layout.fragment_real_estate_detail, container, false);
+
+            MapsInitializer.initialize(Objects.requireNonNull(this.getActivity()));
+            mMapView = view.findViewById(R.id.map);
+            mMapView.onCreate(savedInstanceState);
+            mMapView.getMapAsync(this);
+        } catch (Exception e) {
+            Log.e("DETAIL_FRAG", "Inflate exception");
+        }
+
+        // MEDIA
         configureRecyclerView();
 
         // DESCRIPTION
@@ -117,8 +145,8 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         String ville = bienImmobilierComplete.getBienImmobilier().getVille() + "\n";
         String pays = bienImmobilierComplete.getBienImmobilier().getPays();
 
-
-        tvLocation.setText(String.format("%s%s%s%s%s", rue, complement, ville, cp, pays));
+        this.address = String.format("%s%s%s%s%s", rue, complement, ville, cp, pays);
+        tvLocation.setText(address);
     }
 
     private void configureDescription(){
@@ -170,5 +198,77 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
     @Override
     public void onClickDeleteButton(int position) {
         // ---- //
+    }
+
+    // ------------------ MAP -------------------------
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(Objects.requireNonNull(getActivity()), R.raw.map_style));
+
+        CameraPosition cameraPosition = CameraPosition.builder().target(getLocationFromAddress(getActivity(), this.address)).zoom(17).bearing(0).build();
+
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(Objects.requireNonNull(getLocationFromAddress(getActivity(), this.address)));
+        markerOptions.title(this.bienImmobilierComplete.getBienImmobilier().getRue());
+
+        googleMap.addMarker(markerOptions);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState)
+    {
+        super.onSaveInstanceState(outState); mMapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onLowMemory()
+    {
+        super.onLowMemory();
+        mMapView.onLowMemory();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
+
+    private LatLng getLocationFromAddress(Context context, String strAddress) {
+
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null) {
+                return null;
+            }
+
+            Address location = address.get(0);
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+
+        return p1;
     }
 }

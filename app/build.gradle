@@ -52,4 +52,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.7'
     //SWIPE ACTION
     implementation "com.daimajia.swipelayout:library:1.2.0@aar"
+    implementation 'com.google.android.gms:play-services-maps:16.1.0'
 }
