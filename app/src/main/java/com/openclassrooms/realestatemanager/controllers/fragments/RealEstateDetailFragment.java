@@ -67,29 +67,15 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         try {
             // Inflate the layout for this fragment
             view = inflater.inflate(R.layout.fragment_real_estate_detail, container, false);
-
-            MapsInitializer.initialize(Objects.requireNonNull(this.getActivity()));
             mMapView = view.findViewById(R.id.map);
             mMapView.onCreate(savedInstanceState);
+            mMapView.onResume();
             mMapView.getMapAsync(this);
         } catch (Exception e) {
             Log.e("DETAIL_FRAG", "Inflate exception");
         }
 
-        // MEDIA
-        configureRecyclerView();
-
-        // DESCRIPTION
-        configureDescription();
-
-        // ROOMS
-        configureRooms();
-
-        // LOCATION
-        configureLocation();
-
-        // POINTS OF INTEREST
-        configurePOI();
+        updateContent(this.bienImmobilierComplete, this.pointInteretList);
 
         return view;
     }
@@ -224,10 +210,13 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        MapsInitializer.initialize(Objects.requireNonNull(getContext()));
         googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(Objects.requireNonNull(getActivity()), R.raw.map_style));
+        googleMap.getUiSettings().setCompassEnabled(false);
+        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
 
         CameraPosition cameraPosition = CameraPosition.builder().target(getLocationFromAddress(getActivity(), this.address)).zoom(17).bearing(0).build();
-
         googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         MarkerOptions markerOptions = new MarkerOptions();
