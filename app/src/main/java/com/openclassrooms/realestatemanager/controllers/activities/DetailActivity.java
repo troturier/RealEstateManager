@@ -14,6 +14,7 @@ import com.openclassrooms.realestatemanager.models.PointInteret;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
@@ -28,6 +29,7 @@ public class DetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_real_estate_detail);
         // Fetch the bienImmobilier to display from bundle
         BienImmobilierComplete bienImmobilierComplete = (BienImmobilierComplete) getIntent().getSerializableExtra("bienImmobilier");
+        //noinspection unchecked
         pointInteretList = (List<PointInteret>) getIntent().getSerializableExtra("poi");
         if (savedInstanceState == null){
             // Insert detail fragment based on the bienImmobilier passed
@@ -40,16 +42,21 @@ public class DetailActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.action_add:
-                Toast.makeText(this, "Add button selected", Toast.LENGTH_SHORT).show();
+                intent = new Intent(this, EditActivity.class);
+                intent.putExtra("poi", (Serializable) pointInteretList);
+                intent.putExtra("requestCode", "edit");
+                startActivityForResult(intent, 1);
                 return true;
 
             case R.id.action_edit:
                 RealEstateDetailFragment realEstateDetailFragment = (RealEstateDetailFragment) getSupportFragmentManager().findFragmentById(R.id.flDetailContainer);
-                Intent intent = new Intent(this, EditActivity.class);
-                intent.putExtra("bienImmobilier", realEstateDetailFragment.bienImmobilierComplete);
+                intent = new Intent(this, EditActivity.class);
+                intent.putExtra("bienImmobilier", Objects.requireNonNull(realEstateDetailFragment).bienImmobilierComplete);
                 intent.putExtra("poi", (Serializable) pointInteretList);
+                intent.putExtra("requestCode", "edit");
                 startActivityForResult(intent, 1);
                 return true;
 
@@ -70,9 +77,10 @@ public class DetailActivity extends AppCompatActivity {
         if (requestCode == 1) {
             if (resultCode == RESULT_OK) {
                 BienImmobilierComplete bienImmobilierComplete = (BienImmobilierComplete) data.getSerializableExtra("bienImmobilier");
+                //noinspection unchecked
                 pointInteretList = (List<PointInteret>) data.getSerializableExtra("poi");
                 RealEstateDetailFragment realEstateDetailFragment = (RealEstateDetailFragment) getSupportFragmentManager().findFragmentById(R.id.flDetailContainer);
-                realEstateDetailFragment.updateContent(bienImmobilierComplete, this.pointInteretList);
+                Objects.requireNonNull(realEstateDetailFragment).updateContent(bienImmobilierComplete, this.pointInteretList);
                 Toast.makeText(this, "Update successfully executed", Toast.LENGTH_SHORT).show();
             }
         }

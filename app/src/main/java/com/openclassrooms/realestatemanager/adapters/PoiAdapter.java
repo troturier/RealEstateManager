@@ -23,6 +23,7 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.ViewHolder>{
     public interface Listener { void onClickDeleteButton(int position); }
     private final PoiAdapter.Listener callback;
     private List<PointInteret> items;
+    private String requestCode;
     private BienImmobilierComplete bienImmobilierComplete;
     private BienImmobilierViewModel bienImmobilierViewModel;
 
@@ -40,13 +41,17 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.ViewHolder>{
                     pointInteretBienImmobilier.setIdBien(bienImmobilierComplete.getBienImmobilier().getId());
                     pointInteretBienImmobilier.setIdPoi(items.get(getAdapterPosition()).getId());
                     if(isChecked){
-                        bienImmobilierViewModel.createPointInteretBienImmobilier(pointInteretBienImmobilier);
+                        if (requestCode.equals("edit")) {
+                            bienImmobilierViewModel.createPointInteretBienImmobilier(pointInteretBienImmobilier);
+                        }
                         List<PointInteretBienImmobilier> pointInteretBienImmobiliers = bienImmobilierComplete.getPointInteretBienImmobiliers();
                         pointInteretBienImmobiliers.add(pointInteretBienImmobilier);
                         bienImmobilierComplete.setPointInteretBienImmobiliers(pointInteretBienImmobiliers);
                     }
                     else {
-                        bienImmobilierViewModel.deletePointInteretBienImmobilier(pointInteretBienImmobilier);
+                        if (requestCode.equals("edit")) {
+                            bienImmobilierViewModel.deletePointInteretBienImmobilier(pointInteretBienImmobilier);
+                        }
                         List<PointInteretBienImmobilier> pointInteretBienImmobiliers = bienImmobilierComplete.getPointInteretBienImmobiliers();
                         pointInteretBienImmobiliers.remove(pointInteretBienImmobilier);
                         bienImmobilierComplete.setPointInteretBienImmobiliers(pointInteretBienImmobiliers);
@@ -56,10 +61,11 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.ViewHolder>{
         }
     }
 
-    public PoiAdapter(Listener callback, BienImmobilierViewModel bienImmobilierViewModel){
+    public PoiAdapter(Listener callback, BienImmobilierViewModel bienImmobilierViewModel, String requestCode){
         this.items = new ArrayList<>();
         this.bienImmobilierComplete = null;
         this.bienImmobilierViewModel = bienImmobilierViewModel;
+        this.requestCode = requestCode;
         this.callback = callback;
     }
 

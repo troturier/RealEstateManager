@@ -18,6 +18,8 @@ public class PhotoDataRepository {
 
     public LiveData<List<Photo>> getPhotos(int bienId) { return this.photoDao.getPhotos(bienId); }
 
+    public LiveData<Photo> getLastPhoto(){return  this.photoDao.getLastPhoto();}
+
     // --- CREATE ---
 
     public void createPhoto(Photo photo){ this.photoDao.insertPhoto(photo); }

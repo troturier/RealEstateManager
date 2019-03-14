@@ -17,13 +17,15 @@ public class BienImmobilierDataRepository {
 
     public LiveData<BienImmobilier> getBienImmobilier(int bienId) { return this.bienImmobilierDao.getBienImmobilier(bienId); }
 
+    public LiveData<BienImmobilier> getLastBienImmobilier() { return this.bienImmobilierDao.getLastBienImmobilier(); }
+
     public LiveData<List<BienImmobilier>> getBienImmobiliers() { return this.bienImmobilierDao.getBienImmobiliers(); }
 
     public LiveData<List<BienImmobilierComplete>> getBienImmobiliersComplete() { return this.bienImmobilierDao.getBienImmobiliersComplete(); }
 
     // --- CREATE ---
 
-    public void createBienImmobilier(BienImmobilier bienImmobilier){ this.bienImmobilierDao.insertBienImmobilier(bienImmobilier); }
+    public long createBienImmobilier(BienImmobilier bienImmobilier){ return this.bienImmobilierDao.insertBienImmobilier(bienImmobilier); }
 
     // --- DELETE ---
 

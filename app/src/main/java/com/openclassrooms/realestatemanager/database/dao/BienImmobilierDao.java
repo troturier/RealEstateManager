@@ -30,6 +30,9 @@ public interface BienImmobilierDao {
     @Query("DELETE FROM BienImmobilier WHERE id = :bienImmobilierId")
     int deleteBienImmobilier(int bienImmobilierId);
 
+    @Query("SELECT * FROM BienImmobilier ORDER BY id DESC LIMIT 1")
+    LiveData<BienImmobilier> getLastBienImmobilier();
+
     /**
      * This query will tell Room to query both the [BienImmobilier] and [Type] tables and handle
      * the object mapping.

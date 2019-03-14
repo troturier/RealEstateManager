@@ -25,16 +25,18 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     private final PhotoAdapter.Listener callback;
     private BienImmobilierComplete bienImmobilierComplete;
     private final boolean editactivity;
+    private String requestCode;
     private final Context context;
 
     // FOR DATA
     private List<Photo> items;
 
     // CONSTRUCTOR
-    public PhotoAdapter(Listener callback, boolean editactivity, Context context){
+    public PhotoAdapter(Listener callback, boolean editactivity, Context context, String requestCode){
         this.items = new ArrayList<>();
         this.bienImmobilierComplete = null;
         this.editactivity = editactivity;
+        this.requestCode = requestCode;
         this.callback = callback;
         this.context = context;
     }
@@ -63,11 +65,11 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
             holder.detailTV.setVisibility(View.VISIBLE);
             holder.detailIV.setScaleType(ImageView.ScaleType.CENTER_CROP);
             holder.photoCv.setCardBackgroundColor(0x00000000);
-            if (bienImmobilierComplete != null) {
-                if (items.get(position).getId() == bienImmobilierComplete.getBienImmobilier().getIdPhotoCouverture())
-                    holder.detailTV.setBackgroundColor(Color.parseColor("#A8FF0C40"));
-                else
-                    holder.detailTV.setBackgroundColor(Color.parseColor("#A80C0C0C"));
+            if (bienImmobilierComplete.getPhotoCouverture().size() > 0) {
+                if((requestCode.equals("edit") && items.get(position).getId() == bienImmobilierComplete.getPhotoCouverture().get(0).getId()) || (requestCode.equals("add") && items.get(position) == bienImmobilierComplete.getPhotoCouverture().get(0)))
+                        holder.detailTV.setBackgroundColor(Color.parseColor("#A8FF0C40"));
+                    else
+                        holder.detailTV.setBackgroundColor(Color.parseColor("#A80C0C0C"));
             }
         }
     }
@@ -82,8 +84,8 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
 
     public Photo getItem(int position){ return this.items.get(position);}
 
-    public void updateData(List<Photo> items, BienImmobilierComplete bienImmobilierComplete){
-        this.items = items;
+    public void updateData(BienImmobilierComplete bienImmobilierComplete){
+        this.items = bienImmobilierComplete.getPhotos();
         this.bienImmobilierComplete = bienImmobilierComplete;
         this.notifyDataSetChanged();
     }

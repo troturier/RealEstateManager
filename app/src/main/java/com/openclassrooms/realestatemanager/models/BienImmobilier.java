@@ -67,6 +67,8 @@ public class BienImmobilier implements Serializable {
         this.idType = idType;
     }
 
+    public BienImmobilier(){}
+
     // GETTERS - SETTERS //
 
     public int getId() {

@@ -18,6 +18,9 @@ public interface PhotoDao {
     @Query("SELECT * FROM Photo WHERE id = :id")
     LiveData<Photo> getPhoto(int id);
 
+    @Query("SELECT * FROM Photo ORDER BY id DESC LIMIT 1")
+    LiveData<Photo> getLastPhoto();
+
     @Insert
     long insertPhoto(Photo photo);
 

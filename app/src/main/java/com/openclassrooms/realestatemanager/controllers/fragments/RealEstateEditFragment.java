@@ -32,6 +32,7 @@ import com.openclassrooms.realestatemanager.models.BienImmobilier;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.models.Photo;
 import com.openclassrooms.realestatemanager.models.PointInteret;
+import com.openclassrooms.realestatemanager.models.PointInteretBienImmobilier;
 import com.openclassrooms.realestatemanager.models.Type;
 import com.openclassrooms.realestatemanager.models.Utilisateur;
 import com.openclassrooms.realestatemanager.repositories.injections.Injection;
@@ -43,6 +44,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
@@ -62,9 +64,11 @@ import static android.app.Activity.RESULT_OK;
 public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Listener, LifecycleOwner, PoiAdapter.Listener {
 
     private BienImmobilierComplete bienImmobilierComplete;
+    private BienImmobilier createdBienImmoobilier;
     private BienImmobilierViewModel bienImmobilierViewModel;
-    private List<Photo> photos;
+    private boolean created;
     private View view;
+    private static String requestCode;
 
     // FOR DESIGN
     @BindView(R.id.detail_recycler_view)
@@ -102,8 +106,26 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.created = false;
+        this.createdBienImmoobilier = null;
+        requestCode = Objects.requireNonNull(getActivity()).getIntent().getStringExtra("requestCode");
+        if(requestCode.equals("edit"))
         // Fetch the bienImmobilier to display from bundle
         bienImmobilierComplete = (BienImmobilierComplete) Objects.requireNonNull(getActivity()).getIntent().getSerializableExtra("bienImmobilier");
+        else{
+            BienImmobilier bienImmobilier = new BienImmobilier();
+            List<Photo> photoList = new ArrayList<>();
+            List<Photo> photoCouverture = new ArrayList<>();
+            List<Type> typeList = new ArrayList<>();
+            List<Utilisateur> utilisateurList = new ArrayList<>();
+            List<PointInteretBienImmobilier> pointInteretBienImmobilierList = new ArrayList<>();
+            this.bienImmobilierComplete = new BienImmobilierComplete(bienImmobilier);
+            this.bienImmobilierComplete.setUtilisateurs(utilisateurList);
+            this.bienImmobilierComplete.setType(typeList);
+            this.bienImmobilierComplete.setPhotos(photoList);
+            this.bienImmobilierComplete.setPhotoCouverture(photoCouverture);
+            this.bienImmobilierComplete.setPointInteretBienImmobiliers(pointInteretBienImmobilierList);
+        }
         //noinspection unchecked
         pointInteretList = (List<PointInteret>) getActivity().getIntent().getSerializableExtra("poi");
     }
@@ -144,11 +166,10 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
 
     private void configureMediaRecyclerView() {
         ButterKnife.bind(Objects.requireNonNull(getActivity()));
-        this.adapter = new PhotoAdapter(this, true, getActivity());
+        this.adapter = new PhotoAdapter(this, true, getActivity(), requestCode);
         this.recyclerView.setAdapter(adapter);
         this.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        this.photos = bienImmobilierComplete.getPhotos();
-        this.adapter.updateData(photos, bienImmobilierComplete);
+        this.adapter.updateData(bienImmobilierComplete);
         this.configureOnClickRecyclerView();
         //addMediaIB.setOnClickListener(v -> createAddMediaDialog());
     }
@@ -162,12 +183,12 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
         });
     }
 
-    private void updateMediaRecyclerView(List<Photo> photos){
-        this.adapter.updateData(photos, bienImmobilierComplete);
+    private void updateMediaRecyclerView(){
+        this.adapter.updateData(bienImmobilierComplete);
     }
 
     private void configurePoiRecyclerView(){
-        this.poiAdapter = new PoiAdapter(this, bienImmobilierViewModel);
+        this.poiAdapter = new PoiAdapter(this, bienImmobilierViewModel, requestCode);
         this.recyclerViewPoi.setAdapter(poiAdapter);
         this.recyclerViewPoi.setLayoutManager(new LinearLayoutManager(getActivity()));
         this.poiAdapter.updateData(pointInteretList, bienImmobilierComplete);
@@ -270,7 +291,8 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
         Spinner utilisateurSpinner = this.view.findViewById(R.id.spinner_utilisateur);
         ArrayAdapter<Utilisateur> arrayAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_dropdown_item, utilisateurList);
         utilisateurSpinner.setAdapter(arrayAdapter);
-        utilisateurSpinner.setSelection(bienImmobilierComplete.getUtilisateurs().get(0).getId()-1);
+        if (requestCode.equals("edit"))
+            utilisateurSpinner.setSelection(bienImmobilierComplete.getUtilisateurs().get(0).getId()-1);
         utilisateurSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -292,7 +314,8 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
         typeSpinner = this.view.findViewById(R.id.spinner_type);
         ArrayAdapter<Type> arrayAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_dropdown_item, types);
         typeSpinner.setAdapter(arrayAdapter);
-        typeSpinner.setSelection(bienImmobilierComplete.getType().get(0).getId()-1);
+        if (requestCode.equals("edit"))
+            typeSpinner.setSelection(bienImmobilierComplete.getType().get(0).getId()-1);
         typeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -392,8 +415,14 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
                 Photo photo = new Photo();
                 photo.setDescription(description.getText().toString());
                 photo.setCheminAcces(this.add_media_path.getText().toString());
-                photo.setIdBien(bienImmobilierComplete.getBienImmobilier().getId());
-                addMedia(photo);
+                if (requestCode.equals("edit")) {
+                    photo.setIdBien(bienImmobilierComplete.getBienImmobilier().getId());
+                    addMedia(photo);
+                }
+                else {
+                    bienImmobilierComplete.getPhotos().add(photo);
+                    adapter.updateData(bienImmobilierComplete);
+                }
                 dialogBuilder.dismiss();
             } else {
                 Toast.makeText(getActivity(), "Please fill all the fields before adding a new media", Toast.LENGTH_LONG).show();
@@ -528,34 +557,47 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
             if (!mediaDescription.getText().toString().isEmpty()) {
                 adapter.getItem(position).setDescription(mediaDescription.getText().toString());
                 dialogBuilder.dismiss();
-                this.photos = bienImmobilierComplete.getPhotos();
-                this.adapter.updateData(photos, bienImmobilierComplete);
-                this.bienImmobilierViewModel.updatePhoto(adapter.getItem(position));
+                this.adapter.updateData(bienImmobilierComplete);
+                if (requestCode.equals("edit")) {
+                    this.bienImmobilierViewModel.updatePhoto(adapter.getItem(position));
+                }
             } else {
                 Toast.makeText(getActivity(), "Please fill all the fields before editing a media", Toast.LENGTH_LONG).show();
             }
         });
 
         defaultButton.setOnClickListener(v -> {
-            bienImmobilierComplete.getBienImmobilier().setIdPhotoCouverture(adapter.getItem(position).getId());
+            if (requestCode.equals("edit")) {
+                bienImmobilierComplete.getBienImmobilier().setIdPhotoCouverture(adapter.getItem(position).getId());
+            }else {
+                bienImmobilierComplete.getPhotoCouverture().clear();
+                bienImmobilierComplete.getPhotoCouverture().add(adapter.getItem(position));
+            }
             dialogBuilder.dismiss();
-            this.photos = bienImmobilierComplete.getPhotos();
-            this.adapter.updateData(photos, bienImmobilierComplete);
+            this.adapter.updateData(bienImmobilierComplete);
         });
 
         deleteButton.setOnClickListener(v -> {
             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                 switch (which){
                     case DialogInterface.BUTTON_POSITIVE:
-                        if(bienImmobilierComplete.getBienImmobilier().getIdPhotoCouverture() != adapter.getItem(position).getId()){
-                            bienImmobilierViewModel.deletePhoto(adapter.getItem(position));
+                        if (requestCode.equals("edit")) {
+                            if(bienImmobilierComplete.getBienImmobilier().getIdPhotoCouverture() == null || bienImmobilierComplete.getBienImmobilier().getIdPhotoCouverture() != adapter.getItem(position).getId()){
+                                bienImmobilierViewModel.deletePhoto(adapter.getItem(position));
+                                dialogBuilder.dismiss();
+                                this.bienImmobilierComplete.getPhotos().remove(adapter.getItem(position));
+                                this.adapter.updateData(bienImmobilierComplete);
+                            }
+                            else {
+                                Toast.makeText(getActivity(), "Please set another picture as default and validate the changes before deleting this one", Toast.LENGTH_LONG).show();
+                            }
+                        } else {
+                            if(bienImmobilierComplete.getPhotoCouverture().size() != 0 && bienImmobilierComplete.getPhotoCouverture().get(0) == adapter.getItem(position)){
+                                bienImmobilierComplete.getPhotoCouverture().clear();
+                            }
+                            bienImmobilierComplete.getPhotos().remove(adapter.getItem(position));
+                            adapter.updateData(bienImmobilierComplete);
                             dialogBuilder.dismiss();
-                            this.bienImmobilierComplete.getPhotos().remove(adapter.getItem(position));
-                            this.photos = bienImmobilierComplete.getPhotos();
-                            this.adapter.updateData(photos, bienImmobilierComplete);
-                        }
-                        else {
-                            Toast.makeText(getActivity(), "Please set another picture as default and validate the changes before deleting this one", Toast.LENGTH_LONG).show();
                         }
                         break;
 
@@ -603,75 +645,111 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
     }
 
     private void addMedia(Photo photo){
-        bienImmobilierViewModel.createPhoto(photo);
-        bienImmobilierViewModel.getPhotos(bienImmobilierComplete.getBienImmobilier().getId()).observe( this, this::updateMediaRecyclerView);
+        if (requestCode.equals("edit")) {
+            bienImmobilierViewModel.createPhoto(photo);
+            bienImmobilierViewModel.getPhotos(bienImmobilierComplete.getBienImmobilier().getId()).observe( this, photos -> updateMediaRecyclerView());
+        }
     }
 
     public void updateBienImmobilier(){
         BienImmobilier bienImmobilier = bienImmobilierComplete.getBienImmobilier();
         boolean allFieldsFilled = true;
-        if(!this.descriptionEt.getText().toString().isEmpty())
-            bienImmobilier.setDescription(this.descriptionEt.getText().toString());
-        else
-            allFieldsFilled = false;
-        if(!this.surfaceEt.getText().toString().isEmpty())
-            bienImmobilier.setSurface(Integer.parseInt(this.surfaceEt.getText().toString()));
-        else
-            allFieldsFilled = false;
-        if(!this.roomsEt.getText().toString().isEmpty())
-            bienImmobilier.setPieces(Integer.parseInt(this.roomsEt.getText().toString()));
-        else
-            allFieldsFilled = false;
-        if(!this.bedroomsEt.getText().toString().isEmpty())
-            bienImmobilier.setChambres(Integer.parseInt(this.bedroomsEt.getText().toString()));
-        else
-            allFieldsFilled = false;
-        if(!this.bathroomsEt.getText().toString().isEmpty())
-            bienImmobilier.setSdb(Integer.parseInt(this.bathroomsEt.getText().toString()));
-        else
-            allFieldsFilled = false;
-        if(!this.streetEt.getText().toString().isEmpty())
-            bienImmobilier.setRue(this.streetEt.getText().toString());
-        else
-            allFieldsFilled = false;
-        if (!this.street2Et.getText().toString().isEmpty()) {
-            bienImmobilier.setComplementRue(this.street2Et.getText().toString());
-        } else {
-            bienImmobilier.setComplementRue(null);
-        }
-        if(!this.priceEt.getText().toString().isEmpty())
-            bienImmobilier.setPrix(Integer.parseInt(this.priceEt.getText().toString()));
-        else
-            allFieldsFilled = false;
-        if(!this.cityEt.getText().toString().isEmpty())
-            bienImmobilier.setVille(this.cityEt.getText().toString());
-        else
-            allFieldsFilled = false;
-        if(!this.cpEt.getText().toString().isEmpty())
-            bienImmobilier.setCp(this.cpEt.getText().toString());
-        else
-            allFieldsFilled = false;
-        if(!this.stateEt.getText().toString().isEmpty())
-            bienImmobilier.setPays(this.stateEt.getText().toString());
-        else
-            allFieldsFilled = false;
+        boolean coverPicture = true;
+        List<EditText> editTextList = new ArrayList<>();
+        editTextList.add(this.descriptionEt);
+        editTextList.add(this.surfaceEt);
+        editTextList.add(this.roomsEt);
+        editTextList.add(this.bedroomsEt);
+        editTextList.add(this.bathroomsEt);
+        editTextList.add(this.streetEt);
+        editTextList.add(this.priceEt);
+        editTextList.add(this.cityEt);
+        editTextList.add(this.cpEt);
+        editTextList.add(this.stateEt);
+        editTextList.add(this.cityEt);
 
-        if (allFieldsFilled) {
-            this.bienImmobilierViewModel.updateBienImmobilier(bienImmobilier);
+        for(int i=0; i<editTextList.size();i++){
+            if(editTextList.get(i).getText().toString().isEmpty()){
+                allFieldsFilled = false;
+            }
+        }
+        if(this.bienImmobilierComplete.getPhotoCouverture().size() == 0){
+            coverPicture = false;
+        }
+
+        if (allFieldsFilled && coverPicture) {
             Intent intent;
             intent = new Intent();
-            intent.putExtra("bienImmobilier", this.bienImmobilierComplete);
-            intent.putExtra("poi", (Serializable) this.pointInteretList);
+
+            bienImmobilier.setDescription(this.descriptionEt.getText().toString());
+            bienImmobilier.setSurface(Integer.parseInt(this.surfaceEt.getText().toString()));
+            bienImmobilier.setPieces(Integer.parseInt(this.roomsEt.getText().toString()));
+            bienImmobilier.setChambres(Integer.parseInt(this.bedroomsEt.getText().toString()));
+            bienImmobilier.setSdb(Integer.parseInt(this.bathroomsEt.getText().toString()));
+            bienImmobilier.setRue(this.streetEt.getText().toString());
+            if (!this.street2Et.getText().toString().isEmpty()) {
+                bienImmobilier.setComplementRue(this.street2Et.getText().toString());
+            } else {
+                bienImmobilier.setComplementRue(null);
+            }
+            bienImmobilier.setPrix(Integer.parseInt(this.priceEt.getText().toString()));
+            bienImmobilier.setVille(this.cityEt.getText().toString());
+            bienImmobilier.setCp(this.cpEt.getText().toString());
+            bienImmobilier.setPays(this.stateEt.getText().toString());
+
+            if(requestCode.equals("edit")) {
+                this.bienImmobilierViewModel.updateBienImmobilier(bienImmobilier);
+                intent.putExtra("bienImmobilier", this.bienImmobilierComplete);
+                intent.putExtra("poi", (Serializable) this.pointInteretList);
+            }
+            else {
+                bienImmobilier.setDateEntree(Utils.getTodayDate());
+                bienImmobilierViewModel.createBienImmobilier(bienImmobilier);
+                bienImmobilierViewModel.getLastBienImmobilier().observe(this, this::createItems);
+            }
             Objects.requireNonNull(getActivity()).setResult(RESULT_OK, intent);
             getActivity().finish();
         } else {
-            AlertDialog alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getActivity())).create();
-            alertDialog.setTitle("Error");
-            alertDialog.setMessage("A field or more is empty, please fill in all fields before proceeding.");
-            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                    (dialog, which) -> dialog.dismiss());
-            alertDialog.show();
+            if(!coverPicture){
+                AlertDialog alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getActivity())).create();
+                alertDialog.setTitle("Error");
+                alertDialog.setMessage("Please choose a cover picture.");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        (dialog, which) -> dialog.dismiss());
+                alertDialog.show();
+            }else {
+                AlertDialog alertDialog = new AlertDialog.Builder(Objects.requireNonNull(getActivity())).create();
+                alertDialog.setTitle("Error");
+                alertDialog.setMessage("A field or more is empty, please fill in all fields before proceeding.");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        (dialog, which) -> dialog.dismiss());
+                alertDialog.show();
+            }
         }
+    }
+
+    private void createItems(BienImmobilier bienImmobilier){
+        if (!created) {
+            this.createdBienImmoobilier = bienImmobilier;
+            for(int i=0;i<this.bienImmobilierComplete.getPointInteretBienImmobiliers().size();i++){
+                this.bienImmobilierComplete.getPointInteretBienImmobiliers().get(i).setIdBien(bienImmobilier.getId());
+                bienImmobilierViewModel.createPointInteretBienImmobilier(this.bienImmobilierComplete.getPointInteretBienImmobiliers().get(i));
+            }
+            this.bienImmobilierComplete.getPhotos().remove(bienImmobilierComplete.getPhotoCouverture().get(0));
+            for(int i=0;i<this.bienImmobilierComplete.getPhotos().size();i++){
+                this.bienImmobilierComplete.getPhotos().get(i).setIdBien(bienImmobilier.getId());
+                bienImmobilierViewModel.createPhoto(this.bienImmobilierComplete.getPhotos().get(i));
+            }
+            this.bienImmobilierComplete.getPhotoCouverture().get(0).setIdBien(bienImmobilier.getId());
+            this.bienImmobilierViewModel.createPhoto(this.bienImmobilierComplete.getPhotoCouverture().get(0));
+            this.bienImmobilierViewModel.getLastPhoto().observe(this, this::updateCover);
+            created = true;
+        }
+    }
+
+    private void updateCover(Photo photo){
+        this.createdBienImmoobilier.setIdPhotoCouverture(photo.getId());
+        this.bienImmobilierViewModel.updateBienImmobilier(this.createdBienImmoobilier);
     }
 
     @Override

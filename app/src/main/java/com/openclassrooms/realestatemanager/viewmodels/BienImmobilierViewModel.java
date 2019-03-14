@@ -78,9 +78,11 @@ public class BienImmobilierViewModel extends ViewModel {
     }
 
     public void createBienImmobilier(BienImmobilier bienImmobilier){
-        executor.execute(() -> {
-          bienImmobilierDataSource.createBienImmobilier(bienImmobilier);
-        });
+        executor.execute(() -> bienImmobilierDataSource.createBienImmobilier(bienImmobilier));
+    }
+
+    public LiveData<BienImmobilier> getLastBienImmobilier(){
+        return bienImmobilierDataSource.getLastBienImmobilier();
     }
 
     public void deleteBienImmobilier(BienImmobilier bienImmobilier){
@@ -106,6 +108,8 @@ public class BienImmobilierViewModel extends ViewModel {
     public LiveData<Photo> getPhoto(int photoId){
         return photoDataSource.getPhoto(photoId);
     }
+
+    public LiveData<Photo> getLastPhoto(){return photoDataSource.getLastPhoto();}
 
     public void createPhoto(Photo photo){
         executor.execute(() -> {

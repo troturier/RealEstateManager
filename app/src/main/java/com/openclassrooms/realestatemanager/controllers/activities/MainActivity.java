@@ -125,18 +125,22 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent(this, EditActivity.class);
         switch (item.getItemId()) {
             case R.id.action_add:
-                Toast.makeText(this, "Add button selected", Toast.LENGTH_SHORT).show();
+                intent.putExtra("poi", (Serializable) pointInteretList);
+                intent.putExtra("requestCode", "add");
+                startActivityForResult(intent, 1);
                 return true;
 
             case R.id.action_edit:
                 RealEstateDetailFragment realEstateDetailFragment;
                 if (getSupportFragmentManager().findFragmentById(R.id.flDetailContainer) != null) {
                     realEstateDetailFragment = (RealEstateDetailFragment) getSupportFragmentManager().findFragmentById(R.id.flDetailContainer);
-                    Intent intent = new Intent(this, EditActivity.class);
+                    assert realEstateDetailFragment != null;
                     intent.putExtra("bienImmobilier", realEstateDetailFragment.bienImmobilierComplete);
                     intent.putExtra("poi", (Serializable) pointInteretList);
+                    intent.putExtra("requestCode", "edit");
                     startActivityForResult(intent, 1);
                 } else {
                     Toast.makeText(this, "Please select an item first", Toast.LENGTH_SHORT).show();
