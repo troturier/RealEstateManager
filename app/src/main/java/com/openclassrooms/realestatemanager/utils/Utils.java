@@ -2,9 +2,13 @@ package com.openclassrooms.realestatemanager.utils;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+
+import com.openclassrooms.realestatemanager.R;
 
 import java.io.IOException;
 import java.text.DateFormat;
@@ -13,6 +17,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 /**
  * Created by Philippe on 21/02/2018.
@@ -102,5 +108,30 @@ public class Utils {
             e.printStackTrace();
             throw e;
         }
+    }
+
+    public static void createNotification(Context context){
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "1")
+                .setSmallIcon(R.drawable.ic_home_black_24dp)
+                .setContentTitle("New property added !")
+                .setContentText("A new property has been successfully added to the database.")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "added";
+            String description = "notification channel for adding a property";
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel channel = new NotificationChannel("1", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(1, builder.build());
     }
 }

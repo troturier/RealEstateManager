@@ -750,6 +750,7 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
     private void updateCover(Photo photo){
         this.createdBienImmoobilier.setIdPhotoCouverture(photo.getId());
         this.bienImmobilierViewModel.updateBienImmobilier(this.createdBienImmoobilier);
+        Utils.createNotification(getActivity());
     }
 
     @Override
