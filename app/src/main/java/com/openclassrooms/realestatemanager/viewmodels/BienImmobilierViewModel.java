@@ -163,16 +163,16 @@ public class BienImmobilierViewModel extends ViewModel {
     // FOR POINT_INTERET_BIEN_IMMOBILIER
     // --------
 
-    public LiveData<List<PointInteretBienImmobilier>> getPointInteretsBienImmobilier(int bienImmobilierId){
-        return pointInteretBienImmobilierDataSource.getPointInteretsBienImmobilier(bienImmobilierId);
+    public LiveData<List<PointInteretBienImmobilier>> getPointInteretBienImmobilierByBI(int bienImmobilierId){
+        return pointInteretBienImmobilierDataSource.getPointInteretBienImmobilierByBI(bienImmobilierId);
+    }
+
+    public LiveData<List<PointInteretBienImmobilier>> getPointInteretBienImmobilierByPOI(int poiId){
+        return pointInteretBienImmobilierDataSource.getPointInteretBienImmobiliersByPOI(poiId);
     }
 
     public LiveData<List<PointInteretBienImmobilier>> getAllPointInteretsBienImmobilier(){
         return pointInteretBienImmobilierDataSource.getAllPointInteretsBienImmobilier();
-    }
-
-    public LiveData<PointInteretBienImmobilier> getPointInteretBienImmobilier(int pointInteretId){
-        return pointInteretBienImmobilierDataSource.getPointInteretBienImmobilier(pointInteretId);
     }
 
     public void createPointInteretBienImmobilier(PointInteretBienImmobilier pointInteretBienImmobilier){
@@ -184,12 +184,6 @@ public class BienImmobilierViewModel extends ViewModel {
     public void deletePointInteretBienImmobilier(PointInteretBienImmobilier pointInteretBienImmobilier){
         executor.execute(() -> {
             pointInteretBienImmobilierDataSource.deletePointInteretBienImmobilier(pointInteretBienImmobilier);
-        });
-    }
-
-    public void updatePointInteretBienImmobilier(PointInteretBienImmobilier pointInteretBienImmobilier){
-        executor.execute(() -> {
-            pointInteretBienImmobilierDataSource.updateePointInteretBienImmobilier(pointInteretBienImmobilier);
         });
     }
 

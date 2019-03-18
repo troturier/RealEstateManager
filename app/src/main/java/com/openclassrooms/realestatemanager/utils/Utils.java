@@ -59,7 +59,7 @@ public class Utils {
     /**
      * Vérification de la connexion réseau
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
-     * @return
+     * @return Statut de la connexion
      */
     public static Boolean isInternetAvailable(){
         Runtime runtime = Runtime.getRuntime();

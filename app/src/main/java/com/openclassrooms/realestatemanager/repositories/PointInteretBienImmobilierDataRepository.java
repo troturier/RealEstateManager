@@ -14,9 +14,9 @@ public class PointInteretBienImmobilierDataRepository {
 
     // --- GET ---
 
-    public LiveData<PointInteretBienImmobilier> getPointInteretBienImmobilier(int pointInteretId) { return this.pointInteretBienImmobilierDao.getPointInteretBienImmobilier(pointInteretId); }
+    public LiveData<List<PointInteretBienImmobilier>> getPointInteretBienImmobilierByBI(int bienId) { return this.pointInteretBienImmobilierDao.getPointInteretBienImmobilierByBI(bienId); }
 
-    public LiveData<List<PointInteretBienImmobilier>> getPointInteretsBienImmobilier(int bienId) { return this.pointInteretBienImmobilierDao.getPointInteretsBienImmobilier(bienId); }
+    public LiveData<List<PointInteretBienImmobilier>> getPointInteretBienImmobiliersByPOI(int poiId) { return this.pointInteretBienImmobilierDao.getPointInteretBienImmobiliersByPOI(poiId); }
 
     public LiveData<List<PointInteretBienImmobilier>> getAllPointInteretsBienImmobilier() { return this.pointInteretBienImmobilierDao.getAllPointInteretsBienImmobilier(); }
 
@@ -26,9 +26,6 @@ public class PointInteretBienImmobilierDataRepository {
 
     // --- DELETE ---
 
-    public void deletePointInteretBienImmobilier(PointInteretBienImmobilier pointInteretBienImmobilier){ this.pointInteretBienImmobilierDao.deletePointInteretBienImmobilier(pointInteretBienImmobilier.getIdPoi()); }
+    public void deletePointInteretBienImmobilier(PointInteretBienImmobilier pointInteretBienImmobilier){ this.pointInteretBienImmobilierDao.deletePointInteretBienImmobilier(pointInteretBienImmobilier); }
 
-    // --- UPDATE ---
-
-    public void updateePointInteretBienImmobilier(PointInteretBienImmobilier pointInteretBienImmobilier){ this.pointInteretBienImmobilierDao.updatePointInteretBienImmobilier(pointInteretBienImmobilier); }
-}
+    }

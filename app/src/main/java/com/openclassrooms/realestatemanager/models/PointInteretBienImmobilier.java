@@ -25,7 +25,7 @@ public class PointInteretBienImmobilier implements Serializable {
     private static final long serialVersionUID = -1213949467658913456L;
 
 
-    public PointInteretBienImmobilier(int idPoi, int idBien, String libelle) {
+    public PointInteretBienImmobilier(int idPoi, int idBien) {
         this.idPoi = idPoi;
         this.idBien = idBien;
     }

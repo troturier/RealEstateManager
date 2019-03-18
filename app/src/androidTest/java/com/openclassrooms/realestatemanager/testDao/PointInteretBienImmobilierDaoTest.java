@@ -4,6 +4,7 @@ package com.openclassrooms.realestatemanager.testDao;
 import com.openclassrooms.realestatemanager.LiveDataTestUtil;
 import com.openclassrooms.realestatemanager.database.RealEstateManagerDatabase;
 import com.openclassrooms.realestatemanager.models.BienImmobilier;
+import com.openclassrooms.realestatemanager.models.PointInteret;
 import com.openclassrooms.realestatemanager.models.PointInteretBienImmobilier;
 import com.openclassrooms.realestatemanager.models.Type;
 import com.openclassrooms.realestatemanager.models.Utilisateur;
@@ -19,11 +20,11 @@ import java.util.List;
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
 import androidx.test.InstrumentationRegistry;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
 import static org.junit.Assert.assertTrue;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(AndroidJUnit4ClassRunner.class)
 public class PointInteretBienImmobilierDaoTest {
 
     // FOR DATA
@@ -32,6 +33,7 @@ public class PointInteretBienImmobilierDaoTest {
     // DATA SET FOR TEST
     private static int ID = 1;
     private static Utilisateur USER_DEMO = new Utilisateur(ID, "Roturier", "Thibault");
+    private static PointInteret POI_DEMO = new PointInteret(ID, "Test");
     private static Type TYPE_DEMO = new Type(ID, "Appartement");
     private static BienImmobilier BIEN_DEMO = new BienImmobilier(
             ID,
@@ -51,7 +53,7 @@ public class PointInteretBienImmobilierDaoTest {
             true,
             1,
             1);
-    private static PointInteretBienImmobilier POI_DEMO = new PointInteretBienImmobilier(ID, ID, "Ecole");
+    private static PointInteretBienImmobilier POIBI_DEMO = new PointInteretBienImmobilier(ID, ID);
 
     @Rule
     public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
@@ -70,46 +72,34 @@ public class PointInteretBienImmobilierDaoTest {
     }
 
     @Test
-    public void insertAndGetPointInteret() throws InterruptedException {
+    public void insertAndGetPointInteretBienImmobiliers() throws InterruptedException {
         // BEFORE
         this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
         this.database.typeDao().insertType(TYPE_DEMO);
         this.database.bienImmobilierDao().insertBienImmobilier(BIEN_DEMO);
         this.database.pointInteretDao().insertPointInteret(POI_DEMO);
+        this.database.pointInteretBienImmobilierDao().insertPointInteretBienImmobilier(POIBI_DEMO);
 
         // TEST
-        PointInteretBienImmobilier pointInteretBienImmobilier = LiveDataTestUtil.getValue(this.database.pointInteretDao().getPointInteret(ID));
-        assertTrue(pointInteretBienImmobilier.getIdPoi() == ID && pointInteretBienImmobilier.getLibelle().equals(POI_DEMO.getLibelle()));
+        List<PointInteretBienImmobilier> pointInteretBienImmobilierList = LiveDataTestUtil.getValue(this.database.pointInteretBienImmobilierDao().getPointInteretBienImmobilierByBI(ID));
+        List<PointInteretBienImmobilier> pointInteretBienImmobilierList2 = LiveDataTestUtil.getValue(this.database.pointInteretBienImmobilierDao().getPointInteretBienImmobiliersByPOI(ID));
+        assertTrue(pointInteretBienImmobilierList.size() == 1 && pointInteretBienImmobilierList.get(0).getIdPoi() == ID);
+        assertTrue(pointInteretBienImmobilierList2.size() == 1 && pointInteretBienImmobilierList2.get(0).getIdBien() == ID);
     }
 
     @Test
-    public void insertAndUpdatePointInteret() throws InterruptedException {
+    public void insertAndDeletePointInteretBienImmobilier() throws InterruptedException {
         // BEFORE
         this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
         this.database.typeDao().insertType(TYPE_DEMO);
         this.database.bienImmobilierDao().insertBienImmobilier(BIEN_DEMO);
         this.database.pointInteretDao().insertPointInteret(POI_DEMO);
-        PointInteretBienImmobilier pointInteretBienImmobilier = LiveDataTestUtil.getValue(this.database.pointInteretDao().getPointInteret(ID));
-        pointInteretBienImmobilier.setLibelle("test");
-        this.database.pointInteretDao().updatePointInteret(pointInteretBienImmobilier);
+        this.database.pointInteretBienImmobilierDao().insertPointInteretBienImmobilier(POIBI_DEMO);
+        List<PointInteretBienImmobilier> pointInteretBienImmobilierList = LiveDataTestUtil.getValue(this.database.pointInteretBienImmobilierDao().getPointInteretBienImmobilierByBI(ID));
+        this.database.pointInteretBienImmobilierDao().deletePointInteretBienImmobilier(pointInteretBienImmobilierList.get(0));
 
         // TEST
-        List<PointInteretBienImmobilier> pointInteretBienImmobiliers = LiveDataTestUtil.getValue(this.database.pointInteretDao().getPointInterets(ID));
-        assertTrue(pointInteretBienImmobiliers.size() == 1 && pointInteretBienImmobiliers.get(0).getLibelle().equals("test"));
-    }
-
-    @Test
-    public void insertAndDeletePointInteret() throws InterruptedException {
-        // BEFORE
-        this.database.utilisateurDao().insertUtilisateur(USER_DEMO);
-        this.database.typeDao().insertType(TYPE_DEMO);
-        this.database.bienImmobilierDao().insertBienImmobilier(BIEN_DEMO);
-        this.database.pointInteretDao().insertPointInteret(POI_DEMO);
-        PointInteretBienImmobilier pointInteretBienImmobilier = LiveDataTestUtil.getValue(this.database.pointInteretDao().getPointInteret(ID));
-        this.database.pointInteretDao().deletePointInteret(pointInteretBienImmobilier.getIdPoi());
-
-        // TEST
-        List<PointInteretBienImmobilier> pointInteretBienImmobiliers = LiveDataTestUtil.getValue(this.database.pointInteretDao().getPointInterets(ID));
+        List<PointInteretBienImmobilier> pointInteretBienImmobiliers = LiveDataTestUtil.getValue(this.database.pointInteretBienImmobilierDao().getPointInteretBienImmobilierByBI(ID));
         assertTrue(pointInteretBienImmobiliers.isEmpty());
     }
 }

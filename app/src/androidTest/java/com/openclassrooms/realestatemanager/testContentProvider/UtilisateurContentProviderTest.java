@@ -16,13 +16,13 @@ import org.junit.runner.RunWith;
 
 import androidx.room.Room;
 import androidx.test.InstrumentationRegistry;
-import androidx.test.runner.AndroidJUnit4;
+import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(AndroidJUnit4ClassRunner.class)
 public class UtilisateurContentProviderTest {
 
     // FOR DATA
@@ -51,7 +51,7 @@ public class UtilisateurContentProviderTest {
     public void getUtilisateursWhenNoUtilisateurInserted() {
         final Cursor cursor = mContentResolver.query(ContentUris.withAppendedId(UtilisateurContentProvider.URI_UTILISATEUR, USER_ID), null, null, null, null);
         assertThat(cursor, notNullValue());
-        assertThat(cursor.getCount(), is(2));
+        assertThat(cursor.getCount(), is(3));
         cursor.close();
     }
 
@@ -64,7 +64,7 @@ public class UtilisateurContentProviderTest {
         assertThat(cursor, notNullValue());
         assertThat(cursor.getCount(), is(3));
         assertThat(cursor.moveToFirst(), is(true));
-        assertThat(cursor.getString(cursor.getColumnIndexOrThrow("id")), is(1));
+        assertThat(cursor.getString(cursor.getColumnIndexOrThrow("id")), is("1"));
     }
 
     // ---
