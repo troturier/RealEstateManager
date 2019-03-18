@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.controllers.activities;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controllers.fragments.RealEstateEditFragment;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class EditActivity extends AppCompatActivity {
@@ -52,6 +54,15 @@ public class EditActivity extends AppCompatActivity {
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            RealEstateEditFragment realEstateEditFragment = (RealEstateEditFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentEdit);
+            assert realEstateEditFragment != null;
+            realEstateEditFragment.getImageFromCamera();
         }
     }
 

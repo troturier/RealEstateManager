@@ -70,14 +70,14 @@
                     android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
                     android:layout_weight="25"
-                    android:hint="Price (€)"
+                    android:hint="Price ($)"
                     app:boxBackgroundMode="filled">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etPrice"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:drawableLeft="@drawable/ic_euro"
+                        android:drawableLeft="@drawable/ic_dollar"
                         android:drawablePadding="15dp"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>

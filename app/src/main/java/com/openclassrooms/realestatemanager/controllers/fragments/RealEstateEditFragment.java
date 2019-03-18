@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.controllers.fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -255,7 +256,7 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
 
     private void updatePriceUI(){
         priceEt = this.view.findViewById(R.id.etPrice);
-        priceEt.setText(String.valueOf(bienImmobilierComplete.getBienImmobilier().getPrix()));
+        priceEt.setText(String.valueOf(Utils.convertEuroToDollar(bienImmobilierComplete.getBienImmobilier().getPrix())));
     }
 
     private void updateRoomsUI() {
@@ -407,7 +408,18 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
 
         galleryButton.setOnClickListener(view -> getImageFromAlbum());
 
-        cameraButton.setOnClickListener(v -> getImageFromCamera());
+        cameraButton.setOnClickListener(v -> {
+            if (Utils.checkPermission(getActivity(), Manifest.permission.CAMERA)){
+                try {
+                    Utils.requestPermission(getActivity(), Manifest.permission.CAMERA, Utils.CAMERA_REQUEST_CODE);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            else {
+                getImageFromCamera();
+            }
+        });
 
         cancelButton.setOnClickListener(view -> dialogBuilder.dismiss());
         submitButton.setOnClickListener(view -> {
@@ -443,7 +455,7 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
         }
     }
 
-    private void getImageFromCamera(){
+    public void getImageFromCamera(){
         PackageManager packageManager = Objects.requireNonNull(getActivity()).getPackageManager();
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
             File mainDirectory = new File(Environment.getExternalStorageDirectory(), "DCIM");
@@ -692,7 +704,7 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
             } else {
                 bienImmobilier.setComplementRue(null);
             }
-            bienImmobilier.setPrix(Integer.parseInt(this.priceEt.getText().toString()));
+            bienImmobilier.setPrix(Utils.convertDollarToEuro(Integer.parseInt(this.priceEt.getText().toString())));
             bienImmobilier.setVille(this.cityEt.getText().toString());
             bienImmobilier.setCp(this.cpEt.getText().toString());
             bienImmobilier.setPays(this.stateEt.getText().toString());

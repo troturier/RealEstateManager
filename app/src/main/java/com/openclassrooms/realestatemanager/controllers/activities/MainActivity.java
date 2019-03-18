@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.controllers.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,23 +45,15 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         setContentView(R.layout.activity_main);
 
         determinePaneLayout();
-        if(!Utils.checkPermissionForReadExtertalStorage(this)){
+        if(Utils.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
             try {
-                Utils.requestPermissionForReadExtertalStorage(this);
+                Utils.requestPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Utils.READ_STORAGE_PERMISSION_REQUEST_CODE);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         else {
             configure();
-        }
-
-        if (!Utils.checkPermissionForCamera(this)){
-            try {
-                Utils.requestPermissionForRCamera(this);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
         }
     }
 
@@ -178,6 +172,14 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
-        configure();
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            configure();
+        } else {
+            try {
+                Utils.requestPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Utils.READ_STORAGE_PERMISSION_REQUEST_CODE);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

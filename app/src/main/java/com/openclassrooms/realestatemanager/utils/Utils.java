@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.utils;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -16,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -26,8 +26,8 @@ import androidx.core.app.NotificationManagerCompat;
 
 public class Utils {
 
-    private static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 1;
-    private static final int CAMERA_REQUEST_CODE = 2;
+    public static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 1;
+    public static final int CAMERA_REQUEST_CODE = 2;
 
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
@@ -74,39 +74,36 @@ public class Utils {
         return false;
     }
 
-    public static boolean checkPermissionForReadExtertalStorage(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int result = context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-            return result == PackageManager.PERMISSION_GRANTED;
-        }
-        return false;
+    public static boolean checkPermission(Context context, String permission) {
+        int result = context.checkSelfPermission(permission);
+        return result != PackageManager.PERMISSION_GRANTED;
     }
 
-    public static void requestPermissionForReadExtertalStorage(Context context) throws Exception {
-        try {
-            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    READ_STORAGE_PERMISSION_REQUEST_CODE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
-    }
-
-    public static boolean checkPermissionForCamera(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int result = context.checkSelfPermission(Manifest.permission.CAMERA);
-            return result == PackageManager.PERMISSION_GRANTED;
-        }
-        return false;
-    }
-
-    public static void requestPermissionForRCamera(Context context) throws Exception {
-        try {
-            ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CAMERA},
-                    CAMERA_REQUEST_CODE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
+    public static void requestPermission(Context context, String permission, int requestCode) throws Exception {
+        if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)context, permission)) {
+            if(requestCode == READ_STORAGE_PERMISSION_REQUEST_CODE)
+            new AlertDialog.Builder(context)
+                    .setTitle("Permission needed")
+                    .setMessage("This application requires access to the storage of your device to be able to display the photos of the various properties.")
+                    .setPositiveButton("Next", (dialog, which) -> ActivityCompat.requestPermissions((Activity) context,
+                            new String[] {permission}, requestCode))
+                    .create().show();
+            else if (requestCode == CAMERA_REQUEST_CODE)
+                new AlertDialog.Builder(context)
+                        .setTitle("Permission needed")
+                        .setMessage("A camera access permission is needed in order to take a picture with the camera of your device.")
+                        .setPositiveButton("Next", (dialog, which) -> ActivityCompat.requestPermissions((Activity) context,
+                                new String[] {permission}, requestCode))
+                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                        .create().show();
+        } else {
+            try {
+                ActivityCompat.requestPermissions((Activity) context, new String[]{permission},
+                        requestCode);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw e;
+            }
         }
     }
 
