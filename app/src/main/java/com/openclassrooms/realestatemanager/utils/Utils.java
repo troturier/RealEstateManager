@@ -44,7 +44,7 @@ public class Utils {
      * @param euros Prix en euros
      * @return Prix en dollars
      */
-    public static int convertEuroToDollar(int euros) { return (int) Math.round(euros * 1.188);}
+    public static int convertEuroToDollar(int euros) { return (int) Math.round(euros / 0.812);}
 
     /**
      * Conversion de la date d'aujourd'hui en un format plus approprié
