@@ -25,7 +25,7 @@ import com.openclassrooms.realestatemanager.adapters.PhotoAdapter;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.models.PointInteret;
 import com.openclassrooms.realestatemanager.models.PointInteretBienImmobilier;
-import com.openclassrooms.realestatemanager.utils.Utils;
+import com.openclassrooms.realestatemanager.utils.InternetCheck;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -52,6 +52,7 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
     public BienImmobilierComplete bienImmobilierComplete;
     private List<PointInteret> pointInteretList;
     private String address;
+    private boolean internet;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,14 +60,34 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         assert getArguments() != null;
         this.bienImmobilierComplete = (BienImmobilierComplete) getArguments().getSerializable("bienImmobilier");
         this.pointInteretList = (List<PointInteret>) getArguments().getSerializable("poi");
+        this.internet = false;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_real_estate_detail, container, false);
-        if(Utils.isInternetAvailable()) {
+
+        new InternetCheck(internet1 -> {
+            if (internet1) {
+                try {
+                    mMapView = view.findViewById(R.id.map);
+                    // Inflate the layout for this fragment
+                    mMapView.onCreate(savedInstanceState);
+                    mMapView.onResume();
+                    mMapView.getMapAsync(this);
+                    this.internet = internet1;
+                } catch (Exception e) {
+                    Log.e("DETAIL_FRAG", "Inflate exception");
+                }
+            }
+        });
+
+        updateContent(this.bienImmobilierComplete, this.pointInteretList);
+
+        /**if(this.internet) {
             try {
+                view = inflater.inflate(R.layout.fragment_real_estate_detail, container, false);
                 mMapView = view.findViewById(R.id.map);
                 // Inflate the layout for this fragment
                 mMapView.onCreate(savedInstanceState);
@@ -76,7 +97,9 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
                 Log.e("DETAIL_FRAG", "Inflate exception");
             }
         }
-        updateContent(this.bienImmobilierComplete, this.pointInteretList);
+        else{
+            view = inflater.inflate(R.layout.fragment_real_estate_detail_no_internet, container, false);
+        }*/
 
         return view;
     }
@@ -231,7 +254,7 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
     @Override
     public void onPause() {
         super.onPause();
-        if (Utils.isInternetAvailable()) {
+        if (this.internet) {
             mMapView.onPause();
         }
     }
@@ -239,7 +262,7 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (Utils.isInternetAvailable())
+        if (this.internet)
             mMapView.onDestroy();
     }
 
@@ -253,14 +276,14 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
     public void onLowMemory()
     {
         super.onLowMemory();
-        if (Utils.isInternetAvailable())
+        if (this.internet)
             mMapView.onLowMemory();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (Utils.isInternetAvailable())
+        if (this.internet)
             mMapView.onResume();
     }
 
