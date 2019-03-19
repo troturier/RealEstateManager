@@ -604,7 +604,12 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
                                 this.adapter.updateData(bienImmobilierComplete);
                             }
                             else {
-                                Toast.makeText(getActivity(), "Please set another picture as default and validate the changes before deleting this one", Toast.LENGTH_LONG).show();
+                                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                                alertDialog.setTitle("Error");
+                                alertDialog.setMessage("Please set another picture as default and validate the changes before deleting this one");
+                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                        (dialog1, which1) -> dialog1.dismiss());
+                                alertDialog.show();
                             }
                         } else {
                             if(bienImmobilierComplete.getPhotoCouverture().get(0) == adapter.getItem(position)){

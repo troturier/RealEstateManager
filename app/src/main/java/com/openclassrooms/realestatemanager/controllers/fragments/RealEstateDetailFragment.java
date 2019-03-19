@@ -9,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -45,6 +47,9 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
 
     // FOR DESIGN
     @BindView(R.id.detail_recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.mapview_placeholder) ImageView mapViewPlaceHolder;
+    @BindView(R.id.mapView_Placeholder_Tv) TextView mapViewPlaceHolderTv;
+    @BindView(R.id.mapView_PH_LL) LinearLayout mapViewPlaceHolderLL;
 
     private View view;
     private MapView mMapView;
@@ -67,18 +72,30 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_real_estate_detail, container, false);
+        mMapView = view.findViewById(R.id.map);
 
         new InternetCheck(internet1 -> {
             if (internet1) {
                 try {
                     this.internet = internet1;
-                    mMapView = view.findViewById(R.id.map);
                     // Inflate the layout for this fragment
                     mMapView.onCreate(savedInstanceState);
                     mMapView.onResume();
                     mMapView.getMapAsync(this);
                 } catch (Exception e) {
                     Log.e("DETAIL_FRAG", "Inflate exception");
+                }
+            }
+            else {
+                Context context = getActivity();
+                if (context != null) {
+                    mMapView.setVisibility(View.GONE);
+                    mapViewPlaceHolderLL.setVisibility(View.VISIBLE);
+                    Glide
+                            .with(Objects.requireNonNull(getActivity()))
+                            .load(R.drawable.ic_no_internet)
+                            .into(mapViewPlaceHolder);
+                    mapViewPlaceHolderTv.setText(getString(R.string.no_internet));
                 }
             }
         });
@@ -234,6 +251,15 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
                 markerOptions.position(Objects.requireNonNull(getLocationFromAddress(getActivity(), this.address)));
                 markerOptions.title(this.bienImmobilierComplete.getBienImmobilier().getRue());
                 googleMap.addMarker(markerOptions);
+            }
+            else {
+                mMapView.setVisibility(View.GONE);
+                mapViewPlaceHolderLL.setVisibility(View.VISIBLE);
+                Glide
+                        .with(Objects.requireNonNull(getActivity()))
+                        .load(R.drawable.ic_location)
+                        .into(mapViewPlaceHolder);
+                mapViewPlaceHolderTv.setText(getString(R.string.location_not_found));
             }
         }
     }

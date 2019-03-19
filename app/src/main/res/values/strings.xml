@@ -10,4 +10,6 @@
     <string name="is_not_sold_yet">This property is not sold yet</string>
     <string name="sold">Sold</string>
     <string name="a_photo_of_the_property">A photo of the property</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="location_not_found">Location not found</string>
 </resources>

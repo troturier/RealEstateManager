@@ -307,7 +307,7 @@
                             android:id="@+id/ivLocation"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            app:srcCompat="@drawable/ic_location" />
+                            app:srcCompat="@drawable/ic_location_icon" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -334,13 +334,45 @@
 
                 </LinearLayout>
 
-                <com.google.android.gms.maps.MapView
-                    android:id="@+id/map"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="33"
-                    android:elevation="10dp"
-                    map:liteMode="true"/>
+                    android:orientation="vertical">
+
+                    <com.google.android.gms.maps.MapView
+                        android:id="@+id/map"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:elevation="10dp"
+                        map:liteMode="true" />
+
+                    <LinearLayout
+                        android:id="@+id/mapView_PH_LL"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?attr/colorPrimary"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/mapview_placeholder"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp" />
+
+                        <TextView
+                            android:id="@+id/mapView_Placeholder_Tv"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="TextView"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/white" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
 
             </LinearLayout>
 

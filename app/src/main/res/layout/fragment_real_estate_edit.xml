@@ -369,7 +369,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="10"
-                app:srcCompat="@drawable/ic_location" />
+                app:srcCompat="@drawable/ic_location_icon" />
 
             <TextView
                 android:id="@+id/tvLocation"
