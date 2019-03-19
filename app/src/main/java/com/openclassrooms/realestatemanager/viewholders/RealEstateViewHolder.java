@@ -5,13 +5,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.adapters.RealEstateAdapter;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 import com.openclassrooms.realestatemanager.utils.Utils;
-import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -38,11 +37,12 @@ public class RealEstateViewHolder extends RecyclerView.ViewHolder implements Vie
 
     public void updateWithRealEstate(BienImmobilierComplete bienImmobilierComplete, RealEstateAdapter.Listener callback){
         if(bienImmobilierComplete.getPhotoCouverture().size() > 0) {
-            Picasso.get()
-                    .load(new File(bienImmobilierComplete.getPhotoCouverture().get(0).getCheminAcces()))
+            Glide
+                    .with(itemView)
+                    .load(bienImmobilierComplete.getPhotoCouverture().get(0).getCheminAcces())
+                    .error(R.mipmap.error)
+                    .placeholder(R.mipmap.loading)
                     .centerCrop()
-                    .fit()
-                    .error(R.mipmap.ic_iv_placeholder_no_image)
                     .into(reIV);
         }
         this.typeTV.setText(bienImmobilierComplete.getType().get(0).getLibelle());

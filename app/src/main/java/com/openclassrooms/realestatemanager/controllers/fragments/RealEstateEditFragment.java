@@ -26,6 +26,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.adapters.PhotoAdapter;
 import com.openclassrooms.realestatemanager.adapters.PoiAdapter;
@@ -41,7 +42,6 @@ import com.openclassrooms.realestatemanager.repositories.injections.ViewModelFac
 import com.openclassrooms.realestatemanager.utils.ItemClickSupport;
 import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.viewmodels.BienImmobilierViewModel;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.Serializable;
@@ -495,22 +495,24 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
 
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
-            Picasso.get()
-                    .load(new File(picturePath))
-                    .resize(250, 250)
+            Glide
+                    .with(getActivity())
+                    .load(picturePath)
+                    .error(R.mipmap.error)
+                    .placeholder(R.mipmap.loading)
                     .centerCrop()
-                    .error(R.mipmap.ic_iv_placeholder_no_image)
                     .into(add_media_iv);
             this.add_media_path.setText(picturePath);
             cursor.close();
         }
         else if(resultCode == RESULT_OK && requestCode == 2){
             String filePath = uriFilePath.getPath();
-            Picasso.get()
-                    .load(new File(filePath))
-                    .resize(250, 250)
+            Glide
+                    .with(Objects.requireNonNull(getActivity()))
+                    .load(filePath)
+                    .error(R.mipmap.error)
+                    .placeholder(R.mipmap.loading)
                     .centerCrop()
-                    .error(R.mipmap.ic_iv_placeholder_no_image)
                     .into(add_media_iv);
             this.add_media_path.setText(filePath);
         }
@@ -556,11 +558,12 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
         Button defaultButton = dialogView.findViewById(R.id.editMedia_buttonDefault);
         ImageView editMediaIv = dialogView.findViewById(R.id.edit_media_iv);
 
-        Picasso.get()
-                .load(new File(adapter.getItem(position).getCheminAcces()))
-                .resize(250, 250)
+        Glide
+                .with(getActivity())
+                .load(adapter.getItem(position).getCheminAcces())
+                .error(R.mipmap.error)
+                .placeholder(R.mipmap.loading)
                 .centerCrop()
-                .error(R.mipmap.ic_iv_placeholder_no_image)
                 .into(editMediaIv);
         mediaDescription.setText(adapter.getItem(position).getDescription());
 
@@ -582,10 +585,9 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
         defaultButton.setOnClickListener(v -> {
             if (requestCode.equals("edit")) {
                 bienImmobilierComplete.getBienImmobilier().setIdPhotoCouverture(adapter.getItem(position).getId());
-            }else {
-                bienImmobilierComplete.getPhotoCouverture().clear();
-                bienImmobilierComplete.getPhotoCouverture().add(adapter.getItem(position));
             }
+            bienImmobilierComplete.getPhotoCouverture().clear();
+            bienImmobilierComplete.getPhotoCouverture().add(adapter.getItem(position));
             dialogBuilder.dismiss();
             this.adapter.updateData(bienImmobilierComplete);
         });

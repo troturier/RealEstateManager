@@ -4,12 +4,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.adapters.PhotoAdapter;
 import com.openclassrooms.realestatemanager.models.Photo;
-import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.lang.ref.WeakReference;
 
 import androidx.annotation.NonNull;
@@ -34,11 +33,13 @@ public class PhotoViewHolder extends RecyclerView.ViewHolder implements View.OnC
     }
 
     public void updateWithPhoto(Photo photo, PhotoAdapter.Listener callback){
-        Picasso.get()
-                .load(new File(photo.getCheminAcces()))
-                .resize(250, 250)
+
+        Glide
+                .with(itemView)
+                .load(photo.getCheminAcces())
+                .error(R.mipmap.error)
+                .placeholder(R.mipmap.loading)
                 .centerCrop()
-                .error(R.mipmap.ic_iv_placeholder_no_image)
                 .into(detailIV);
 
         detailTV.setText(photo.getDescription());

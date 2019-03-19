@@ -71,12 +71,12 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         new InternetCheck(internet1 -> {
             if (internet1) {
                 try {
+                    this.internet = internet1;
                     mMapView = view.findViewById(R.id.map);
                     // Inflate the layout for this fragment
                     mMapView.onCreate(savedInstanceState);
                     mMapView.onResume();
                     mMapView.getMapAsync(this);
-                    this.internet = internet1;
                 } catch (Exception e) {
                     Log.e("DETAIL_FRAG", "Inflate exception");
                 }
@@ -84,22 +84,6 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         });
 
         updateContent(this.bienImmobilierComplete, this.pointInteretList);
-
-        /**if(this.internet) {
-            try {
-                view = inflater.inflate(R.layout.fragment_real_estate_detail, container, false);
-                mMapView = view.findViewById(R.id.map);
-                // Inflate the layout for this fragment
-                mMapView.onCreate(savedInstanceState);
-                mMapView.onResume();
-                mMapView.getMapAsync(this);
-            } catch (Exception e) {
-                Log.e("DETAIL_FRAG", "Inflate exception");
-            }
-        }
-        else{
-            view = inflater.inflate(R.layout.fragment_real_estate_detail_no_internet, container, false);
-        }*/
 
         return view;
     }
@@ -233,21 +217,24 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        MapsInitializer.initialize(Objects.requireNonNull(getContext()));
-        googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(Objects.requireNonNull(getActivity()), R.raw.map_style));
-        googleMap.getUiSettings().setCompassEnabled(false);
-        googleMap.getUiSettings().setMyLocationButtonEnabled(false);
-        googleMap.getUiSettings().setMapToolbarEnabled(false);
+        Context context = getContext();
+        if (context != null) {
+            MapsInitializer.initialize(context);
+            googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(Objects.requireNonNull(getActivity()), R.raw.map_style));
+            googleMap.getUiSettings().setCompassEnabled(false);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            googleMap.getUiSettings().setMapToolbarEnabled(false);
 
-        LatLng latLng = getLocationFromAddress(getActivity(), this.address);
-        if(latLng != null) {
-            CameraPosition cameraPosition = CameraPosition.builder().target(latLng).zoom(17).bearing(0).build();
-            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            LatLng latLng = getLocationFromAddress(getActivity(), this.address);
+            if(latLng != null) {
+                CameraPosition cameraPosition = CameraPosition.builder().target(latLng).zoom(17).bearing(0).build();
+                googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(Objects.requireNonNull(getLocationFromAddress(getActivity(), this.address)));
-            markerOptions.title(this.bienImmobilierComplete.getBienImmobilier().getRue());
-            googleMap.addMarker(markerOptions);
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(Objects.requireNonNull(getLocationFromAddress(getActivity(), this.address)));
+                markerOptions.title(this.bienImmobilierComplete.getBienImmobilier().getRue());
+                googleMap.addMarker(markerOptions);
+            }
         }
     }
 
