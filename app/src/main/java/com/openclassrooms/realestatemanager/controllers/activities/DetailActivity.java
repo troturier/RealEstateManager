@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.controllers.fragments.RealEstateDetailFragment;
@@ -58,10 +57,6 @@ public class DetailActivity extends AppCompatActivity {
                 intent.putExtra("poi", (Serializable) pointInteretList);
                 intent.putExtra("requestCode", "edit");
                 startActivityForResult(intent, 1);
-                return true;
-
-            case R.id.action_search:
-                Toast.makeText(this, "Search button selected", Toast.LENGTH_SHORT).show();
                 return true;
 
             default:
