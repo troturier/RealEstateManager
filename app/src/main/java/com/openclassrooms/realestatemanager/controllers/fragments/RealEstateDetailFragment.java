@@ -250,7 +250,7 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(Objects.requireNonNull(getLocationFromAddress(getActivity(), this.address)));
                 markerOptions.title(this.bienImmobilierComplete.getBienImmobilier().getRue());
-                googleMap.addMarker(markerOptions);
+                googleMap.addMarker(markerOptions).showInfoWindow();
             }
             else {
                 mMapView.setVisibility(View.GONE);
@@ -322,4 +322,5 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
 
         return p1;
     }
+
 }

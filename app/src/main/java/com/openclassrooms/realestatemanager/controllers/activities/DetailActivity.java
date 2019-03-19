@@ -81,7 +81,6 @@ public class DetailActivity extends AppCompatActivity {
                 pointInteretList = (List<PointInteret>) data.getSerializableExtra("poi");
                 RealEstateDetailFragment realEstateDetailFragment = (RealEstateDetailFragment) getSupportFragmentManager().findFragmentById(R.id.flDetailContainer);
                 Objects.requireNonNull(realEstateDetailFragment).updateContent(bienImmobilierComplete, this.pointInteretList);
-                Toast.makeText(this, "Update successfully executed", Toast.LENGTH_SHORT).show();
             }
         }
     }
