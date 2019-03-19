@@ -433,6 +433,7 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
                 }
                 else {
                     bienImmobilierComplete.getPhotos().add(photo);
+                    bienImmobilierComplete.getPhotoCouverture().add(photo);
                     adapter.updateData(bienImmobilierComplete);
                 }
                 dialogBuilder.dismiss();
@@ -604,12 +605,19 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
                                 Toast.makeText(getActivity(), "Please set another picture as default and validate the changes before deleting this one", Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            if(bienImmobilierComplete.getPhotoCouverture().size() != 0 && bienImmobilierComplete.getPhotoCouverture().get(0) == adapter.getItem(position)){
-                                bienImmobilierComplete.getPhotoCouverture().clear();
+                            if(bienImmobilierComplete.getPhotoCouverture().get(0) == adapter.getItem(position)){
+                                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                                alertDialog.setTitle("Error");
+                                alertDialog.setMessage("Please set another picture as default before deleting this one");
+                                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                        (dialog1, which1) -> dialog1.dismiss());
+                                alertDialog.show();
                             }
-                            bienImmobilierComplete.getPhotos().remove(adapter.getItem(position));
-                            adapter.updateData(bienImmobilierComplete);
-                            dialogBuilder.dismiss();
+                            else {
+                                bienImmobilierComplete.getPhotos().remove(adapter.getItem(position));
+                                adapter.updateData(bienImmobilierComplete);
+                                dialogBuilder.dismiss();
+                            }
                         }
                         break;
 
