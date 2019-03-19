@@ -679,8 +679,6 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
         editTextList.add(this.descriptionEt);
         editTextList.add(this.surfaceEt);
         editTextList.add(this.roomsEt);
-        editTextList.add(this.bedroomsEt);
-        editTextList.add(this.bathroomsEt);
         editTextList.add(this.streetEt);
         editTextList.add(this.priceEt);
         editTextList.add(this.cityEt);
@@ -689,7 +687,7 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
         editTextList.add(this.cityEt);
 
         for(int i=0; i<editTextList.size();i++){
-            if(editTextList.get(i).getText().toString().isEmpty()){
+            if(editTextList.get(i).getText().toString().isEmpty() || editTextList.get(i).getText().toString().equals("0")){
                 allFieldsFilled = false;
             }
         }
