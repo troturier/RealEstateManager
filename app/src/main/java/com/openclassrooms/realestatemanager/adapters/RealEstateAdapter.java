@@ -13,8 +13,12 @@ import com.openclassrooms.realestatemanager.viewholders.RealEstateViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Real Estate Adapter used in RealEstateListFragment
+ */
 public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder> {
     // CALLBACK
     public interface Listener { void onClickDeleteButton(int position); }
@@ -31,8 +35,9 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
         this.row_index = -1;
     }
 
+    @NonNull
     @Override
-    public RealEstateViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RealEstateViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.main_recycler_view_item, parent, false);
@@ -41,7 +46,7 @@ public class RealEstateAdapter extends RecyclerView.Adapter<RealEstateViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RealEstateViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull RealEstateViewHolder viewHolder, int position) {
         viewHolder.updateWithRealEstate(this.items.get(position), this.callback);
         if(row_index==position){
             viewHolder.row_linearlayout.setBackgroundColor(Color.parseColor("#FFFF4081"));

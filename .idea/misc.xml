@@ -4,6 +4,10 @@
     <entry_points version="2.0">
       <entry_point TYPE="field" FQNAME="com.openclassrooms.realestatemanager.viewholders.PhotoViewHolder callbackWeakRef" />
     </entry_points>
+    <pattern value="com.openclassrooms.realestatemanager.adapters.PoiAdapter" method="getItemsList" />
+    <pattern value="com.openclassrooms.realestatemanager.adapters.PoiAdapter.Listener" />
+    <pattern value="com.openclassrooms.realestatemanager.adapters.PoiAdapter.Listener" method="onClickDeleteButton" />
+    <pattern value="com.openclassrooms.realestatemanager.adapters.PoiAdapter" method="getItemCount" />
   </component>
   <component name="NullableNotNullManager">
     <option name="myDefaultNullable" value="android.support.annotation.Nullable" />

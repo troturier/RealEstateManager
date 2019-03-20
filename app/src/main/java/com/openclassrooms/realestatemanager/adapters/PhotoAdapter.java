@@ -18,6 +18,9 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Photo Adapter used to display Photo in a RecyclerView
+ */
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
 
     // CALLBACK

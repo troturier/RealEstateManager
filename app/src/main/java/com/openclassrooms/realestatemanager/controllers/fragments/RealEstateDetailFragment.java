@@ -55,7 +55,6 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
 
     public BienImmobilierComplete bienImmobilierComplete;
     private List<PointInteret> pointInteretList;
-    private String address;
     private boolean internet;
 
     @Override
@@ -76,7 +75,7 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         new InternetCheck(internet1 -> {
             if (internet1) {
                 try {
-                    this.internet = internet1;
+                    this.internet = true;
                     // Inflate the layout for this fragment
                     mMapView.onCreate(savedInstanceState);
                     mMapView.onResume();
@@ -104,6 +103,11 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         return view;
     }
 
+    /**
+     * Configure and update the UI
+     * @param bienImmobilierComplete BienImmobilierComplete retrieved from the intent
+     * @param pointInteretList List of points of interest
+     */
     public void updateContent(BienImmobilierComplete bienImmobilierComplete, List<PointInteret> pointInteretList){
         this.bienImmobilierComplete = bienImmobilierComplete;
         this.pointInteretList = pointInteretList;
@@ -125,9 +129,12 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
     }
 
     // -------------------
-    // UI UPDATE
+    // UI SETUP AND UPDATE
     // -------------------
 
+    /**
+     * Configure Points of Interest part of the UI
+     */
     private void configurePOI(){
         View divider = view.findViewById(R.id.divider4);
         TextView tvPoI = view.findViewById(R.id.tvPoI);
@@ -164,6 +171,9 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         }
     }
 
+    /**
+     * Configure Location part of the UI
+     */
     private void configureLocation(){
         TextView tvLocation = view.findViewById(R.id.tvLocation);
         String rue = bienImmobilierComplete.getBienImmobilier().getRue() + "\n";
@@ -175,10 +185,13 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         String ville = bienImmobilierComplete.getBienImmobilier().getVille() + "\n";
         String pays = bienImmobilierComplete.getBienImmobilier().getPays();
 
-        this.address = String.format("%s%s%s%s%s", rue, complement, ville, cp, pays);
+        String address = String.format("%s%s%s%s%s", rue, complement, ville, cp, pays);
         tvLocation.setText(address);
     }
 
+    /**
+     * Configure Description part of the UI
+     */
     private void configureDescription(){
         TextView tvDescription = view.findViewById(R.id.tvDescription);
         if(bienImmobilierComplete.getBienImmobilier().getDescription() != null)
@@ -192,6 +205,9 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
 
     }
 
+    /**
+     * Configure Rooms part of the UI
+     */
     private void configureRooms(){
         TextView tvRooms = view.findViewById(R.id.tvRooms);
         tvRooms.setText(String.valueOf(bienImmobilierComplete.getBienImmobilier().getPieces()));
@@ -203,10 +219,9 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         tvBedrooms.setText(String.valueOf(bienImmobilierComplete.getBienImmobilier().getChambres()));
     }
 
-    // -------------------
-    // UI SETUP
-    // -------------------
-
+    /**
+     * Configure Photos part of the UI
+     */
     private void configureRecyclerView(){
         ButterKnife.bind(this, view);
         PhotoAdapter adapter = new PhotoAdapter(this, false, getActivity(), "edit");
@@ -215,6 +230,16 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         adapter.updateData(bienImmobilierComplete);
     }
 
+    // -------------------
+    // NEW INSTANCE
+    // -------------------
+
+    /**
+     * RealEstateDetailFragment new instance method
+     * @param bienImmobilierComplete BienImmobilierComplete retrieved from the intents
+     * @param pointInteretList List of Points of Interest retrieved from the intents
+     * @return RealEstateDetailFragment
+     */
     public static RealEstateDetailFragment newInstance(BienImmobilierComplete bienImmobilierComplete, List<PointInteret> pointInteretList){
         RealEstateDetailFragment realEstateDetailFragment = new RealEstateDetailFragment();
         Bundle args = new Bundle();

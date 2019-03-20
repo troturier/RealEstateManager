@@ -5,6 +5,9 @@ import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+/**
+ * Class used to create an expanded GridView inside a ScrollView
+ */
 public class ExpandableHeightGridView extends GridView
 {
 

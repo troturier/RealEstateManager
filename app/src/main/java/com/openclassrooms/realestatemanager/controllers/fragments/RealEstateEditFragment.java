@@ -518,33 +518,6 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
 
     }
 
-    // ----------------------------------------------------------------------
-
-    private void createAddPoiDialog(){
-        final AlertDialog dialogBuilder = new AlertDialog.Builder(Objects.requireNonNull(getActivity())).create();
-        LayoutInflater inflater = this.getLayoutInflater();
-        @SuppressLint("InflateParams") View dialogView = inflater.inflate(R.layout.add_poi_dialog, null);
-
-        final EditText editText = dialogView.findViewById(R.id.poi_name);
-        Button submitButton = dialogView.findViewById(R.id.addPoi_buttonSubmit);
-        Button cancelButton = dialogView.findViewById(R.id.addPoi_buttonCancel);
-
-        cancelButton.setOnClickListener(view -> dialogBuilder.dismiss());
-        submitButton.setOnClickListener(view -> {
-            if (!editText.getText().toString().isEmpty()) {
-                PointInteret pointInteret = new PointInteret();
-                pointInteret.setLibelle(editText.getText().toString());
-                addPoi(pointInteret);
-                dialogBuilder.dismiss();
-            } else {
-                Toast.makeText(getActivity(), "Please enter a name for the new point of interest", Toast.LENGTH_LONG).show();
-            }
-        });
-
-        dialogBuilder.setView(dialogView);
-        dialogBuilder.show();
-    }
-
     private void createEditMediaDialog(int position){
         final AlertDialog dialogBuilder = new AlertDialog.Builder(Objects.requireNonNull(getActivity())).create();
         LayoutInflater inflater = this.getLayoutInflater();
@@ -636,6 +609,33 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
                     .setNegativeButton("No", dialogClickListener).show();
+        });
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
+    }
+
+    // ----------------------------------------------------------------------
+
+    private void createAddPoiDialog(){
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(Objects.requireNonNull(getActivity())).create();
+        LayoutInflater inflater = this.getLayoutInflater();
+        @SuppressLint("InflateParams") View dialogView = inflater.inflate(R.layout.add_poi_dialog, null);
+
+        final EditText editText = dialogView.findViewById(R.id.poi_name);
+        Button submitButton = dialogView.findViewById(R.id.addPoi_buttonSubmit);
+        Button cancelButton = dialogView.findViewById(R.id.addPoi_buttonCancel);
+
+        cancelButton.setOnClickListener(view -> dialogBuilder.dismiss());
+        submitButton.setOnClickListener(view -> {
+            if (!editText.getText().toString().isEmpty()) {
+                PointInteret pointInteret = new PointInteret();
+                pointInteret.setLibelle(editText.getText().toString());
+                addPoi(pointInteret);
+                dialogBuilder.dismiss();
+            } else {
+                Toast.makeText(getActivity(), "Please enter a name for the new point of interest", Toast.LENGTH_LONG).show();
+            }
         });
 
         dialogBuilder.setView(dialogView);

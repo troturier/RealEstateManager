@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+/**
+ * Class used to check internet connectivity asynchronously
+ */
 public class InternetCheck extends AsyncTask<Void,Void,Boolean> {
 
     private Consumer mConsumer;

@@ -73,6 +73,10 @@ public class Utils {
         return false;
     }
 
+    /**
+     * Informs the user with a notification of the proper conduct of adding a property to the database
+     * @param context Context
+     */
     public static void createNotification(Context context){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "1")
                 .setSmallIcon(R.drawable.ic_home_black_24dp)
@@ -98,7 +102,11 @@ public class Utils {
         notificationManager.notify(1, builder.build());
     }
 
-    // getting the maximum value
+    /**
+     * Return the maximum value of an integer array
+     * @param array Integer array
+     * @return Integer maxValue
+     */
     public static int getMaxValue(int[] array) {
         int maxValue = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -109,7 +117,11 @@ public class Utils {
         return maxValue;
     }
 
-    // getting the miniumum value
+    /**
+     * Return the minimum value of an integer array
+     * @param array Integer array
+     * @return Integer minValue
+     */
     public static int getMinValue(int[] array) {
         int minValue = array[0];
         for (int i = 1; i < array.length; i++) {
@@ -120,10 +132,14 @@ public class Utils {
         return minValue;
     }
 
-    // Function to remove duplicates from an ArrayList
+    /**
+     * Function to remove duplicates from an ArrayList
+     * @param list ArrayList with duplicates
+     * @param <T> Type of element
+     * @return ArrayList without duplicates
+     */
     public static <T> ArrayList<T> removeDuplicates(ArrayList<T> list)
     {
-
         // Create a new ArrayList
         ArrayList<T> newList = new ArrayList<T>();
 
@@ -142,6 +158,12 @@ public class Utils {
         return newList;
     }
 
+    /**
+     * Function to obtain GPS coordinates from an address
+     * @param context Context
+     * @param bienImmobilierComplete BienImmobilierComplete object
+     * @return LatLng object (GPS coordinates)
+     */
     public static LatLng getLocationFromAddress(Context context, BienImmobilierComplete bienImmobilierComplete) {
 
         String rue = bienImmobilierComplete.getBienImmobilier().getRue() + "\n";

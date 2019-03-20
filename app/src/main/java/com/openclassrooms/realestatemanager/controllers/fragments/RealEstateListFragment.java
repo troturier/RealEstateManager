@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,16 +34,10 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
     @BindView(R.id.main_recycler_view) RecyclerView recyclerView;
     public RealEstateAdapter adapter;
 
-    private RealEstateDetailFragment realEstateDetailFragment;
     private List<PointInteret> pointInteretList;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_real_estate_list, container, false);
@@ -56,20 +51,17 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
 
     private void configureOnClickRecyclerView(){
         ItemClickSupport.addTo(recyclerView, R.layout.main_recycler_view_item)
-                .setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
-                    @Override
-                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-                        boolean isTwoPane = ((MainActivity) Objects.requireNonNull(getActivity())).isTwoPane;
-                        if (isTwoPane){
-                            adapter.row_index = position;
-                            updateDetailFragment();
-                        }
-                        else {
-                            Intent i = new Intent(getActivity(), DetailActivity.class);
-                            i.putExtra("bienImmobilier", adapter.getItem(position));
-                            i.putExtra("poi", (Serializable) pointInteretList);
-                            startActivityForResult(i, 1);
-                        }
+                .setOnItemClickListener((recyclerView, position, v) -> {
+                    boolean isTwoPane = ((MainActivity) Objects.requireNonNull(getActivity())).isTwoPane;
+                    if (isTwoPane){
+                        adapter.row_index = position;
+                        updateDetailFragment();
+                    }
+                    else {
+                        Intent i = new Intent(getActivity(), DetailActivity.class);
+                        i.putExtra("bienImmobilier", adapter.getItem(position));
+                        i.putExtra("poi", (Serializable) pointInteretList);
+                        startActivityForResult(i, 1);
                     }
                 });
     }
@@ -77,7 +69,7 @@ public class RealEstateListFragment extends Fragment implements RealEstateAdapte
     public void updateDetailFragment() {
         adapter.notifyDataSetChanged();
         RealEstateDetailFragment realEstateDetailFragment = RealEstateDetailFragment.newInstance(adapter.getItem(adapter.row_index), pointInteretList);
-        FragmentTransaction ft = (((MainActivity) Objects.requireNonNull(getActivity())).getSupportFragmentManager().beginTransaction());
+        FragmentTransaction ft = (Objects.requireNonNull(getActivity()).getSupportFragmentManager().beginTransaction());
         ft.replace(R.id.flDetailContainer, realEstateDetailFragment);
         ft.commitAllowingStateLoss();
     }

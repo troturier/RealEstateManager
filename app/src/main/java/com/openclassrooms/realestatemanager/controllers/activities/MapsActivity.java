@@ -64,6 +64,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         getUserLocation();
     }
 
+    /**
+     * Locate the user position
+     */
     @SuppressLint("MissingPermission")
     @AfterPermissionGranted(3)
     private void getUserLocation(){
@@ -78,6 +81,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    /**
+     * Move camera and display user's position on the map
+     */
     @SuppressLint("MissingPermission")
     private void locateUser() {
         MapsInitializer.initialize(this);
@@ -98,6 +104,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 });
     }
 
+    /**
+     * Add all markers corresponding to the retrieved BienImmobilierComplete list
+     */
     private void addMarkers(){
         for (int i=0; i<bienImmobilierCompleteList.size();i++){
             LatLng latLng = getLocationFromAddress(this, bienImmobilierCompleteList.get(i));

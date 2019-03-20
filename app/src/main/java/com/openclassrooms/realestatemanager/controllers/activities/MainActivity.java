@@ -102,12 +102,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner, E
     // UI
     // -------------------
 
-    // 5 - Update header
-    /**private void updateHeader(Utilisateur utilisateur){
-     this.profileText.setText(utilisateur.getPrenom());
-     }*/
-
-    // 6 - Update the list of items
+    // 5 - Update the list of items
     private void updateBienImmobiliersList(List<BienImmobilierComplete> bienImmobilierList){
         this.bienImmobilierCompleteList = bienImmobilierList;
         getPoi();
@@ -213,6 +208,9 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner, E
         }
     }
 
+    /**
+     * Method used to create a Mortgage Simulator Dialog box
+     */
     private void createMortgageSimulatorDialog(){
         final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
         LayoutInflater inflater = this.getLayoutInflater();
@@ -289,6 +287,9 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner, E
         dialogBuilder.show();
     }
 
+    /**
+     * Method used to create a Search Dialog box
+     */
     private void createSearchDialog(){
         final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
         LayoutInflater inflater = this.getLayoutInflater();

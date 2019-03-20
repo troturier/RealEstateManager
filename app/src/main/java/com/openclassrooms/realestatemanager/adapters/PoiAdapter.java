@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
@@ -18,44 +17,45 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+/**
+ * Points of Interest Adapter
+ */
+@SuppressWarnings("unused")
 public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.ViewHolder>{
 
     public interface Listener { void onClickDeleteButton(int position); }
-    private final PoiAdapter.Listener callback;
+
     private List<PointInteret> items;
-    private String requestCode;
+    private final String requestCode;
     private BienImmobilierComplete bienImmobilierComplete;
-    private BienImmobilierViewModel bienImmobilierViewModel;
+    private final BienImmobilierViewModel bienImmobilierViewModel;
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        CheckBox poi;
+    class ViewHolder extends RecyclerView.ViewHolder{
+        final CheckBox poi;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             poi = itemView.findViewById(R.id.poi);
 
-            poi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    PointInteretBienImmobilier pointInteretBienImmobilier = new PointInteretBienImmobilier();
-                    pointInteretBienImmobilier.setIdBien(bienImmobilierComplete.getBienImmobilier().getId());
-                    pointInteretBienImmobilier.setIdPoi(items.get(getAdapterPosition()).getId());
-                    if(isChecked){
-                        if (requestCode.equals("edit")) {
-                            bienImmobilierViewModel.createPointInteretBienImmobilier(pointInteretBienImmobilier);
-                        }
-                        List<PointInteretBienImmobilier> pointInteretBienImmobiliers = bienImmobilierComplete.getPointInteretBienImmobiliers();
-                        pointInteretBienImmobiliers.add(pointInteretBienImmobilier);
-                        bienImmobilierComplete.setPointInteretBienImmobiliers(pointInteretBienImmobiliers);
+            poi.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                PointInteretBienImmobilier pointInteretBienImmobilier = new PointInteretBienImmobilier();
+                pointInteretBienImmobilier.setIdBien(bienImmobilierComplete.getBienImmobilier().getId());
+                pointInteretBienImmobilier.setIdPoi(items.get(getAdapterPosition()).getId());
+                if(isChecked){
+                    if (requestCode.equals("edit")) {
+                        bienImmobilierViewModel.createPointInteretBienImmobilier(pointInteretBienImmobilier);
                     }
-                    else {
-                        if (requestCode.equals("edit")) {
-                            bienImmobilierViewModel.deletePointInteretBienImmobilier(pointInteretBienImmobilier);
-                        }
-                        List<PointInteretBienImmobilier> pointInteretBienImmobiliers = bienImmobilierComplete.getPointInteretBienImmobiliers();
-                        pointInteretBienImmobiliers.remove(pointInteretBienImmobilier);
-                        bienImmobilierComplete.setPointInteretBienImmobiliers(pointInteretBienImmobiliers);
+                    List<PointInteretBienImmobilier> pointInteretBienImmobiliers = bienImmobilierComplete.getPointInteretBienImmobiliers();
+                    pointInteretBienImmobiliers.add(pointInteretBienImmobilier);
+                    bienImmobilierComplete.setPointInteretBienImmobiliers(pointInteretBienImmobiliers);
+                }
+                else {
+                    if (requestCode.equals("edit")) {
+                        bienImmobilierViewModel.deletePointInteretBienImmobilier(pointInteretBienImmobilier);
                     }
+                    List<PointInteretBienImmobilier> pointInteretBienImmobiliers = bienImmobilierComplete.getPointInteretBienImmobiliers();
+                    pointInteretBienImmobiliers.remove(pointInteretBienImmobilier);
+                    bienImmobilierComplete.setPointInteretBienImmobiliers(pointInteretBienImmobiliers);
                 }
             });
         }
@@ -66,7 +66,6 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.ViewHolder>{
         this.bienImmobilierComplete = null;
         this.bienImmobilierViewModel = bienImmobilierViewModel;
         this.requestCode = requestCode;
-        this.callback = callback;
     }
 
     public void updateData(List<PointInteret> pointInteretList, BienImmobilierComplete bienImmobilierComplete){
@@ -82,13 +81,13 @@ public class PoiAdapter extends RecyclerView.Adapter<PoiAdapter.ViewHolder>{
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.poi_list_item, viewGroup, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(PoiAdapter.ViewHolder holder, final int i) {
+    public void onBindViewHolder(@NonNull PoiAdapter.ViewHolder holder, final int i) {
         int x = holder.getLayoutPosition();
 
         boolean found = false;
