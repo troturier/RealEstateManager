@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -46,11 +45,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class MainActivity extends AppCompatActivity implements LifecycleOwner {
 
@@ -70,16 +70,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         setContentView(R.layout.activity_main);
 
         determinePaneLayout();
-        if(Utils.checkPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)){
-            try {
-                Utils.requestPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Utils.READ_STORAGE_PERMISSION_REQUEST_CODE);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        else {
-            configure();
-        }
+        configure();
     }
 
     // -------------------
@@ -128,11 +119,18 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         }
     }
 
+    @AfterPermissionGranted(1)
     private void configure(){
-        // 8 - Configure RecyclerView & ViewModel
-        this.configureViewModel();
-        // 9 - Get BienImmobiliers from Database
-        this.getBienImmobiliers();
+        String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            // 8 - Configure RecyclerView & ViewModel
+            this.configureViewModel();
+            // 9 - Get BienImmobiliers from Database
+            this.getBienImmobiliers();
+        } else {
+            EasyPermissions.requestPermissions(this, "This application requires to have access to the storage of your device to be able to display the photos of the various real estates.",
+                    1, perms);
+        }
     }
 
     private void determinePaneLayout() {
@@ -172,6 +170,11 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
 
             case R.id.action_mortgage:
                 createMortgageSimulatorDialog();
+                return true;
+
+            case R.id.action_map:
+                Intent mapIntent = new Intent(this, MapsActivity.class);
+                startActivity(mapIntent);
                 return true;
 
             default:
@@ -662,15 +665,10 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            configure();
-        } else {
-            try {
-                Utils.requestPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Utils.READ_STORAGE_PERMISSION_REQUEST_CODE);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 }

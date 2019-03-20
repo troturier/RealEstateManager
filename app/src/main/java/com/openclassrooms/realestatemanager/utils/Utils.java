@@ -29,6 +29,7 @@ public class Utils {
 
     public static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 1;
     public static final int CAMERA_REQUEST_CODE = 2;
+    public static final int LOCATION_REQUEST_CODE = 3;
 
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
