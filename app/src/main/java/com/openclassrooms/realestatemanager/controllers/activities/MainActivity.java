@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -169,12 +170,92 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
                 createSearchDialog();
                 return true;
 
+            case R.id.action_mortgage:
+                createMortgageSimulatorDialog();
+                return true;
+
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    private void createMortgageSimulatorDialog(){
+        final AlertDialog dialogBuilder = new AlertDialog.Builder(this).create();
+        LayoutInflater inflater = this.getLayoutInflater();
+        @SuppressLint("InflateParams") View dialogView = inflater.inflate(R.layout.mortgage_simulator_dialog, null);
+
+        final EditText amountEt = dialogView.findViewById(R.id.amountEt);
+        final EditText monthEt = dialogView.findViewById(R.id.monthEt);
+        final EditText yearEt = dialogView.findViewById(R.id.yearEt);
+        final EditText rateEt = dialogView.findViewById(R.id.rateEt);
+        final EditText contributionEt = dialogView.findViewById(R.id.contributionEt);
+
+        final TextView resultTv = dialogView.findViewById(R.id.resultTv);
+
+        final Button cancelButton = dialogView.findViewById(R.id.mortgage_cancel);
+        final Button calculateButton = dialogView.findViewById(R.id.mortgage_calculate);
+
+        cancelButton.setOnClickListener(v -> dialogBuilder.dismiss());
+
+        calculateButton.setOnClickListener(v -> {
+            if (monthEt.getText().toString().isEmpty() && yearEt.getText().toString().isEmpty()) {
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                alertDialog.setTitle("No mortgage term specified");
+                alertDialog.setMessage("Please specify duration first");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        (dialog1, which1) -> dialog1.dismiss());
+                alertDialog.show();
+            }
+            else if(amountEt.getText().toString().isEmpty()){
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                alertDialog.setTitle("No amount specified");
+                alertDialog.setMessage("Please specify an amount first");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                        (dialog1, which1) -> dialog1.dismiss());
+                alertDialog.show();
+            }
+            else {
+                int month;
+                if (!monthEt.getText().toString().isEmpty()) {
+                    month = Integer.parseInt(monthEt.getText().toString());
+                } else {
+                    month = 0;
+                }
+
+                int year;
+                if (!yearEt.getText().toString().isEmpty()) {
+                    year = Integer.parseInt(yearEt.getText().toString());
+                } else {
+                    year = 0;
+                }
+
+                int amount = Integer.parseInt(amountEt.getText().toString());
+
+                float rate;
+                if (!rateEt.getText().toString().isEmpty()) {
+                    rate = Float.parseFloat(rateEt.getText().toString());
+                } else {
+                    rate = 1;
+                }
+
+                int contribution;
+                if (!contributionEt.getText().toString().isEmpty()) {
+                    contribution = Integer.parseInt(contributionEt.getText().toString());
+                } else {
+                    contribution = 0;
+                }
+
+                float result = (amount-contribution)/(month+(year*12))*rate;
+
+                resultTv.setText("$"+String.format("%.2f", result) + " / month ");
+            }
+        });
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.show();
     }
 
     private void createSearchDialog(){
