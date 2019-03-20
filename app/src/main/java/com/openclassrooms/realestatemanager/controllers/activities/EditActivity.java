@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.controllers.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,6 +12,7 @@ import com.openclassrooms.realestatemanager.controllers.fragments.RealEstateEdit
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import pub.devrel.easypermissions.EasyPermissions;
 
 public class EditActivity extends AppCompatActivity {
 
@@ -58,12 +58,11 @@ public class EditActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
-        if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            RealEstateEditFragment realEstateEditFragment = (RealEstateEditFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentEdit);
-            assert realEstateEditFragment != null;
-            realEstateEditFragment.getImageFromCamera();
-        }
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
 }

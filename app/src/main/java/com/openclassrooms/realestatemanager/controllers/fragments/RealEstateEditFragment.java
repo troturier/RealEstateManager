@@ -59,6 +59,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -408,18 +410,7 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
 
         galleryButton.setOnClickListener(view -> getImageFromAlbum());
 
-        cameraButton.setOnClickListener(v -> {
-            if (Utils.checkPermission(getActivity(), Manifest.permission.CAMERA)){
-                try {
-                    Utils.requestPermission(getActivity(), Manifest.permission.CAMERA, Utils.CAMERA_REQUEST_CODE);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-            else {
-                getImageFromCamera();
-            }
-        });
+        cameraButton.setOnClickListener(v -> getImageFromCamera());
 
         cancelButton.setOnClickListener(view -> dialogBuilder.dismiss());
         submitButton.setOnClickListener(view -> {
@@ -456,22 +447,30 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
         }
     }
 
+    @AfterPermissionGranted(2)
     public void getImageFromCamera(){
-        PackageManager packageManager = Objects.requireNonNull(getActivity()).getPackageManager();
-        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            File mainDirectory = new File(Environment.getExternalStorageDirectory(), "DCIM");
-            if (!mainDirectory.exists())
-                //noinspection ResultOfMethodCallIgnored
-                mainDirectory.mkdirs();
+        String[] perms = {Manifest.permission.CAMERA};
+        if(EasyPermissions.hasPermissions(Objects.requireNonNull(getActivity()), perms)) {
+            PackageManager packageManager = Objects.requireNonNull(getActivity()).getPackageManager();
+            if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                File mainDirectory = new File(Environment.getExternalStorageDirectory(), "DCIM");
+                if (!mainDirectory.exists())
+                    //noinspection ResultOfMethodCallIgnored
+                    mainDirectory.mkdirs();
 
-            Calendar calendar = Calendar.getInstance();
+                Calendar calendar = Calendar.getInstance();
 
-            uriFilePath = Uri.fromFile(new File(mainDirectory, "IMG_" + calendar.getTimeInMillis()));
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uriFilePath);
-            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-            StrictMode.setVmPolicy(builder.build());
-            startActivityForResult(intent, 2);
+                uriFilePath = Uri.fromFile(new File(mainDirectory, "IMG_" + calendar.getTimeInMillis()));
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uriFilePath);
+                StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                StrictMode.setVmPolicy(builder.build());
+                startActivityForResult(intent, 2);
+            }
+        }
+        else {
+            EasyPermissions.requestPermissions(this, "A camera access permission is needed in order to take a picture with the camera of your device.",
+                    2, perms);
         }
     }
 
@@ -781,5 +780,13 @@ public class RealEstateEditFragment extends Fragment implements PhotoAdapter.Lis
     @Override
     public void onClickDeleteButton(int position) {
 
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Forward results to EasyPermissions
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 }

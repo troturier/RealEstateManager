@@ -46,14 +46,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.ViewModelProviders;
 import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements LifecycleOwner {
+public class MainActivity extends AppCompatActivity implements LifecycleOwner, EasyPermissions.PermissionCallbacks {
 
     // 1 - FOR DATA
     private BienImmobilierViewModel bienImmobilierViewModel;
@@ -120,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
         }
     }
 
-    @AfterPermissionGranted(1)
+    @AfterPermissionGranted(5)
     private void configure(){
         String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE};
         if (EasyPermissions.hasPermissions(this, perms)) {
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
             this.getBienImmobiliers();
         } else {
             EasyPermissions.requestPermissions(this, "This application requires to have access to the storage of your device to be able to display the photos of the various real estates.",
-                    1, perms);
+                    5, perms);
         }
     }
 
@@ -174,22 +176,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
                 return true;
 
             case R.id.action_map:
-                new InternetCheck(internet -> {
-                    if (internet){
-                        Intent mapIntent = new Intent(this, MapsActivity.class);
-                        mapIntent.putExtra("bienImmobilier", (Serializable) this.bienImmobilierCompleteList);
-                        mapIntent.putExtra("poi", (Serializable) pointInteretList);
-                        startActivity(mapIntent);
-                    }
-                    else{
-                        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
-                        alertDialog.setTitle("No internet connection");
-                        alertDialog.setMessage("Please make sure you are connected to the internet before opening the map view of the app.");
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                                (dialog1, which1) -> dialog1.dismiss());
-                        alertDialog.show();
-                    }
-                });
+                startMapActivity();
                 return true;
 
             default:
@@ -197,6 +184,32 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
+        }
+    }
+
+    @AfterPermissionGranted(3)
+    private void startMapActivity(){
+        String[] perms2 = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        if (EasyPermissions.hasPermissions(this, perms2)) {
+            new InternetCheck(internet -> {
+                if (internet){
+                    Intent mapIntent = new Intent(this, MapsActivity.class);
+                    mapIntent.putExtra("bienImmobilier", (Serializable) this.bienImmobilierCompleteList);
+                    mapIntent.putExtra("poi", (Serializable) pointInteretList);
+                    startActivity(mapIntent);
+                }
+                else{
+                    AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                    alertDialog.setTitle("No internet connection");
+                    alertDialog.setMessage("Please make sure you are connected to the internet before opening the map view of the app.");
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            (dialog1, which1) -> dialog1.dismiss());
+                    alertDialog.show();
+                }
+            });
+        } else {
+            EasyPermissions.requestPermissions(this, "This app require access to your device location in order to show you the nearby properties",
+                    3, perms2);
         }
     }
 
@@ -677,11 +690,33 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
                 getBienImmobiliers();
             }
         }
+
+        if(requestCode == 5){
+            String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE};
+            if(EasyPermissions.hasPermissions(this, perms))
+            configure();
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode==5 && grantResults[0] == -1){
+            configure();
+        }
 
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);

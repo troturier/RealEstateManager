@@ -1,10 +1,8 @@
 package com.openclassrooms.realestatemanager.utils;
 
-import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Build;
@@ -21,8 +19,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -31,10 +27,6 @@ import androidx.core.app.NotificationManagerCompat;
  */
 
 public class Utils {
-
-    public static final int READ_STORAGE_PERMISSION_REQUEST_CODE = 1;
-    public static final int CAMERA_REQUEST_CODE = 2;
-    public static final int LOCATION_REQUEST_CODE = 3;
 
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
@@ -79,39 +71,6 @@ public class Utils {
         catch (InterruptedException e) { e.printStackTrace(); }
 
         return false;
-    }
-
-    public static boolean checkPermission(Context context, String permission) {
-        int result = context.checkSelfPermission(permission);
-        return result != PackageManager.PERMISSION_GRANTED;
-    }
-
-    public static void requestPermission(Context context, String permission, int requestCode) throws Exception {
-        if (ActivityCompat.shouldShowRequestPermissionRationale((Activity)context, permission)) {
-            if(requestCode == READ_STORAGE_PERMISSION_REQUEST_CODE)
-            new AlertDialog.Builder(context)
-                    .setTitle("Permission needed")
-                    .setMessage("This application requires access to the storage of your device to be able to display the photos of the various properties.")
-                    .setPositiveButton("Next", (dialog, which) -> ActivityCompat.requestPermissions((Activity) context,
-                            new String[] {permission}, requestCode))
-                    .create().show();
-            else if (requestCode == CAMERA_REQUEST_CODE)
-                new AlertDialog.Builder(context)
-                        .setTitle("Permission needed")
-                        .setMessage("A camera access permission is needed in order to take a picture with the camera of your device.")
-                        .setPositiveButton("Next", (dialog, which) -> ActivityCompat.requestPermissions((Activity) context,
-                                new String[] {permission}, requestCode))
-                        .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
-                        .create().show();
-        } else {
-            try {
-                ActivityCompat.requestPermissions((Activity) context, new String[]{permission},
-                        requestCode);
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw e;
-            }
-        }
     }
 
     public static void createNotification(Context context){
