@@ -23,7 +23,7 @@ public class UtilsUnitTest {
 
     @Test
     public void euroToDollar(){
-        assertEquals(119, convertEuroToDollar(100));
+        assertEquals(123, convertEuroToDollar(100));
     }
 
     @Test
