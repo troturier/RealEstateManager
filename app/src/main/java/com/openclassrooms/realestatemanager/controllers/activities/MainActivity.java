@@ -30,6 +30,7 @@ import com.openclassrooms.realestatemanager.models.PointInteret;
 import com.openclassrooms.realestatemanager.repositories.injections.Injection;
 import com.openclassrooms.realestatemanager.repositories.injections.ViewModelFactory;
 import com.openclassrooms.realestatemanager.utils.ExpandableHeightGridView;
+import com.openclassrooms.realestatemanager.utils.InternetCheck;
 import com.openclassrooms.realestatemanager.utils.Utils;
 import com.openclassrooms.realestatemanager.viewmodels.BienImmobilierViewModel;
 
@@ -173,9 +174,22 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
                 return true;
 
             case R.id.action_map:
-                Intent mapIntent = new Intent(this, MapsActivity.class);
-                mapIntent.putExtra("bienImmobilier", (Serializable) this.bienImmobilierCompleteList);
-                startActivity(mapIntent);
+                new InternetCheck(internet -> {
+                    if (internet){
+                        Intent mapIntent = new Intent(this, MapsActivity.class);
+                        mapIntent.putExtra("bienImmobilier", (Serializable) this.bienImmobilierCompleteList);
+                        mapIntent.putExtra("poi", (Serializable) pointInteretList);
+                        startActivity(mapIntent);
+                    }
+                    else{
+                        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                        alertDialog.setTitle("No internet connection");
+                        alertDialog.setMessage("Please make sure you are connected to the internet before opening the map view of the app.");
+                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                                (dialog1, which1) -> dialog1.dismiss());
+                        alertDialog.show();
+                    }
+                });
                 return true;
 
             default:

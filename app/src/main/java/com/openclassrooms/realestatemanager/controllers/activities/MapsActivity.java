@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.controllers.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -17,23 +18,27 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.openclassrooms.realestatemanager.R;
 import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
+import com.openclassrooms.realestatemanager.models.PointInteret;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 import static com.openclassrooms.realestatemanager.utils.Utils.getLocationFromAddress;
 
+@SuppressWarnings("unchecked")
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
-    private static final String TAG = "MapsActivity";
     private GoogleMap mMap;
     private String[] perms;
     private FusedLocationProviderClient mFusedLocationClient;
-    private List<BienImmobilierComplete> bienImmobilierCompleteList;
+    private static List<BienImmobilierComplete> bienImmobilierCompleteList;
+    private static List<PointInteret> pointInteretList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +47,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.maps);
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         perms = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
         bienImmobilierCompleteList = (List<BienImmobilierComplete>) getIntent().getSerializableExtra("bienImmobilier");
+        pointInteretList = (List<PointInteret>) getIntent().getSerializableExtra("poi");
     }
 
 
@@ -58,7 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @SuppressLint("MissingPermission")
     @AfterPermissionGranted(3)
-    public void getUserLocation(){
+    private void getUserLocation(){
         if (EasyPermissions.hasPermissions(this, perms)) {
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
@@ -82,7 +90,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 .addOnSuccessListener(this, location2 -> {
                                     // Get last known location. In some rare situations this can be null.
                                     if (location2 != null) {
-                                        CameraPosition user = CameraPosition.builder().target(new LatLng(location2.getLatitude(), location2.getLongitude())).zoom(16).bearing(0).build();
+                                        CameraPosition user = CameraPosition.builder().target(new LatLng(location2.getLatitude(), location2.getLongitude())).zoom(14).bearing(0).build();
                                         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(user));
                                     }
                                 });
@@ -92,18 +100,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void addMarkers(){
         for (int i=0; i<bienImmobilierCompleteList.size();i++){
-            LatLng latLng = getLocationFromAddress(this, this.bienImmobilierCompleteList.get(i));
+            LatLng latLng = getLocationFromAddress(this, bienImmobilierCompleteList.get(i));
             if(latLng != null) {
                 MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(Objects.requireNonNull(getLocationFromAddress(this, this.bienImmobilierCompleteList.get(i))));
-                markerOptions.title(this.bienImmobilierCompleteList.get(i).getBienImmobilier().getRue());
+                markerOptions.position(Objects.requireNonNull(getLocationFromAddress(this, bienImmobilierCompleteList.get(i))));
+                markerOptions.title(bienImmobilierCompleteList.get(i).getBienImmobilier().getRue());
+                markerOptions.snippet(String.valueOf(i));
                 mMap.addMarker(markerOptions).showInfoWindow();
             }
         }
+
+        mMap.setOnMarkerClickListener(marker -> {
+            Intent intent = new Intent(MapsActivity.this, DetailActivity.class);
+            intent.putExtra("bienImmobilier", bienImmobilierCompleteList.get(Integer.parseInt(marker.getSnippet())));
+            intent.putExtra("poi", (Serializable) pointInteretList);
+            startActivity(intent);
+            return true;
+        });
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         // Forward results to EasyPermissions
