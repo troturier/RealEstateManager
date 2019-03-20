@@ -174,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleOwner {
 
             case R.id.action_map:
                 Intent mapIntent = new Intent(this, MapsActivity.class);
+                mapIntent.putExtra("bienImmobilier", (Serializable) this.bienImmobilierCompleteList);
                 startActivity(mapIntent);
                 return true;
 

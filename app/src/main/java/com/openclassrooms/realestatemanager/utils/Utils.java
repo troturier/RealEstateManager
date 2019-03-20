@@ -5,15 +5,20 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Build;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.openclassrooms.realestatemanager.R;
+import com.openclassrooms.realestatemanager.models.BienImmobilierComplete;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import androidx.appcompat.app.AlertDialog;
@@ -176,5 +181,39 @@ public class Utils {
 
         // return the new list
         return newList;
+    }
+
+    public static LatLng getLocationFromAddress(Context context, BienImmobilierComplete bienImmobilierComplete) {
+
+        String rue = bienImmobilierComplete.getBienImmobilier().getRue() + "\n";
+        String complement = "";
+        if(bienImmobilierComplete.getBienImmobilier().getComplementRue() != null) {
+            complement = bienImmobilierComplete.getBienImmobilier().getComplementRue() + "\n";
+        }
+        String cp = bienImmobilierComplete.getBienImmobilier().getCp() + "\n";
+        String ville = bienImmobilierComplete.getBienImmobilier().getVille() + "\n";
+        String pays = bienImmobilierComplete.getBienImmobilier().getPays();
+
+        String strAddress = String.format("%s%s%s%s%s", rue, complement, ville, cp, pays);
+
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 5);
+            if (address == null || address.size() == 0) {
+                return null;
+            }
+            else {
+                Address location = address.get(0);
+                p1 = new LatLng(location.getLatitude(), location.getLongitude());
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return p1;
     }
 }

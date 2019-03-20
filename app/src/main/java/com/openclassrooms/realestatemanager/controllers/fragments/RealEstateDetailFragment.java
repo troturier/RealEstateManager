@@ -1,8 +1,6 @@
 package com.openclassrooms.realestatemanager.controllers.fragments;
 
 import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,7 +27,6 @@ import com.openclassrooms.realestatemanager.models.PointInteret;
 import com.openclassrooms.realestatemanager.models.PointInteretBienImmobilier;
 import com.openclassrooms.realestatemanager.utils.InternetCheck;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +38,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.openclassrooms.realestatemanager.utils.Utils.getLocationFromAddress;
 
 @SuppressWarnings("unchecked")
 public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.Listener, OnMapReadyCallback {
@@ -242,13 +241,13 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
             googleMap.getUiSettings().setMapToolbarEnabled(false);
 
-            LatLng latLng = getLocationFromAddress(getActivity(), this.address);
+            LatLng latLng = getLocationFromAddress(getActivity(), this.bienImmobilierComplete);
             if(latLng != null) {
                 CameraPosition cameraPosition = CameraPosition.builder().target(latLng).zoom(17).bearing(0).build();
                 googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
                 MarkerOptions markerOptions = new MarkerOptions();
-                markerOptions.position(Objects.requireNonNull(getLocationFromAddress(getActivity(), this.address)));
+                markerOptions.position(Objects.requireNonNull(getLocationFromAddress(getActivity(), this.bienImmobilierComplete)));
                 markerOptions.title(this.bienImmobilierComplete.getBienImmobilier().getRue());
                 googleMap.addMarker(markerOptions).showInfoWindow();
             }
@@ -298,29 +297,6 @@ public class RealEstateDetailFragment extends Fragment implements PhotoAdapter.L
         super.onResume();
         if (this.internet)
             mMapView.onResume();
-    }
-
-    private LatLng getLocationFromAddress(Context context, String strAddress) {
-
-        Geocoder coder = new Geocoder(context);
-        List<Address> address;
-        LatLng p1 = null;
-
-        try {
-            // May throw an IOException
-            address = coder.getFromLocationName(strAddress, 5);
-            if (address == null || address.size() == 0) {
-                return null;
-            }
-            else {
-                Address location = address.get(0);
-                p1 = new LatLng(location.getLatitude(), location.getLongitude());
-            }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-
-        return p1;
     }
 
 }
