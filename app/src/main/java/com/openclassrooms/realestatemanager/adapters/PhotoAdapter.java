@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,10 +59,20 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
         if(position == items.size()){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.detailIV.setImageDrawable(this.context.getDrawable(R.drawable.ic_add_media));
-                holder.detailTV.setVisibility(View.GONE);
+            }
+            else {
+                holder.detailIV.setImageDrawable(this.context.getResources().getDrawable(R.drawable.ic_add_media));
+            }
+            holder.detailTV.setVisibility(View.GONE);
                 holder.detailIV.setScaleType(ImageView.ScaleType.CENTER);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 holder.photoCv.setCardBackgroundColor(this.context.getColor(R.color.colorAccent));
+            }
+            else {
+                holder.photoCv.setCardBackgroundColor(this.context.getResources().getColor(R.color.colorAccent));
+            }
         }
         else {
             holder.updateWithPhoto(this.items.get(position), this.callback);
